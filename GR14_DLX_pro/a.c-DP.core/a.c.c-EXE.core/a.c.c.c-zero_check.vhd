@@ -17,5 +17,5 @@ END zero_check;
 ARCHITECTURE datafl OF zero_check IS
 BEGIN
     ctrl_out <= '1' WHEN data_in = (data_in'RANGE => '0') ELSE
-        '0';
+        '0'; -- including collisions in input
 END datafl;

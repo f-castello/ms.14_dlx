@@ -11,18 +11,16 @@ END branch_cond;
 
 ARCHITECTURE datafl OF branch_cond IS
 BEGIN
-    -- BEHAVIORAL DESCRIPTION (process needed...):
+    -- BEHAVIORAL DESCRIPTION (inside a process...):
     -- IF (cond_in = '1') THEN
     --     ctrl_out <= ctrl_in;
-    -- ELSIF (cond_in = '0') THEN
-    --     ctrl_out <= NOT ctrl_in;
     -- ELSE
-    --     ctrl_out <= 'X';
+    --     ctrl_out <= NOT ctrl_in;
     -- END IF;
 
-    -- DERIVED LOGIC FUNCTION (3 gates — 2 logic levels):
+    -- DERIVED LOGIC FUNCTION (unoptimized):
     -- ctrl_out <= (ctrl_in and cond_in) or (ctrl_in nor cond_in);
 
-    -- BOOLEAN REDUCTION (optimized — single logic gate/level):
+    -- BOOLEAN REDUCTION (optimized):
     ctrl_out <= ctrl_in XNOR cond_in;
 END datafl;

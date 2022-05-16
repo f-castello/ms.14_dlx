@@ -21,5 +21,5 @@ ARCHITECTURE datafl OF gen_mux21 IS
 
 BEGIN
     s <= (OTHERS => sel);            -- extend selector to N bits
-    m <= (x AND NOT s) OR (y AND s); -- CMOS logic function
+    m <= (x AND NOT s) OR (y AND s); -- standard logic function
 END datafl;
