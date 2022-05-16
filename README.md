@@ -17,4 +17,5 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 - `#DEST_PATH#`: remote path to send to
 ###### Working practices:
 1. Do NOT create _any_ additional temporary directories or use _any_ arbitrary file naming other than what is described inside [the official guide](/Documentation/dlx_guide.pdf) for code versioning
-2. Every `.vhd` source file MUST be both **well commented** and **formatted** by using [this beautifier tool](https://marketplace.visualstudio.com/items?itemName=Vinrobot.vhdl-formatter) for VS Code before final submission
+2. Always keep the [GR14_DLX_pro](/GR14_DLX_pro) directory **clean** and well-structured
+3. Every `.vhd` source file MUST be both **well commented** and **formatted** by using [this beautifier tool](https://marketplace.visualstudio.com/items?itemName=Vinrobot.vhdl-formatter) for VS Code before final submission.
