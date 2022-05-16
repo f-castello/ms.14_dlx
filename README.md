@@ -23,7 +23,7 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 # Project integration
 Every task should only be marked as _complete_ after the corresponding step is **100% complete** and the associated file(s) no longer need(s) to be changed. The required steps are:
 1. [**Implementation**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#implementation) — complete component writing & VHDL syntax checking
-2. [**Simulation**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#simulation) — [testbench creation](https://github.com/f-castello/ms.14_dlx/blob/main/INTEGRATION.md#testbenches) & error-free run
+2. [**Simulation**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#simulation) — [testbench](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#testbenches) creation & error-free run
 3. [**Synthesis**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#synthesis) — successful elaboration & design phase.
 
 ## Implementation
