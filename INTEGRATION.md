@@ -1,7 +1,7 @@
 Every task should only be marked as _complete_ after the corresponding step is **100% complete** and the associated file(s) no longer need changes [theoretically]. The required steps are:
-1. **Implementation** = complete component writing & VHDL syntax checking
-2. **Simulation** = testbench creation & error-free run
-3. **Synthesis** = successful elaboration & design phase.
+1. [**Implementation**](https://github.com/f-castello/ms.14_dlx/blob/main/INTEGRATION.md#implementation) — complete component writing & VHDL syntax checking
+2. [**Simulation**](https://github.com/f-castello/ms.14_dlx/blob/main/INTEGRATION.md#simulation) — [testbench creation](https://github.com/f-castello/ms.14_dlx/blob/main/INTEGRATION.md#testbenches) & error-free run
+3. [**Synthesis**](https://github.com/f-castello/ms.14_dlx/blob/main/INTEGRATION.md#synthesis) — successful elaboration & design phase.
 
 ## Implementation
 - [ ] `dlx_utils`
