@@ -11,16 +11,16 @@ END branch_cond;
 
 ARCHITECTURE datafl OF branch_cond IS
 BEGIN
-    -- BEHAVIORAL DESCRIPTION (inside a process...):
+    -- BEHAVIORAL DESCRIPTION (process...):
     -- IF (cond_in = '1') THEN
     --     ctrl_out <= ctrl_in;
     -- ELSE
     --     ctrl_out <= NOT ctrl_in;
     -- END IF;
 
-    -- DERIVED LOGIC FUNCTION (unoptimized):
+    -- DERIVED LOGIC FUNCTION:
     -- ctrl_out <= (ctrl_in and cond_in) or (ctrl_in nor cond_in);
 
-    -- BOOLEAN REDUCTION (optimized):
+    -- BOOLEAN REDUCTION:
     ctrl_out <= ctrl_in XNOR cond_in;
 END datafl;

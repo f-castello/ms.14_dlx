@@ -10,14 +10,14 @@ ENTITY sign_ext IS
     );
     PORT
     (
-        data_in  : STD_LOGIC_VECTOR(N_IN - 1 DOWNTO 0);
-        data_ext : STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
+        data_in  : IN STD_LOGIC_VECTOR(N_IN - 1 DOWNTO 0);
+        data_ext : OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
     );
 END sign_ext;
 
 ARCHITECTURE datafl OF sign_ext IS
 BEGIN
-    data_ext <=                                  -- signed output
-        (N_OUT - N_IN DOWNTO 0 => data_in(N_IN - 1)) -- extended MSB
-        & data_in;                                   -- original data
+    data_ext <=                                      -- signed output
+        (N_OUT - N_IN - 1 DOWNTO 0 => data_in(N_IN - 1)) -- extended MSB
+        & data_in;                                       -- original data
 END datafl;

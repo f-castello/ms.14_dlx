@@ -12,8 +12,8 @@ ENTITY pc_add IS
     );
     PORT
     (
-        data_in  : STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-        data_out : STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
+        data_in  : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+        data_out : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
     );
 END pc_add;
 

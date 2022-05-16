@@ -9,13 +9,13 @@ ENTITY zero_check IS
     );
     PORT
     (
-        data_in  : STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-        ctrl_out : STD_LOGIC
+        data_in  : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+        ctrl_out : OUT STD_LOGIC
     );
 END zero_check;
 
 ARCHITECTURE datafl OF zero_check IS
 BEGIN
     ctrl_out <= '1' WHEN data_in = (data_in'RANGE => '0') ELSE
-        '0'; -- including collisions in input
+        '0'; -- including input collisions
 END datafl;

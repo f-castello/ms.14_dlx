@@ -13,7 +13,7 @@ ENTITY gen_mux21 IS
         x, y : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
         m    : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
     );
-END gen_reg;
+END gen_mux21;
 
 ARCHITECTURE datafl OF gen_mux21 IS
 
