@@ -3,11 +3,14 @@ USE ieee.std_logic_1164.ALL;
 
 PACKAGE dlx_utils IS
     -- Constant generics
-    CONSTANT MICRO_N  : NATURAL := 10;
-    CONSTANT FUNC_N   : NATURAL := 11;
-    CONSTANT OPCODE_N : NATURAL := 6;
-    CONSTANT IR_N     : NATURAL := 32;
-    CONSTANT CW_N     : NATURAL := 16;
+    CONSTANT NbitShort : NATURAL := 16;
+    CONSTANT NbitLong  : NATURAL := 32;
+    CONSTANT NPC_GAP   : NATURAL := 4;
+    CONSTANT MICRO_N   : NATURAL := 10;
+    CONSTANT FUNC_N    : NATURAL := 11;
+    CONSTANT OPCODE_N  : NATURAL := 6;
+    CONSTANT IR_N      : NATURAL := 32;
+    CONSTANT CW_N      : NATURAL := 16;
 
     -- Custom types
     TYPE ALU_MSG IS (
