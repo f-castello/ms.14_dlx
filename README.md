@@ -42,7 +42,7 @@ Every task should only be marked as _complete_ only after the corresponding phas
       - [x] `gen_reg`
       - [x] `gen_mux21`
       - [x] `zero_check`
-      - [x] `branch_cond`
+      - [x] `cond_branch`
       - [ ] `alu`
       - [x] `cpsr`
     - [ ] `MEM`
@@ -67,7 +67,7 @@ Every task should only be marked as _complete_ only after the corresponding phas
       - [x] `gen_reg`
       - [x] `gen_mux21`
       - [x] `zero_check`
-      - [x] `branch_cond`
+      - [x] `cond_branch`
       - [ ] `alu`
       - [x] `cpsr`
     - [ ] `MEM`
@@ -77,7 +77,7 @@ Every task should only be marked as _complete_ only after the corresponding phas
       - [x] `gen_mux41`
 ###### Testbenches
 - [ ] `TB_alu`
-- [x] `TB_branch_cond`
+- [x] `TB_cond_branch`
 - [x] `TB_cpsr`
 - [ ] `TB_CU_HW`
 - [ ] `TB_DLX`
@@ -111,7 +111,7 @@ Every task should only be marked as _complete_ only after the corresponding phas
       - [ ] `gen_reg`
       - [ ] `gen_mux21`
       - [ ] `zero_check`
-      - [ ] `branch_cond`
+      - [ ] `cond_branch`
       - [ ] `alu`
       - [ ] `cpsr`
     - [ ] `MEM`
