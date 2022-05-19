@@ -10,23 +10,27 @@ ARCHITECTURE test OF TB_sign_ext IS
     COMPONENT sign_ext
         GENERIC
         (
-            N_IN  : NATURAL := NbitShort;
-            N_OUT : NATURAL := NbitShort
+            N_IN0 : NATURAL := NbitJump;
+            N_IN1 : NATURAL := NbitShort;
+            N_OUT : NATURAL := NbitLong
         );
         PORT
         (
-            data_in  : IN STD_LOGIC_VECTOR(N_IN - 1 DOWNTO 0);
+            ctrl_in  : IN STD_LOGIC;
+            data_in  : IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
             data_ext : OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
         );
     END COMPONENT;
 
-    SIGNAL DATA_IN  : STD_LOGIC_VECTOR(NbitShort - 1 DOWNTO 0);
+    SIGNAL CTRL_IN  : STD_LOGIC;
+    SIGNAL DATA_IN  : STD_LOGIC_VECTOR(NbitJump - 1 DOWNTO 0);
     SIGNAL DATA_EXT : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 
 BEGIN
     dut : sign_ext GENERIC
-    MAP (NbitShort, NbitLong) PORT MAP
-    (DATA_IN, DATA_EXT);
+    MAP (NbitJump, NbitShort, NbitLong) PORT MAP
+    (CTRL_IN, DATA_IN, DATA_EXT);
 
-    DATA_IN <= (OTHERS => '0'), (OTHERS => '1') AFTER Tclk;
+    CTRL_IN <= '0', '1' AFTER Tclk;
+    DATA_IN <= (NbitJump - NbitShort - 1 DOWNTO 0 => '0') & (NbitShort - 1 DOWNTO 0 => '1');
 END test;

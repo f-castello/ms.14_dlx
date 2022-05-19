@@ -19,14 +19,10 @@ ARCHITECTURE behav OF gen_reg IS
 BEGIN
     REG_MEM : PROCESS (clk, rst, en)
     BEGIN
-        IF (en = '1') THEN
-            IF (rst = '0') THEN -- asynchronous, active-low
-                data_out <= (OTHERS => '0');
-            ELSIF rising_edge(clk) THEN -- normal operation
-                data_out <= data_in;
-            END IF;
-        ELSE -- disconnect from net
-            data_out <= (OTHERS => 'Z');
+        IF (rst = '0') THEN -- asynchronous, active-low
+            data_out <= (OTHERS => '0');
+        ELSIF rising_edge(clk) AND (en = '1') THEN -- normal operation
+            data_out <= data_in;
         END IF;
     END PROCESS REG_MEM;
 END behav;

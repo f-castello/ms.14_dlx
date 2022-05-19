@@ -15,11 +15,11 @@ ENTITY gen_mux21 IS
     );
 END gen_mux21;
 
-ARCHITECTURE datafl OF gen_mux21 IS
+ARCHITECTURE dflow OF gen_mux21 IS
 
-    SIGNAL s : STD_LOGIC_VECTOR(N - 1 DOWNTO 0); -- array version for 'sel'
+    SIGNAL s : STD_LOGIC_VECTOR(N - 1 DOWNTO 0); -- 'sel' array
 
 BEGIN
     s <= (OTHERS => sel);            -- extend selector to N bits
     m <= (x AND NOT s) OR (y AND s); -- standard logic function
-END datafl;
+END dflow;

@@ -14,8 +14,8 @@ ENTITY zero_check IS
     );
 END zero_check;
 
-ARCHITECTURE datafl OF zero_check IS
+ARCHITECTURE dflow OF zero_check IS
 BEGIN
     ctrl_out <= '1' WHEN data_in = (data_in'RANGE => '0') ELSE
         '0'; -- including input collisions
-END datafl;
+END dflow;
