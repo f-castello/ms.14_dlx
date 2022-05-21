@@ -20,102 +20,25 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 2. Always keep the [GR14_DLX_pro](/GR14_DLX_pro) directory **clean** and well-structured
 3. Every `.vhd` source file MUST be both **well commented** and **formatted** by using [this beautifier tool](https://marketplace.visualstudio.com/items?itemName=Vinrobot.vhdl-formatter) for VS Code before final submission.
 
-# Project integration
-Every task should only be marked as _complete_ only after the corresponding phase is 100% done (future project changes represent an exception to this rule). The required steps are:
-1. [**Implementation**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#implementation) — complete component writing & VHDL syntax checking
-2. [**Simulation**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#simulation) — [testbench](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#testbenches) creation & error-free run
-3. [**Synthesis**](https://github.com/f-castello/ms.14_dlx/blob/main/README.md#synthesis) — successful elaboration & design phase.
-
-## Implementation
-- [ ] `dlx_utils`
-- [ ] `DLX`
-  - [ ] `CU_HW`
-  - [ ] `DP`
-    - [ ] `IF`
-      - [x] `gen_reg`
-      - [x] `pc_add`
-    - [ ] `ID`
-      - [x] `gen_reg`
-      - [x] `sign_ext`
-      - [ ] `reg_file`
-    - [ ] `EXE`
-      - [x] `gen_reg`
-      - [x] `gen_mux21`
-      - [x] `zero_check`
-      - [x] `cond_branch`
-      - [ ] `alu`
-      - [x] `cpsr`
-    - [ ] `MEM`
-      - [x] `gen_reg`
-      - [x] `gen_mux21`
-    - [ ] `WB`
-      - [x] `gen_mux41`
-
-## Simulation
-- [ ] `dlx_utils`
-- [ ] `DLX`
-  - [ ] `CU_HW`
-  - [ ] `DP`
-    - [ ] `IF`
-      - [x] `gen_reg`
-      - [x] `pc_add`
-    - [ ] `ID`
-      - [x] `gen_reg`
-      - [x] `sign_ext`
-      - [ ] `reg_file`
-    - [ ] `EXE`
-      - [x] `gen_reg`
-      - [x] `gen_mux21`
-      - [x] `zero_check`
-      - [x] `cond_branch`
-      - [ ] `alu`
-      - [x] `cpsr`
-    - [ ] `MEM`
-      - [x] `gen_reg`
-      - [x] `gen_mux21`
-    - [ ] `WB`
-      - [x] `gen_mux41`
-###### Testbenches
-- [ ] `TB_alu`
-- [x] `TB_cond_branch`
-- [x] `TB_cpsr`
-- [ ] `TB_CU_HW`
-- [ ] `TB_DLX`
-- [ ] `TB_DP`
-- [ ] `TB_EXE`
-- [x] `TB_gen_mux21`
-- [x] `TB_gen_mux41`
-- [x] `TB_gen_reg`
-- [ ] `TB_ID`
-- [ ] `TB_IF`
-- [ ] `TB_MEM`
-- [x] `TB_pc_add`
-- [ ] `TB_reg_file`
-- [x] `TB_sign_ext`
-- [ ] `TB_WB`
-- [x] `TB_zero_check`
-
-## Synthesis
-- [ ] `dlx_utils`
-- [ ] `DLX`
-  - [ ] `CU_HW`
-  - [ ] `DP`
-    - [ ] `IF`
-      - [ ] `gen_reg`
-      - [ ] `pc_add`
-    - [ ] `ID`
-      - [ ] `gen_reg`
-      - [ ] `sign_ext`
-      - [ ] `reg_file`
-    - [ ] `EXE`
-      - [ ] `gen_reg`
-      - [ ] `gen_mux21`
-      - [ ] `zero_check`
-      - [ ] `cond_branch`
-      - [ ] `alu`
-      - [ ] `cpsr`
-    - [ ] `MEM`
-      - [ ] `gen_reg`
-      - [ ] `gen_mux21`
-    - [ ] `WB`
-      - [ ] `gen_mux41`
+# Integration tracking
+Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet):
+| DESIGN        | VHDL | _TB_ |  SIM | SYNTH |
+|---------------|:----:|:----:|:----:|:-----:|
+| `alu`         |      |      |      |       |
+| `cond_branch` | DONE | DONE | DONE |       |
+| `cpsr`        | DONE | DONE | DONE |       |
+| `CU_HW`       |  WIP |      |      |       |
+| `DLX`         |      |      |      |       |
+| `DP`          |      |      |      |       |
+| `EXE`         |      |      |      |       |
+| `gen_mux_21`  | DONE | DONE | DONE |       |
+| `gen_mux_41`  | DONE | DONE | DONE |       |
+| `gen_reg`     | DONE | DONE | DONE |       |
+| `ID`          |      |      |      |       |
+| `IF`          | DONE |  WIP |      |       |
+| `MEM`         |      |      |      |       |
+| `pc_add`      | DONE | DONE | DONE |       |
+| `reg_file`    | DONE | DONE | DONE |       |
+| `sign_ext`    | DONE | DONE | DONE |       |
+| `WB`          |      |      |      |       |
+| `zero_check`  | DONE | DONE | DONE |       |
