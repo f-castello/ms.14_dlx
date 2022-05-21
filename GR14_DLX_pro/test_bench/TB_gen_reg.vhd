@@ -53,9 +53,12 @@ BEGIN
             DATA_IN <= DATA_IN + '1';
         END LOOP;
         WAIT FOR T / 2;
-        RST <= '0';
-        WAIT FOR T;
         EN <= '0';
+        WAIT FOR 2 * T;
+        EN <= '1';
+        WAIT FOR T;
+        RST <= '0';
+        EN  <= '0';
         WAIT;
     END PROCESS I_O;
 END test;

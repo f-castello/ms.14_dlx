@@ -12,6 +12,7 @@ ENTITY gen_mux41 IS
         sel        : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- selectors
         w, x, y, z : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
         m          : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
+		
     );
 END gen_mux41;
 
