@@ -6,6 +6,7 @@ PACKAGE dlx_utils IS
     CONSTANT NbitShort : NATURAL := 16;
     CONSTANT NbitJump  : NATURAL := 26;
     CONSTANT NbitLong  : NATURAL := 32;
+    CONSTANT RF_ADDR   : NATURAL := 5;
     CONSTANT NPC_GAP   : NATURAL := 4;
     CONSTANT MICRO_N   : NATURAL := 150;
     CONSTANT FUNC_N    : NATURAL := 11;
