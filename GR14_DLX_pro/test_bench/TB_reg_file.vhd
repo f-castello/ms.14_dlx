@@ -29,6 +29,10 @@ ARCHITECTURE test OF TB_reg_file IS
     SIGNAL DATAIN, OUT1, OUT2               : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 
 BEGIN
+    dut : reg_file GENERIC
+    MAP (NbitLong, RF_ADDR) PORT MAP
+    (CLK, RESET, ENABLE, RD1, RD2, WR, ADD_WR, ADD_RD1, ADD_RD2, DATAIN, OUT1, OUT2);
+
     CLOCK : PROCESS IS
     BEGIN
         CLK <= '0';
@@ -36,10 +40,6 @@ BEGIN
         CLK <= '1';
         WAIT FOR T / 2;
     END PROCESS CLOCK;
-
-    dut : reg_file GENERIC
-    MAP (NbitLong, RF_ADDR) PORT MAP
-    (CLK, RESET, ENABLE, RD1, RD2, WR, ADD_WR, ADD_RD1, ADD_RD2, DATAIN, OUT1, OUT2);
 
     I_O : PROCESS IS
     BEGIN

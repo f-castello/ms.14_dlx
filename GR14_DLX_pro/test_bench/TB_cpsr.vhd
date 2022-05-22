@@ -10,20 +10,19 @@ ARCHITECTURE test OF TB_cpsr IS
     COMPONENT cpsr
         PORT
         (
-            clk, rst, en, FL3, FL2, FL1, FL0 : IN STD_LOGIC;
+            clk, rst, ld, FL3, FL2, FL1, FL0 : IN STD_LOGIC;
             N, Z, C, V                       : OUT STD_LOGIC
         );
     END COMPONENT;
 
     CONSTANT T : TIME := Tclk;
 
-    SIGNAL CLK, RST, EN, N, Z, C, V : STD_LOGIC;
+    SIGNAL CLK, RST, LD, N, Z, C, V : STD_LOGIC;
     SIGNAL FL                       : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
 BEGIN
-
     dut : cpsr PORT MAP
-        (CLK, RST, EN, FL(3), FL(2), FL(1), FL(0), N, Z, C, V);
+        (CLK, RST, LD, FL(3), FL(2), FL(1), FL(0), N, Z, C, V);
 
     CLOCK : PROCESS IS
     BEGIN
@@ -36,12 +35,12 @@ BEGIN
     I_O : PROCESS IS
     BEGIN
         RST <= '0';
-        EN  <= '0';
+        LD  <= '0';
         FL  <= (OTHERS => '1');
         WAIT FOR T / 2;
         RST <= '1';
         WAIT FOR T;
-        EN <= '1';
+        LD <= '1';
         FL <= "1000";
         WAIT FOR T;
         FL <= "0100";
@@ -50,10 +49,14 @@ BEGIN
         WAIT FOR T;
         FL <= "0001";
         WAIT FOR T;
-        RST <= '0';
-        FL  <= (OTHERS => '1');
+        LD <= '0';
+        FL <= (OTHERS => '1');
         WAIT FOR T;
-        EN <= '0';
+        LD <= '1';
+        WAIT FOR T;
+        RST <= '0';
+        WAIT FOR T;
+        LD <= '0';
         WAIT;
     END PROCESS I_O;
 END test;
