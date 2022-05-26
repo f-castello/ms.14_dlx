@@ -31,14 +31,14 @@ ARCHITECTURE STRUCTURAL OF IF_STAGE IS
 	SIGNAL PC_OUT_SIG: STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0);
 	SIGNAL ADDER_OUT : STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0);
 	
-	COMPONENT gen_reg_sync IS
+	COMPONENT gen_reg IS
     	GENERIC
     	(
     	    N : NATURAL := NbitLong -- # of bits
     	);
     	PORT
     	(
-    	    clk, rst, en : IN STD_LOGIC;
+    	    clk, rst, ld : IN STD_LOGIC;
     	    data_in      : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
     	    data_out     : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
     	);
@@ -59,31 +59,31 @@ ARCHITECTURE STRUCTURAL OF IF_STAGE IS
 
 BEGIN
 
-	PC: gen_reg_sync GENERIC MAP (
+	PC: gen_reg GENERIC MAP (
 		N=>N_BITS_PC)
 	PORT MAP(
 		clk=>CLK,
 		rst=>RST,
-		en =>IR_LATCH_EN,
+		ld =>IR_LATCH_EN,
 		data_in=>PC_IN,
 		data_out=>PC_OUT_SIG
 	);
 	
-	IR: gen_reg_sync GENERIC MAP (
+	IR: gen_reg GENERIC MAP (
 		N=>N_BITS_INST)
 	PORT MAP(
 		clk=>CLK,
 		rst=> RST,
-		en =>IR_LATCH_EN,
+		ld =>IR_LATCH_EN,
 		data_in=>IR_IN,
 		data_out=>IR_OUT
 	);
-	NPC: gen_reg_sync GENERIC MAP (
+	NPC: gen_reg GENERIC MAP (
 		N=>N_BITS_PC)
 	PORT MAP(
 		clk=>CLK,
 		rst=> RST,
-		en =>NPC_LATCH_EN,
+		ld =>NPC_LATCH_EN,
 		data_in=>ADDER_OUT,
 		data_out=>NPC_OUT
 	);
@@ -94,4 +94,7 @@ BEGIN
     	    data_in  =>PC_OUT_SIG,
     	    data_out =>ADDER_OUT
 	);
+	
+	PC_OUT <= PC_OUT_SIG;
+
 END STRUCTURAL;
