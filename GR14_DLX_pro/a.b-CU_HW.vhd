@@ -16,7 +16,7 @@ ENTITY CU_HW IS
 	PORT
 	(
 		Clk   : IN STD_LOGIC;                              -- Clock
-		Rst   : IN STD_LOGIC;                              -- Reset (Synchronous & Active Low)
+		Rst   : IN STD_LOGIC;                              -- Reset (Asynchronous & Active Low)
 		IR_IN : IN STD_LOGIC_VECTOR(IR_SIZE - 1 DOWNTO 0); -- Instruction Register Word
 
 		-- PIPE STAGE #1: IF
@@ -421,44 +421,42 @@ BEGIN
 	JAL_MUX_SEL <= cw5(CW_SIZE - 17);
 	RF_WR_EN    <= cw5(CW_SIZE - 18);
 
-	CW_PIPE : PROCESS (Clk)
+	CW_PIPE : PROCESS (Rst, Clk)
 	BEGIN
-		IF rising_edge(Clk) THEN
-			IF (Rst = '0') THEN
-				-- control word
-				cw1 <= (OTHERS => '0');
-				cw2 <= (OTHERS => '0');
-				cw3 <= (OTHERS => '0');
-				cw4 <= (OTHERS => '0');
-				cw5 <= (OTHERS => '0');
+		IF (Rst = '0') THEN
+			-- control word
+			cw1 <= (OTHERS => '0');
+			cw2 <= (OTHERS => '0');
+			cw3 <= (OTHERS => '0');
+			cw4 <= (OTHERS => '0');
+			cw5 <= (OTHERS => '0');
 
-				-- ALU
-				ALU_op1 <= nop;
-				ALU_op2 <= nop;
-				ALU_op3 <= nop;
+			-- ALU
+			ALU_op1 <= nop;
+			ALU_op2 <= nop;
+			ALU_op3 <= nop;
 
-				-- FPU
-				FPU_op1 <= nop;
-				FPU_op2 <= nop;
-				FPU_op3 <= nop;
-			ELSE
-				-- control word
-				cw1 <= cw;
-				cw2 <= cw1(CW_SIZE - 3 DOWNTO 0);
-				cw3 <= cw2(CW_SIZE - 6 DOWNTO 0);
-				cw4 <= cw3(CW_SIZE - 11 DOWNTO 0);
-				cw5 <= cw4(CW_SIZE - 15 DOWNTO 0);
+			-- FPU
+			FPU_op1 <= nop;
+			FPU_op2 <= nop;
+			FPU_op3 <= nop;
+		ELSIF rising_edge(Clk) THEN
+			-- control word
+			cw1 <= cw;
+			cw2 <= cw1(CW_SIZE - 3 DOWNTO 0);
+			cw3 <= cw2(CW_SIZE - 6 DOWNTO 0);
+			cw4 <= cw3(CW_SIZE - 11 DOWNTO 0);
+			cw5 <= cw4(CW_SIZE - 15 DOWNTO 0);
 
-				-- ALU
-				ALU_op1 <= ALU_op;
-				ALU_op2 <= ALU_op1;
-				ALU_op3 <= ALU_op2;
+			-- ALU
+			ALU_op1 <= ALU_op;
+			ALU_op2 <= ALU_op1;
+			ALU_op3 <= ALU_op2;
 
-				-- FPU
-				FPU_op1 <= FPU_op;
-				FPU_op2 <= FPU_op1;
-				FPU_op3 <= FPU_op2;
-			END IF;
+			-- FPU
+			FPU_op1 <= FPU_op;
+			FPU_op2 <= FPU_op1;
+			FPU_op3 <= FPU_op2;
 		END IF;
 	END PROCESS CW_PIPE;
 

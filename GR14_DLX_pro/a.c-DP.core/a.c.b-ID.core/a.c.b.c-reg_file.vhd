@@ -26,15 +26,15 @@ ARCHITECTURE INTEGER OF reg_file IS
     SIGNAL REGISTERS : REG_ARRAY; -- internal memory
 
 BEGIN
-    INT_REGS : PROCESS (CLK)
+    INT_REGS : PROCESS (RESET, CLK)
     BEGIN
-        IF rising_edge(CLK) THEN
-            IF (RESET = '0') THEN
-                REGISTERS <= (OTHERS => (OTHERS => '0')); -- wipe internal mem
-                -- ... and disable both output ports
-                OUT1 <= (OTHERS => '0');
-                OUT2 <= (OTHERS => '0');
-            ELSIF (ENABLE = '1') THEN
+        IF (RESET = '0') THEN
+            REGISTERS <= (OTHERS => (OTHERS => '0')); -- wipe internal mem
+            -- ... and disable both output ports
+            OUT1 <= (OTHERS => '0');
+            OUT2 <= (OTHERS => '0');
+        ELSIF rising_edge(CLK) THEN
+            IF (ENABLE = '1') THEN
                 IF (WR = '1') THEN
                     REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN; -- REG(ADW) = DIN
                 END IF;

@@ -11,20 +11,18 @@ END cpsr;
 
 ARCHITECTURE status OF cpsr IS
 BEGIN
-    INT_MEM : PROCESS (clk)
+    INT_MEM : PROCESS (rst, clk)
     BEGIN
-        IF rising_edge(clk) THEN
-            IF (rst = '0') THEN -- synchronous, active-low
-                N <= '0';
-                Z <= '0';
-                C <= '0';
-                V <= '0';
-            ELSIF (ld = '1') THEN -- normal operation
-                N <= FL3;             -- Negative
-                Z <= FL2;             -- Zero
-                C <= FL1;             -- Carry
-                V <= FL0;             -- Overflow
-            END IF;
+        IF (rst = '0') THEN -- asynchronous, active-low
+            N <= '0';
+            Z <= '0';
+            C <= '0';
+            V <= '0';
+        ELSIF rising_edge(clk) AND (ld = '1') THEN -- normal operation
+            N <= FL3;                                  -- Negative
+            Z <= FL2;                                  -- Zero
+            C <= FL1;                                  -- Carry
+            V <= FL0;                                  -- Overflow
         END IF;
     END PROCESS INT_MEM;
 END status;
