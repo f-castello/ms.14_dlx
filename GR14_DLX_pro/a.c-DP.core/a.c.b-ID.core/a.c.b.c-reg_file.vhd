@@ -24,8 +24,11 @@ ARCHITECTURE INTEGER OF reg_file IS
     SUBTYPE REG_ADDR IS NATURAL RANGE 0 TO (2 ** Abits - 1);
     TYPE REG_ARRAY IS ARRAY(REG_ADDR) OF STD_LOGIC_VECTOR(Dbits - 1 DOWNTO 0);
     SIGNAL REGISTERS : REG_ARRAY; -- internal memory
-
+    
+    
 BEGIN
+	REGISTERS(0) <= (OTHERS => '0'); -- reg 0 always 0s
+
     INT_REGS : PROCESS (RESET, CLK)
     BEGIN
         IF (RESET = '0') THEN
@@ -36,7 +39,9 @@ BEGIN
         ELSIF rising_edge(CLK) THEN
             IF (ENABLE = '1') THEN
                 IF (WR = '1') THEN
+                    IF (ADD_WR /= (Abits - 1 DOWNTO 0 => '0')) THEN
                     REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN; -- REG(ADW) = DIN
+                    END IF;
                 END IF;
                 IF (RD1 = '1') THEN
                     IF (ADD_RD1 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
@@ -58,8 +63,8 @@ BEGIN
                 END IF;
             ELSE -- ENABLE = '0'
                 -- just disable both output ports
-                OUT1 <= (OTHERS => '0');
-                OUT2 <= (OTHERS => '0');
+                --OUT1 <= (OTHERS => '0');
+                --OUT2 <= (OTHERS => '0');
             END IF;
         END IF;
     END PROCESS INT_REGS;

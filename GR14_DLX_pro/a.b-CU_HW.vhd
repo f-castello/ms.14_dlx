@@ -27,8 +27,11 @@ ENTITY CU_HW IS
 		RF_RD1_EN     : OUT STD_LOGIC; -- Register File Read 1 Enable
 		RF_RD2_EN     : OUT STD_LOGIC; -- Register File Read 2 Enable
 		DEC_OUTREG_EN : OUT STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
-		IS_I_TYPE     : OUT STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
-
+		IS_I_TYPE     : OUT STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection. 1 IF I-TYPE, 0 OTHERWISE
+		--ADDED SIGNALS
+		RD1		  : OUT STD_LOGIC; --enable reading port 1 of the RF
+		RD2		  : OUT STD_LOGIC; --enable reading port 2 of the RF
+		WR			  : OUT STD_LOGIC; --enable writing port of the RF
 		-- PIPE STAGE #3: EX
 		MUXA_SEL      : OUT STD_LOGIC; -- MUXA Sel
 		MUXB_SEL      : OUT STD_LOGIC; -- MUXB Sel
@@ -47,7 +50,7 @@ ENTITY CU_HW IS
 
 		-- PIPE STAGE #5: WB
 		WB_MUX_SEL  : OUT STD_LOGIC; -- Write Back MUX Sel
-		JAL_MUX_SEL : OUT STD_LOGIC; -- Jump And Link Mux Selector/RF OR Operand
+		JAL_MUX_SEL : OUT STD_LOGIC; -- Jump And Link Mux Selector/RF OR Operand. 1 IF JUMP INST, 0 IF NOT
 		RF_WR_EN    : OUT STD_LOGIC  -- Register File Write Enable
 	);
 END CU_HW;
