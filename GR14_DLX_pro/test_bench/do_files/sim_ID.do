@@ -15,4 +15,4 @@ add wave -position insertpoint  \
 sim:/tb_id/DUT/SING_EXT/data_in
 add wave -position insertpoint  \
 sim:/tb_id/DUT/SING_EXT/data_ext
-run 150 ns
+run 160 ns

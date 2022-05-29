@@ -10,7 +10,7 @@ END TB_ID;
 ARCHITECTURE TEST OF TB_ID IS
 
     TYPE MEM_ARRAY IS ARRAY (0 to 31) OF STD_LOGIC_VECTOR(NbitLong-1 downto 0);
-    CONSTANT RF_COPY : MEM_ARRAY  := 
+    SIGNAL RF_COPY : MEM_ARRAY  := 
     (
         std_logic_vector(to_unsigned(0,NbitLong)),
         std_logic_vector(to_unsigned(101111,NbitLong)),
@@ -144,7 +144,7 @@ BEGIN
         REPORT("Starting simulation");	
 		REPORT("TEST 1:   - RF reset test");	        
         RST_tb              <= '0'; -- Reset registers
-        JAL_MUX_SEL_tb      <= '0'; -- 0 in order to don't mask ADD_RD1
+        JAL_MUX_SEL_tb      <= '0'; -- 0 in order to don't mask ADD_WR
         DEC_OUTREG_EN_tb    <= '1'; -- 1 to enable all pipeline registers
         IS_I_TYPE_tb        <= '0'; -- 0 to select the R_type put it in the WR_ADDR_OUT reg (don't care now)
         RD1_en_tb           <= '1'; -- 1 to enable reading port 1 
@@ -272,6 +272,88 @@ BEGIN
 		SEVERITY failure; 		 
 
 		REPORT("TEST 4 RESULT: SUCCESSFUL");
+
+        
+        --############################ TEST 5  ############################--
+        REPORT("TEST 5: -Writing address in JAL instruction" );
+        -- We write any address in the writing port but it should be masked.
+        JAL_MUX_SEL_tb  <= '1'; -- 1 in order to mask ADD_WR
+        WR_ADDR_IN_tb   <= "10101"; --Any value different form 31 in writing address
+        DATA_IN_tb      <= x"F0E0D0C0";
+        WR_en_tb 	    <= '1';
+        RF_COPY(31)     <= x"F0E0D0C0"; --keeping track of the values in the RF
+        
+        WAIT UNTIL falling_edge(CLK_tb);
+        I_CODE_tb(25 DOWNTO 21) <= std_logic_vector(to_unsigned(31,RF_ADDR)); --Addressing last reg in port 1
+        
+        WAIT UNTIL falling_edge(CLK_tb);
+        ASSERT (REGA_OUT_tb = RF_COPY(31))
+		REPORT " REG A exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(31)))) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) 
+		SEVERITY failure;
+
+		REPORT("TEST 5 RESULT: SUCCESSFUL");
+        
+        --############################ TEST 6  ############################--
+        REPORT("TEST 6: -Writing reg 0    -Reading ports with reading enable = 0" );
+        JAL_MUX_SEL_tb  <= '0'; -- 0 in order to don't mask ADD_WR
+        WR_ADDR_IN_tb   <= "00000";
+        
+        WAIT UNTIL falling_edge(CLK_tb);
+        I_CODE_tb(25 DOWNTO 21) <= std_logic_vector(to_unsigned(0,RF_ADDR)); --Addressing last reg in port 1
+
+        WAIT UNTIL falling_edge(CLK_tb);
+        ASSERT (REGA_OUT_tb = "00000000")
+		REPORT " REG A exp val: " & INTEGER'image(0) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) 
+		SEVERITY failure;
+        -- Reading ports when RD_EN = 0
+        WAIT UNTIL falling_edge(CLK_tb);
+        I_CODE_tb(25 DOWNTO 16) <= std_logic_vector(to_unsigned(5,RF_ADDR))&std_logic_vector(to_unsigned(30,RF_ADDR)); --Addressing different registers
+        RD1_en_tb           <= '0'; -- 0 to disable reading port 1 
+        RD2_en_tb           <= '0'; -- 0 to disable reading port 2
+        WAIT UNTIL falling_edge(CLK_tb);
+        ASSERT (REGA_OUT_tb = "00000000" AND REGB_OUT_tb = "00000000")
+		REPORT " REG A exp val: " & INTEGER'image(0) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B exp val " & INTEGER'image(0) & " REG B obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))  
+		SEVERITY failure;
+        WAIT UNTIL falling_edge(CLK_tb);    
+
+		REPORT("TEST 6 RESULT: SUCCESSFUL");
+
+        --############################ TEST 7  ############################--
+        REPORT("TEST 7: -Reading output registers when enable = 0" );
+        --We expect the registers to keep the value
+        WR_en_tb 	        <= '0'; -- 0 to disable writing port 
+        RD1_en_tb           <= '1'; -- 1 to enable reading port 1 
+        RD2_en_tb           <= '1'; -- 1 to enable reading port 2
+        NPC1_IN_tb 	<= std_logic_vector(to_unsigned(22,N_BITS_PC)); -- Writing any value in NPC1 reg
+        --Here we are mixing I and R type instruction, we read the instruction
+        --considering both types in order to see in which address I am reading in port 2 and which immediate
+        --I am writing (Modifying the reading address modifies the immeddiate) This shouldn't happend.
+        IS_I_TYPE_tb <= '1'; --I-TYPE INSTRUCTION, 16 bits sign extension and selecting I-type writing address from the instruction
+		I_CODE_tb(25 DOWNTO 0) <=  "10001"&"10101"&"00011"&"101"&x"00"; --Rd Port1 = d17,WR_ADDR = d21 RD PORT2 = d21, Imm =0x3500 or d13568 (positive)
+		      
+        WAIT UNTIL falling_edge(CLK_tb);
+        DEC_OUTREG_EN_tb    <= '0'; -- 0 to disable all pipeline registers
+        I_CODE_tb(25 DOWNTO 0) <=  "11101"&"11000"&"11100"&"011"&x"0F"; --Changing all input values (output values should not change)
+        
+        ASSERT (REGA_OUT_tb = RF_COPY(17) AND REGB_OUT_tb = RF_COPY(21))
+		REPORT " REG A exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(17)))) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B exp val " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(21)))) & " REG B obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))  
+		SEVERITY failure;
+
+        ASSERT (NPC1_out_tb = std_logic_vector(to_unsigned(22,N_BITS_PC)) AND WR_ADDR_OUT_tb = std_logic_vector(to_unsigned(21,N_BITS_PC)))
+		REPORT " NPC1 exp val: " & INTEGER'image(22) & " NPC1 obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC1_out_tb))) & " WR ADDR OUT exp val " & INTEGER'image(21) & " WR ADDR OUT obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(WR_ADDR_OUT_tb)))
+		SEVERITY failure;  
+
+        aux := (31 downto 16 => '0') &"00011101"&  x"00";
+        ASSERT (REGIMM_OUT_tb = aux)
+		REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
+		SEVERITY failure; 		 
+		
+		REPORT("TEST 7 RESULT: SUCCESSFUL");
+
+
+		REPORT " End of simulation";
+        
+
 
         WAIT;
     END PROCESS;

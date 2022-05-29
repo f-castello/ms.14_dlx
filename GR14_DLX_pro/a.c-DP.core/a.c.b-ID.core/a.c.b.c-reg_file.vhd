@@ -44,7 +44,9 @@ BEGIN
                     END IF;
                 END IF;
                 IF (RD1 = '1') THEN
-                    IF (ADD_RD1 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
+					IF (ADD_RD1 = (Abits - 1 DOWNTO 0 => '0')) THEN					
+				        OUT1 <= REGISTERS(0);            
+					ELSIF (ADD_RD1 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
                         OUT1 <= DATAIN;                         -- bypass register
                     ELSE
                         OUT1 <= REGISTERS(to_integer(unsigned(ADD_RD1))); -- DOUT1 = REG(ADR1)
@@ -53,7 +55,9 @@ BEGIN
                     OUT1 <= (OTHERS => '0'); -- disable output port
                 END IF;
                 IF (RD2 = '1') THEN
-                    IF (ADD_RD2 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
+					IF (ADD_RD2 = (Abits - 1 DOWNTO 0 => '0')) THEN					
+				        OUT2 <= REGISTERS(0);            
+                    ELSIF (ADD_RD2 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
                         OUT2 <= DATAIN;                         -- bypass register
                     ELSE
                         OUT2 <= REGISTERS(to_integer(unsigned(ADD_RD2))); -- DOUT2 = REG(ADR2)
