@@ -20,7 +20,7 @@ ENTITY EXE_STAGE IS
 		FLAGS_RST     : IN STD_LOGIC; -- Current Program Status Register Reset
 		EQ_COND       : IN STD_LOGIC; -- Branch if (not) Equal to Zero
 		JUMP_EN       : IN STD_LOGIC -- Jump Enable Signal for Cond Selection
-		ALU_OPCODE    : IN TYPE_OP; -- to decide
+		ALU_OPCODE    : IN ALU_MSG;  -- Custom Type for ALU Ops
 		-- Data ports
 		NPC2_IN 	   : IN STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0); -- NPC2 reg input
 		NPC_MUXA_IN    : IN STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0); -- Input 0 of the first multiplexer
@@ -108,9 +108,9 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 	COMPONENT ALU IS
 	GENERIC (N : INTEGER := NbitLong);
 	PORT (
-		FUNC             : IN TYPE_OP;
+		FUNC             : IN ALU_MSG;
 		DATA1, DATA2     : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-		ZERO, OVF, CARRY : OUT STD_LOGIC; -- essential status flags for unsigned operation
+		NEG, ZERO, OVF, CARRY : OUT STD_LOGIC; -- essential status flags for unsigned operation
 		OUTALU           : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
 	);
 	END COMPONENT;
@@ -161,6 +161,7 @@ BEGIN
 		FUNC     => ALU_OPCODE,
 		DATA1    => MUXA_OUT_INT,
 		DATA2    => MUXB_OUT_INT,
+		NEG      => NEG_INT,
 		ZERO     => ZERO_INT,
 		OVF      => OVF_INT,
 		OUTALU   => ALU_OUT_INT
