@@ -20,7 +20,7 @@ END sign_ext;
 ARCHITECTURE datafl OF sign_ext IS
 BEGIN
     data_ext <= (N_OUT - N_IN1 - 1 DOWNTO 0 => data_in(N_IN1 - 1)) -- extend reduced-length MSB
-        & data_in (N_IN1 - 1 DOWNTO 0) WHEN ctrl_in = '1'                                   -- select N_IN1
+        & data_in (N_IN1 - 1 DOWNTO 0) WHEN ctrl_in = '1'              -- select N_IN1
         ELSE                                                           -- select N_IN0
         (N_OUT - N_IN0 - 1 DOWNTO 0 => data_in(N_IN0 - 1)) & data_in;  -- extend actual MSB
 END datafl;

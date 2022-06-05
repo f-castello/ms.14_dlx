@@ -29,9 +29,9 @@ ENTITY CU_HW IS
 		DEC_OUTREG_EN : OUT STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
 		IS_I_TYPE     : OUT STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection. 1 IF I-TYPE, 0 OTHERWISE
 		--ADDED SIGNALS
-		RD1		  : OUT STD_LOGIC; --enable reading port 1 of the RF
-		RD2		  : OUT STD_LOGIC; --enable reading port 2 of the RF
-		WR			  : OUT STD_LOGIC; --enable writing port of the RF
+		RD1 : OUT STD_LOGIC; --enable reading port 1 of the RF
+		RD2 : OUT STD_LOGIC; --enable reading port 2 of the RF
+		WR  : OUT STD_LOGIC; --enable writing port of the RF
 		-- PIPE STAGE #3: EX
 		MUXA_SEL      : OUT STD_LOGIC; -- MUXA Sel
 		MUXB_SEL      : OUT STD_LOGIC; -- MUXB Sel
