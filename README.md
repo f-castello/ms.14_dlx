@@ -24,17 +24,17 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet):
 | DESIGN        | VHDL | _TB_ |  SIM | SYNTH |
 |---------------|:----:|:----:|:----:|:-----:|
-| `alu`         |      |      |      |       |
+| `alu`         |  WIP |      |      |       |
 | `cond_branch` | DONE | DONE | DONE |       |
 | `cpsr`        | DONE | DONE | DONE |       |
 | `CU_HW`       |  WIP |      |      |       |
 | `DLX`         |      |      |      |       |
 | `DP`          |      |      |      |       |
-| `EXE`         |      |      |      |       |
+| `EXE`         |  WIP |      |      |       |
 | `gen_mux_21`  | DONE | DONE | DONE |       |
 | `gen_mux_41`  | DONE | DONE | DONE |       |
 | `gen_reg`     | DONE | DONE | DONE |       |
-| `ID`          |      |      |      |       |
+| `ID`          | DONE |  WIP |      |       |
 | `IF`          | DONE |  WIP |      |       |
 | `MEM`         |      |      |      |       |
 | `pc_add`      | DONE | DONE | DONE |       |
