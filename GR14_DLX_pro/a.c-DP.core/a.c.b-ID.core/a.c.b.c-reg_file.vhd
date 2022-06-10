@@ -27,7 +27,7 @@ ARCHITECTURE INTEGER OF reg_file IS
 BEGIN
     REGISTERS(0) <= (OTHERS => '0'); -- r0 is always zero
 
-    INT_REGS : PROCESS (RESET, CLK)
+    PROCESS (RESET, CLK)
     BEGIN
         IF (RESET = '0') THEN
             REGISTERS <= (OTHERS => (OTHERS => '0')); -- wipe internal mem
@@ -61,7 +61,12 @@ BEGIN
                 ELSE
                     OUT2 <= (OTHERS => '0'); -- disable output port
                 END IF;
+            ELSE -- ENABLE = '0'
+                -- keep the internal data structure
+                -- just disable output ports
+                OUT1 <= (OTHERS => '0');
+                OUT2 <= (OTHERS => '0');
             END IF;
         END IF;
-    END PROCESS INT_REGS;
+    END PROCESS;
 END INTEGER;

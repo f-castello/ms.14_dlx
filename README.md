@@ -34,11 +34,11 @@ Refer to the table below to record the general progress of this project (note th
 | `gen_mux_21`  | DONE | DONE | DONE |       |
 | `gen_mux_41`  | DONE | DONE | DONE |       |
 | `gen_reg`     | DONE | DONE | DONE |       |
-| `ID`          | DONE |  WIP |      |       |
-| `IF`          | DONE |  WIP |      |       |
+| `ID`          | DONE | DONE | DONE |       |
+| `IF`          | DONE | DONE | DONE |       |
 | `MEM`         |      |      |      |       |
 | `pc_add`      | DONE | DONE | DONE |       |
 | `reg_file`    | DONE | DONE | DONE |       |
-| `sign_ext`    | DONE | DONE | DONE |       |
+| `sign_ext`    | DONE | DONE |  WIP |       |
 | `WB`          |      |      |      |       |
 | `zero_check`  | DONE | DONE | DONE |       |
