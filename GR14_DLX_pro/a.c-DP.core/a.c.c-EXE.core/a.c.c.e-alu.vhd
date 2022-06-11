@@ -10,7 +10,7 @@ ENTITY ALU IS
 	(
 		ALU_OPCODE            : IN ALU_MSG;
 		DATA1, DATA2          : IN STD_LOGIC_VECTOR(0 TO N - 1);
-		NEG, ZERO, OVF, CARRY : OUT STD_LOGIC;
+		NEG, ZERO, CARRY, OVF : OUT STD_LOGIC;
 		OUTALU                : OUT STD_LOGIC_VECTOR(0 TO N - 1)
 	);
 END ALU;
@@ -20,24 +20,40 @@ BEGIN
 	PROCESS (ALU_OPCODE, DATA1, DATA2)
 		VARIABLE TMP : STD_LOGIC_VECTOR(0 TO N); -- temporary result on N + 1 bits
 	BEGIN
-		TMP := (OTHERS => '0'); -- default value
+		-- default values
+		NEG   <= '0';
+		ZERO  <= '0';
+		CARRY <= '0';
+		OVF   <= '0';
+		TMP := (OTHERS => '0');
+
 		CASE ALU_OPCODE IS
 			WHEN I_addui | I_jr | I_jalr | I_lbu | I_lhu | R_addu =>
 				TMP := STD_LOGIC_VECTOR(UNSIGNED(DATA1) + UNSIGNED(DATA2));
+				OVF <= TMP(N - 1);
 			WHEN J_j | J_jal | I_addi | I_lb | I_lh | I_lw | I_sb | I_sh | I_sw | R_add =>
 				TMP := STD_LOGIC_VECTOR(SIGNED(DATA1) + SIGNED(DATA2));
+				NEG <= TMP(N - 2);
+				OVF <= (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
 			WHEN I_beqz              =>
 				IF (DATA2 = (DATA2'RANGE => '0')) THEN
 					TMP := STD_LOGIC_VECTOR(SIGNED(DATA1) + SIGNED(DATA2));
+					NEG <= TMP(N - 2);
+					OVF <= (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
 				END IF;
 			WHEN I_bnez               =>
 				IF (DATA2 /= (DATA2'RANGE => '0')) THEN
 					TMP := STD_LOGIC_VECTOR(SIGNED(DATA1) + SIGNED(DATA2));
+					NEG <= TMP(N - 2);
+					OVF <= (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
 				END IF;
 			WHEN I_subui | R_subu =>
 				TMP := STD_LOGIC_VECTOR(UNSIGNED(DATA1) - UNSIGNED(DATA2));
+				OVF <= TMP(N - 1);
 			WHEN I_subi | R_sub =>
 				TMP := STD_LOGIC_VECTOR(SIGNED(DATA1) - SIGNED(DATA2));
+				NEG <= TMP(N - 2);
+				OVF <= (DATA1(N - 1) AND DATA2(N - 1) AND NOT TMP(N - 1));
 			WHEN I_andi | R_and =>
 				TMP(0 TO N - 1) := DATA1 AND DATA2;
 			WHEN I_ori | R_or =>
@@ -45,13 +61,14 @@ BEGIN
 			WHEN I_xori | R_xor =>
 				TMP(0 TO N - 1) := DATA1 XOR DATA2;
 			WHEN I_lhi =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(DATA1), NbitShort));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(DATA1), (N / 2)));
 			WHEN I_slli | R_sll =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2(27 TO 31)))));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2(N - 5 TO N - 1)))));
 			WHEN I_srli | R_srl =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_RIGHT(UNSIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2(27 TO 31)))));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_RIGHT(UNSIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2(N - 5 TO N - 1)))));
 			WHEN I_srai | R_sra =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_RIGHT(SIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2)));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_RIGHT(SIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2))));
+				NEG <= TMP(N - 2);
 			WHEN I_seqi | R_seq =>
 				IF (SIGNED(DATA1) = SIGNED(DATA2)) THEN
 					TMP(0) := '1';
@@ -92,15 +109,21 @@ BEGIN
 				IF (UNSIGNED(DATA1) >= UNSIGNED(DATA2)) THEN
 					TMP(0) := '1';
 				END IF;
-				-- MULTIPLICATIONS ?!
+			WHEN R_mult =>
+				TMP := STD_LOGIC_VECTOR(SIGNED(DATA1(0 TO (N / 2) - 1)) * SIGNED(DATA2(0 TO (N / 2) - 1)));
+				NEG <= TMP(N - 2);
+				OVF <= (DATA1(N - 1) AND DATA2(N - 1) AND NOT TMP(N - 1)) OR (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
+			WHEN R_multu =>
+				TMP := STD_LOGIC_VECTOR(UNSIGNED(DATA1(0 TO (N / 2) - 1)) * UNSIGNED(DATA2(0 TO (N / 2) - 1)));
+				OVF <= TMP(N - 1);
 			WHEN OTHERS => NULL; -- faults + NOP
 		END CASE;
+
 		IF (TMP = (TMP'RANGE => '0')) THEN
 			ZERO <= '1';
-		ELSE
-			ZERO <= '0';
 		END IF;
-		-- Reminder: CPSR FLAGS management.
-		OUTALU <= TMP(N - 1 DOWNTO 0); -- actual result assignment
+		CARRY <= TMP(N - 1);
+
+		OUTALU <= TMP(N - 1 DOWNTO 0); -- result assignment
 	END PROCESS;
 END ARITH;

@@ -47,6 +47,8 @@ PACKAGE dlx_utils IS
         R_sgtu,
         R_sleu,
         R_sgeu,
+        R_mult,
+        R_multu,
         J_j,
         J_jal,
         I_beqz,
