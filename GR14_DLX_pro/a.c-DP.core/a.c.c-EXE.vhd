@@ -126,7 +126,7 @@ BEGIN
 		data_out => NPC2_OUT
 	);
 
-	ZERO? : zero_check GENERIC MAP (N => N_BITS_DATA)
+	ZERO : zero_check GENERIC MAP (N => N_BITS_DATA)
 	PORT MAP(
 		data_in  => REGA_MUXA_IN,
 		ctrl_out => BRANCH_TAKEN
@@ -167,7 +167,7 @@ BEGIN
 		OUTALU   => ALU_OUT_INT
 	);
 
-	ALU_OUTPUT : : gen_reg GENERIC MAP (N => N_BITS_DATA)
+	ALU_OUTPUT : gen_reg GENERIC MAP (N => N_BITS_DATA)
 	PORT MAP(
 		clk  	 => CLK,
 		rst  	 => RST,
