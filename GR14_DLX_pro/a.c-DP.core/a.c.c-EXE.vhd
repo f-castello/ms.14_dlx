@@ -22,35 +22,25 @@ ENTITY EXE_STAGE IS
 		JUMP_EN       : IN STD_LOGIC  -- Jump Enable Signal for Cond Selection
 		ALU_OPCODE    : IN ALU_MSG;   -- Custom Type for ALU Ops
 		-- Data ports
-		NPC2_IN      : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);    -- NPC2 reg input
-		NPC_MUXA_IN  : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);    -- Input 0 of the first multiplexer
-		REGA_MUXA_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the first multiplexer
-		REGB_MUXB_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the second multiplexer
-		IMM_MUXB_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the second multiplexer
-		IR2_IN       : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);      -- IR2 reg input
-		NPC2_OUT     : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);   -- NPC2 reg output
-		COND_OUT     : OUT STD_LOGIC;                                  -- Output of the branch_cond logic
-		ALU_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data of the ALU
-		IR2_OUT      : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0)      -- IR2 reg output
-		N_FLAG       : OUT STD_LOGIC;                                  -- Negative condition code flag ALU 
-		Z_FLAG       : OUT STD_LOGIC;                                  -- Zero condition code flag ALU 
-		C_FLAG       : OUT STD_LOGIC;                                  -- Carry condition code flag ALU 
-		V_FLAG       : OUT STD_LOGIC                                   -- Overflow condition code flag ALU 
+		NPC2_IN      : IN STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1);    -- NPC2 reg input
+		NPC_MUXA_IN  : IN STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1);    -- Input 0 of the first multiplexer
+		REGA_MUXA_IN : IN STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);  -- Input 1 of the first multiplexer
+		REGB_MUXB_IN : IN STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);  -- Input 0 of the second multiplexer
+		IMM_MUXB_IN  : IN STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);  -- Input 1 of the second multiplexer
+		IR2_IN       : IN STD_LOGIC_VECTOR(0 TO RF_ADDR - 1);      -- IR2 reg input
+		NPC2_OUT     : OUT STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1);   -- NPC2 reg output
+		COND_OUT     : OUT STD_LOGIC;                              -- Output of the branch_cond logic
+		ALU_OUT      : OUT STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1); -- Output data of the ALU
+		IR2_OUT      : OUT STD_LOGIC_VECTOR(0 TO RF_ADDR - 1)      -- IR2 reg output
+		N_FLAG       : OUT STD_LOGIC;                              -- Negative condition code flag ALU 
+		Z_FLAG       : OUT STD_LOGIC;                              -- Zero condition code flag ALU 
+		C_FLAG       : OUT STD_LOGIC;                              -- Carry condition code flag ALU 
+		V_FLAG       : OUT STD_LOGIC                               -- Overflow condition code flag ALU 
 	);
 
 END EXE_STAGE;
 
 ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
-
-	SIGNAL BRANCH_TAKEN : STD_LOGIC;
-	SIGNAL MUXA_OUT_INT : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-	SIGNAL MUXB_OUT_INT : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-	SIGNAL ALU_OUT_INT  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-	SIGNAL NEG_INT      : STD_LOGIC;
-	SIGNAL ZERO_INT     : STD_LOGIC;
-	SIGNAL OVF_INT      : STD_LOGIC;
-	SIGNAL CARRY_INT    : STD_LOGIC;
-
 	COMPONENT gen_reg IS
 		GENERIC
 		(
@@ -59,11 +49,10 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		PORT
 		(
 			clk, rst, ld : IN STD_LOGIC;
-			data_in      : IN STD_LOGIC_VECTOR(0 to N - 1);
-			data_out     : OUT STD_LOGIC_VECTOR(0 to N - 1)
+			data_in      : IN STD_LOGIC_VECTOR(0 TO N - 1);
+			data_out     : OUT STD_LOGIC_VECTOR(0 TO N - 1)
 		);
 	END COMPONENT;
-
 	COMPONENT gen_mux21 IS
 		GENERIC
 		(
@@ -72,11 +61,10 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		PORT
 		(
 			sel  : IN STD_LOGIC; -- selector
-			x, y : IN STD_LOGIC_VECTOR(0 to N - 1);
-			m    : OUT STD_LOGIC_VECTOR(0 to N - 1)
+			x, y : IN STD_LOGIC_VECTOR(0 TO N - 1);
+			m    : OUT STD_LOGIC_VECTOR(0 TO N - 1)
 		);
 	END COMPONENT;
-
 	COMPONENT zero_check IS
 		GENERIC
 		(
@@ -84,11 +72,10 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		);
 		PORT
 		(
-			data_in  : IN STD_LOGIC_VECTOR(0 to N - 1);
+			data_in  : IN STD_LOGIC_VECTOR(0 TO N - 1);
 			ctrl_out : OUT STD_LOGIC
 		);
 	END COMPONENT;
-
 	COMPONENT cond_branch IS
 		PORT
 		(
@@ -104,7 +91,6 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 			N, Z, C, V                       : OUT STD_LOGIC
 		);
 	END COMPONENT;
-
 	COMPONENT ALU IS
 		GENERIC
 			(N : INTEGER := NbitLong);
@@ -117,8 +103,16 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		);
 	END COMPONENT;
 
-BEGIN
+	SIGNAL BRANCH_TAKEN : STD_LOGIC;
+	SIGNAL MUXA_OUT_INT : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
+	SIGNAL MUXB_OUT_INT : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
+	SIGNAL ALU_OUT_INT  : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
+	SIGNAL NEG_INT      : STD_LOGIC;
+	SIGNAL ZERO_INT     : STD_LOGIC;
+	SIGNAL OVF_INT      : STD_LOGIC;
+	SIGNAL CARRY_INT    : STD_LOGIC;
 
+BEGIN
 	NPC2 : gen_reg GENERIC
 	MAP (N => N_BITS_PC)
 	PORT MAP
