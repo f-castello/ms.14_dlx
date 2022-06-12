@@ -12,15 +12,15 @@ ENTITY sign_ext IS
     PORT
     (
         ctrl_in  : IN STD_LOGIC;
-        data_in  : IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
-        data_ext : OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
+        data_in  : IN STD_LOGIC_VECTOR(0 TO N_IN0 - 1);
+        data_ext : OUT STD_LOGIC_VECTOR(0 TO N_OUT - 1)
     );
 END sign_ext;
 
 ARCHITECTURE datafl OF sign_ext IS
 BEGIN
-    data_ext <= (N_OUT - N_IN1 - 1 DOWNTO 0 => data_in(N_IN1 - 1)) -- extend reduced-length MSB
-        & data_in (N_IN1 - 1 DOWNTO 0) WHEN ctrl_in = '1'              -- select N_IN1
-        ELSE                                                           -- select N_IN0
-        (N_OUT - N_IN0 - 1 DOWNTO 0 => data_in(N_IN0 - 1)) & data_in;  -- extend actual MSB
+    data_ext <= (0 TO N_OUT - N_IN1 - 1 => data_in(N_IN1 - 1)) -- extend reduced-length MSB
+        & data_in (0 TO N_IN1 - 1) WHEN ctrl_in = '1'              -- select N_IN1
+        ELSE                                                       -- select N_IN0
+        (0 TO N_OUT - N_IN0 - 1 => data_in(N_IN0 - 1)) & data_in;  -- extend actual MSB
 END datafl;

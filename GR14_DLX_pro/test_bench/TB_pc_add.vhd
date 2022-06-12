@@ -15,8 +15,8 @@ ARCHITECTURE test OF TB_pc_add IS
         );
         PORT
         (
-            data_in  : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-            data_out : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
+            data_in  : IN STD_LOGIC_VECTOR(0 TO N - 1);
+            data_out : OUT STD_LOGIC_VECTOR(0 TO N - 1)
         );
     END COMPONENT;
 

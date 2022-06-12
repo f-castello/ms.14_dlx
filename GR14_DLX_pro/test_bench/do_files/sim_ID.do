@@ -5,7 +5,7 @@ vcom -reportprogress 300 -work work /home/ms22.14/GR14_DLX_pro/a.c-DP.core/a.c.b
 vcom -reportprogress 300 -work work /home/ms22.14/GR14_DLX_pro/a.c-DP.core/a.c.b-ID.core/a.c.b.c-reg_file.vhd
 vcom -reportprogress 300 -work work /home/ms22.14/GR14_DLX_pro/a.c-DP.core/a.c.b-ID.vhd
 vcom -reportprogress 300 -work work /home/ms22.14/GR14_DLX_pro/test_bench/TB_ID.vhd
-vsim -t 10ps work.cfg_test_id
+vsim -t 10ps work.tb_id
 add wave *
 add wave -position insertpoint  \
 sim:/tb_id/DUT/RF/ADD_WR

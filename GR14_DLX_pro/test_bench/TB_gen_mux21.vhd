@@ -15,13 +15,13 @@ ARCHITECTURE test OF TB_gen_mux21 IS
         PORT
         (
             sel  : IN STD_LOGIC;
-            x, y : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-            m    : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
+            x, y : IN STD_LOGIC_VECTOR(0 TO N - 1);
+            m    : OUT STD_LOGIC_VECTOR(0 TO N - 1)
         );
     END COMPONENT;
 
     SIGNAL SEL     : STD_LOGIC;
-    SIGNAL X, Y, M : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+    SIGNAL X, Y, M : STD_LOGIC_VECTOR(0 TO NbitLong - 1);
 
 BEGIN
     dut : gen_mux21 GENERIC

@@ -3,7 +3,7 @@ vcom -reportprogress 300 -work work /home/ms22.14/ms.14_dlx/GR14_DLX_pro/a.c-DP.
 vcom -reportprogress 300 -work work /home/ms22.14/ms.14_dlx/GR14_DLX_pro/a.c-DP.core/test/a.c.a.b-pc_add.vhd 
 vcom -reportprogress 300 -work work /home/ms22.14/ms.14_dlx/GR14_DLX_pro/a.c-DP.core/test/a.c.a-IF.vhd
 vcom -reportprogress 300 -work work /home/ms22.14/ms.14_dlx/GR14_DLX_pro/a.c-DP.core/test/TB_IF.vhd
-vsim -t 10ps work.cfg_test_if
+vsim -t 10ps work.tb_if
 add wave *
 add wave -position insertpoint  \
 sim:/tb_if/IR_MEM_VALS

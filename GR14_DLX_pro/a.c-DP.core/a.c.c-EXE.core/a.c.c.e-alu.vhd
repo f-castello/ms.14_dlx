@@ -61,13 +61,13 @@ BEGIN
 			WHEN I_xori | R_xor =>
 				TMP(0 TO N - 1) := DATA1 XOR DATA2;
 			WHEN I_lhi =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(DATA1), (N / 2)));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(shift_left(UNSIGNED(DATA1), (N / 2)));
 			WHEN I_slli | R_sll =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2(N - 5 TO N - 1)))));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(shift_left(UNSIGNED(DATA1), to_integer(UNSIGNED(DATA2(N - 5 TO N - 1)))));
 			WHEN I_srli | R_srl =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_RIGHT(UNSIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2(N - 5 TO N - 1)))));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(shift_right(UNSIGNED(DATA1), to_integer(UNSIGNED(DATA2(N - 5 TO N - 1)))));
 			WHEN I_srai | R_sra =>
-				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(SHIFT_RIGHT(SIGNED(DATA1), TO_INTEGER(UNSIGNED(DATA2))));
+				TMP(0 TO N - 1) := STD_LOGIC_VECTOR(shift_right(SIGNED(DATA1), to_integer(UNSIGNED(DATA2))));
 				NEG <= TMP(N - 2);
 			WHEN I_seqi | R_seq =>
 				IF (SIGNED(DATA1) = SIGNED(DATA2)) THEN

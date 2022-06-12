@@ -15,9 +15,9 @@ ENTITY CU_HW IS
 	);
 	PORT
 	(
-		Clk   : IN STD_LOGIC;                              -- Clock
-		Rst   : IN STD_LOGIC;                              -- Reset (Asynchronous & Active Low)
-		IR_IN : IN STD_LOGIC_VECTOR(IR_SIZE - 1 DOWNTO 0); -- Instruction Register Word
+		Clk   : IN STD_LOGIC;                          -- Clock
+		Rst   : IN STD_LOGIC;                          -- Reset (Asynchronous & Active Low)
+		IR_IN : IN STD_LOGIC_VECTOR(0 TO IR_SIZE - 1); -- Instruction Register Word
 
 		-- PIPE STAGE #1: IF
 		IR_LATCH_EN  : OUT STD_LOGIC; -- Instruction Register Latch Enable
@@ -56,7 +56,7 @@ ENTITY CU_HW IS
 END CU_HW;
 
 ARCHITECTURE CONTROL OF CU_HW IS
-	TYPE MICRO_MEM IS ARRAY (NATURAL RANGE 0 TO MICRO_SIZE - 1) OF STD_LOGIC_VECTOR(CW_SIZE - 1 DOWNTO 0);
+	TYPE MICRO_MEM IS ARRAY (NATURAL RANGE 0 TO MICRO_SIZE - 1) OF STD_LOGIC_VECTOR(0 TO CW_SIZE - 1);
 	-- all invalid/not (yet) implemented entries will automatically get resolved to a NOP
 	SIGNAL cw_code : MICRO_MEM := (
 		-- +---------------------+----------+---------+--------+------+-----------+
@@ -364,17 +364,17 @@ ARCHITECTURE CONTROL OF CU_HW IS
 		-- +---------------------+----------+---------+--------+------+-----------+
 	);
 
-	SIGNAL IR_opcode  : STD_LOGIC_VECTOR(OPCODE_SIZE - 1 DOWNTO 0); -- Op Code field
-	SIGNAL int_opcode : NATURAL;                                    -- IR_opcode -> [integer type]
-	SIGNAL IR_func    : STD_LOGIC_VECTOR(FUNC_SIZE DOWNTO 0);       -- Func Field
-	SIGNAL int_func   : NATURAL;                                    -- IR_func -> [integer type]
+	SIGNAL IR_opcode  : STD_LOGIC_VECTOR(0 TO OPCODE_SIZE - 1); -- Op Code field
+	SIGNAL int_opcode : NATURAL;                                -- IR_opcode -> [integer type]
+	SIGNAL IR_func    : STD_LOGIC_VECTOR(0 TO FUNC_SIZE);       -- Func Field
+	SIGNAL int_func   : NATURAL;                                -- IR_func -> [integer type]
 
-	SIGNAL cw  : STD_LOGIC_VECTOR(CW_SIZE - 1 DOWNTO 0);  -- full control word
-	SIGNAL cw1 : STD_LOGIC_VECTOR(CW_SIZE - 1 DOWNTO 0);  -- first stage cw
-	SIGNAL cw2 : STD_LOGIC_VECTOR(CW_SIZE - 3 DOWNTO 0);  -- second stage cw
-	SIGNAL cw3 : STD_LOGIC_VECTOR(CW_SIZE - 7 DOWNTO 0);  -- third stage cw
-	SIGNAL cw4 : STD_LOGIC_VECTOR(CW_SIZE - 13 DOWNTO 0); -- fourth stage cw
-	SIGNAL cw5 : STD_LOGIC_VECTOR(CW_SIZE - 16 DOWNTO 0); -- fifth stage cw
+	SIGNAL cw  : STD_LOGIC_VECTOR(0 TO CW_SIZE - 1);  -- full control word
+	SIGNAL cw1 : STD_LOGIC_VECTOR(0 TO CW_SIZE - 1);  -- first stage cw
+	SIGNAL cw2 : STD_LOGIC_VECTOR(0 TO CW_SIZE - 3);  -- second stage cw
+	SIGNAL cw3 : STD_LOGIC_VECTOR(0 TO CW_SIZE - 7);  -- third stage cw
+	SIGNAL cw4 : STD_LOGIC_VECTOR(0 TO CW_SIZE - 13); -- fourth stage cw
+	SIGNAL cw5 : STD_LOGIC_VECTOR(0 TO CW_SIZE - 16); -- fifth stage cw
 
 	SIGNAL ALU_op  : ALU_MSG; -- ALU Op Code
 	SIGNAL ALU_op1 : ALU_MSG; -- delay: 1 cc
@@ -388,10 +388,10 @@ ARCHITECTURE CONTROL OF CU_HW IS
 
 BEGIN
 	-- parse fields of interest from input IR
-	IR_opcode  <= IR_IN(IR_SIZE - 1 DOWNTO IR_SIZE - OPCODE_SIZE);
-	int_opcode <= to_integer(unsigned(IR_opcode));
-	IR_func    <= IR_IN(FUNC_SIZE - 1 DOWNTO 0);
-	int_func   <= to_integer(unsigned(IR_func));
+	IR_opcode  <= IR_IN(IR_SIZE - OPCODE_SIZE TO IR_SIZE - 1);
+	int_opcode <= to_integer(UNSIGNED(IR_opcode));
+	IR_func    <= IR_IN(0 TO FUNC_SIZE - 1);
+	int_func   <= to_integer(UNSIGNED(IR_func));
 
 	-- stage one control signals
 	IR_LATCH_EN  <= cw1(CW_SIZE - 1);
@@ -446,10 +446,10 @@ BEGIN
 		ELSIF rising_edge(Clk) THEN
 			-- control word
 			cw1 <= cw;
-			cw2 <= cw1(CW_SIZE - 3 DOWNTO 0);
-			cw3 <= cw2(CW_SIZE - 6 DOWNTO 0);
-			cw4 <= cw3(CW_SIZE - 11 DOWNTO 0);
-			cw5 <= cw4(CW_SIZE - 15 DOWNTO 0);
+			cw2 <= cw1(0 TO CW_SIZE - 3);
+			cw3 <= cw2(0 TO CW_SIZE - 6);
+			cw4 <= cw3(0 TO CW_SIZE - 11);
+			cw5 <= cw4(0 TO CW_SIZE - 15);
 
 			-- ALU
 			ALU_op1 <= ALU_op;

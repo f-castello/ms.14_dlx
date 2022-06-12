@@ -59,8 +59,8 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		PORT
 		(
 			clk, rst, ld : IN STD_LOGIC;
-			data_in      : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-			data_out     : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
+			data_in      : IN STD_LOGIC_VECTOR(0 to N - 1);
+			data_out     : OUT STD_LOGIC_VECTOR(0 to N - 1)
 		);
 	END COMPONENT;
 
@@ -72,8 +72,8 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		PORT
 		(
 			sel  : IN STD_LOGIC; -- selector
-			x, y : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
-			m    : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
+			x, y : IN STD_LOGIC_VECTOR(0 to N - 1);
+			m    : OUT STD_LOGIC_VECTOR(0 to N - 1)
 		);
 	END COMPONENT;
 
@@ -84,7 +84,7 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		);
 		PORT
 		(
-			data_in  : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+			data_in  : IN STD_LOGIC_VECTOR(0 to N - 1);
 			ctrl_out : OUT STD_LOGIC
 		);
 	END COMPONENT;

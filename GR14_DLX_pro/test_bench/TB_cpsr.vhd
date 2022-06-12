@@ -18,7 +18,7 @@ ARCHITECTURE test OF TB_cpsr IS
     CONSTANT T : TIME := Tclk;
 
     SIGNAL CLK, RST, LD, N, Z, C, V : STD_LOGIC;
-    SIGNAL FL                       : STD_LOGIC_VECTOR(3 DOWNTO 0);
+    SIGNAL FL                       : STD_LOGIC_VECTOR(0 TO 3);
 
 BEGIN
     dut : cpsr PORT MAP
