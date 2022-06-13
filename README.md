@@ -24,7 +24,7 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet):
 | DESIGN        | VHDL | _TB_ |  SIM | SYNTH |
 |---------------|:----:|:----:|:----:|:-----:|
-| `alu`         | DONE |      |      |       |
+| `alu`         | DONE |  WIP |      |       |
 | `cond_branch` | DONE | DONE | DONE |       |
 | `cpsr`        | DONE | DONE | DONE |       |
 | `CU_HW`       |  WIP |      |      |       |
