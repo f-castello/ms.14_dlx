@@ -1,0 +1,37 @@
+ALU TESTBENCH 
+
+
+TEST 1 : 
+	- UNSIGNED ADDITION 
+	 1. O = 1, C = 1, Z = 0 7FFFFFFF + 00000001 = 80000000
+	 2. O = 0, C = 0, Z = 0 00000011 + 00110000 = 00110011
+
+TEST 2 : 
+	- SIGNED ADDITION 
+	 1. O = 1 , N = 1 , C = 1, Z = 0  7FFFFFFF + 00000001 = 80000000, two positive operands and negative result
+	 2. O = 1 , N = 0 , C = 1, Z = 0  FFFFFFFF + 10000000 = 0FFFFFFF, two negative operands and positive result
+	 3. O = 0 , N = 0 , C = 0, Z = 0  10000011 + 00000010 = 10000021
+
+TEST 3 :
+	- I_beqz 
+	 O = 0 , N = 0 , C = 0, Z = 0     00000FF1 + 00000000 = 00000FF1
+
+	-I_bnez
+	 1. O = 0 , N = 0 , C = 0, Z = 0     00000FF1 + 00000FF2 = 00001FE3
+	 2. O = 1 , N = 0 , C = 1, Z = 0     FFFFFFFF + 10000000 = 0FFFFFFF
+TEST 4 :
+	- UNSIGNED SUBTRACTION 
+	 1. O = 0 , N = 0 , C = 0, Z = 0     00000FF2 - 00000010 = 00000FE2
+	 2. O = 0 , N = 0 , C = 0, Z = 1     FFFFFFFF - FFFFFFFF = 00000000
+TEST 5 :
+	- SIGNED SUBTRACTION 
+	 1. O = 0 , N = 0 , C = 0, Z = 0      70000000 - 80000000 = EFFFFFFE
+	 2. O = 1 , N = 0 , C = 1, Z = 0      FFFFFFFF - FFFFFFFF = 00000000
+
+TEST 6 : 
+TEST 7 : 
+TEST 8 : 
+TEST 9 :
+TEST 10 : 
+ 
+
