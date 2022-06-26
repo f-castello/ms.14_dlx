@@ -56,7 +56,7 @@ BEGIN
 	x"70000000", --[17]
 	x"EFFFFFFE", --[18]
 	x"00000FF9", --[19]
-	x"FFD00003" --[20]
+	x"F0002211" --[20]
 	);
 
 	DUT : ALU
@@ -80,11 +80,11 @@ BEGIN
 	REPORT("TEST 1:   - UNSIGNED ADDITION");
 	
 	ALU_OPCODE_tb <= I_jr;
-	DATA1_tb <= STD_LOGIC_VECTOR(to_unsigned(5, NbitLong));
+	DATA1_tb <= STD_LOGIC_VECTOR(to_unsigned(3, NbitLong));
 	DATA2_tb <= STD_LOGIC_VECTOR(to_unsigned(2, NbitLong));
 	WAIT FOR 2 ns;
-	ASSERT(DATA1_tb = STD_LOGIC_VECTOR(to_unsigned(5, NbitLong)) AND DATA2_tb = STD_LOGIC_VECTOR(to_unsigned(2, NbitLong)))
-	REPORT " OUTALU exp val: " & INTEGER'image(7) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb))) & "OVF exp val :" & STD_LOGIC'image('0') & "OVF obt val:" & STD_LOGIC'image(OVF_tb)
+	ASSERT(DATA1_tb = STD_LOGIC_VECTOR(to_unsigned(3, NbitLong)) AND DATA2_tb = STD_LOGIC_VECTOR(to_unsigned(2, NbitLong)))
+	REPORT " OUTALU exp val: " & INTEGER'image(5) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb))) & "OVF obt val : " & STD_LOGIC'image(OVF_tb) & "NEG obt val : " & STD_LOGIC'image(NEG_tb) & "ZERO obt val : " & STD_LOGIC'image(ZERO_tb) & "CARRY obt val : " & STD_LOGIC'image(CARRY_tb)
 		SEVERITY failure;
 	
 	ALU_OPCODE_tb <= I_addui;
@@ -198,6 +198,15 @@ BEGIN
 	ASSERT(DATA1_tb = TEST_VALUES(4) AND DATA2_tb = TEST_VALUES(4))
 	REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(8)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
 		SEVERITY failure;
+	
+	ALU_OPCODE_tb <= I_subi;
+	DATA1_tb <= TEST_VALUES(4);
+	DATA2_tb <= x"0FFFDDEE";
+	WAIT FOR 2 ns;
+	ASSERT(DATA1_tb = TEST_VALUES(4) AND DATA2_tb = x"0FFFDDEE")
+	REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(20)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+		SEVERITY failure;
+
 
 	REPORT("TEST 5 result: SUCCESSFUL");
 	--############################ TEST 6 ############################--
