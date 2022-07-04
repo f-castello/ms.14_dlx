@@ -36,7 +36,7 @@ Refer to the table below to record the general progress of this project (note th
 | `gen_reg`     | DONE | DONE | DONE |       |
 | `ID`          | DONE | DONE | DONE |       |
 | `IF`          | DONE | DONE | DONE |       |
-| `MEM`         |      |      |      |       |
+| `MEM`         | DONE |  WIP |      |       |
 | `pc_add`      | DONE | DONE | DONE |       |
 | `reg_file`    | DONE | DONE | DONE |       |
 | `sign_ext`    | DONE | DONE |  WIP |       |
