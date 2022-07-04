@@ -15,15 +15,15 @@ ARCHITECTURE test OF TB_gen_reg IS
         PORT
         (
             clk, rst, ld : IN STD_LOGIC;
-            data_in      : IN STD_LOGIC_VECTOR(0 TO N - 1);
-            data_out     : OUT STD_LOGIC_VECTOR(0 TO N - 1)
+            data_in      : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+            data_out     : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
         );
     END COMPONENT;
 
     CONSTANT T : TIME := Tclk;
 
     SIGNAL CLK, RST, LD      : STD_LOGIC;
-    SIGNAL DATA_IN, DATA_OUT : STD_LOGIC_VECTOR(0 TO NbitLong - 1);
+    SIGNAL DATA_IN, DATA_OUT : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 
 BEGIN
 

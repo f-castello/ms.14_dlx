@@ -10,14 +10,13 @@ ENTITY gen_mux21 IS
     PORT
     (
         sel  : IN STD_LOGIC; -- selector
-        x, y : IN STD_LOGIC_VECTOR(0 TO N - 1);
-        m    : OUT STD_LOGIC_VECTOR(0 TO N - 1)
+        x, y : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+        m    : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
     );
 END gen_mux21;
 
 ARCHITECTURE dflow OF gen_mux21 IS
-
-    SIGNAL s : STD_LOGIC_VECTOR(0 TO N - 1); -- 'sel' array
+    SIGNAL s : STD_LOGIC_VECTOR(N - 1 DOWNTO 0); -- 'sel' array
 
 BEGIN
     s <= (OTHERS => sel);            -- extend selector to N bits

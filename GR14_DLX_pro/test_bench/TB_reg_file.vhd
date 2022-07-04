@@ -16,17 +16,17 @@ ARCHITECTURE test OF TB_reg_file IS
         PORT
         (
             CLK, RESET, ENABLE, RD1, RD2, WR : IN STD_LOGIC;
-            ADD_WR, ADD_RD1, ADD_RD2         : IN STD_LOGIC_VECTOR(0 TO Abits - 1);
-            DATAIN                           : IN STD_LOGIC_VECTOR(0 TO Dbits - 1);
-            OUT1, OUT2                       : OUT STD_LOGIC_VECTOR(0 TO Dbits - 1)
+            ADD_WR, ADD_RD1, ADD_RD2         : IN STD_LOGIC_VECTOR(Abits - 1 DOWNTO 0);
+            DATAIN                           : IN STD_LOGIC_VECTOR(Dbits - 1 DOWNTO 0);
+            OUT1, OUT2                       : OUT STD_LOGIC_VECTOR(Dbits - 1 DOWNTO 0)
         );
     END COMPONENT;
 
     CONSTANT T : TIME := Tclk;
 
     SIGNAL CLK, RESET, ENABLE, RD1, RD2, WR : STD_LOGIC;
-    SIGNAL ADD_WR, ADD_RD1, ADD_RD2         : STD_LOGIC_VECTOR(0 TO RF_ADDR - 1);
-    SIGNAL DATAIN, OUT1, OUT2               : STD_LOGIC_VECTOR(0 TO NbitLong - 1);
+    SIGNAL ADD_WR, ADD_RD1, ADD_RD2         : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+    SIGNAL DATAIN, OUT1, OUT2               : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 
 BEGIN
     dut : reg_file GENERIC

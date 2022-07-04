@@ -14,12 +14,12 @@ ARCHITECTURE test OF TB_zero_check IS
         );
         PORT
         (
-            data_in  : IN STD_LOGIC_VECTOR(0 TO N - 1);
+            data_in  : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
             ctrl_out : OUT STD_LOGIC
         );
     END COMPONENT;
 
-    SIGNAL DATA_IN  : STD_LOGIC_VECTOR(0 TO NbitLong - 1);
+    SIGNAL DATA_IN  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
     SIGNAL CTRL_OUT : STD_LOGIC;
 
 BEGIN

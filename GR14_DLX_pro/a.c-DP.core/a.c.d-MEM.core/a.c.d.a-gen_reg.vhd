@@ -10,8 +10,8 @@ ENTITY gen_reg IS
     PORT
     (
         clk, rst, ld : IN STD_LOGIC;
-        data_in      : IN STD_LOGIC_VECTOR(0 TO N - 1);
-        data_out     : OUT STD_LOGIC_VECTOR(0 TO N - 1)
+        data_in      : IN STD_LOGIC_VECTOR(N - 1 DOWNTO 0);
+        data_out     : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
     );
 END gen_reg;
 

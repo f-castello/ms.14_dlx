@@ -9,7 +9,7 @@ END TB_ID;
 
 ARCHITECTURE TEST OF TB_ID IS
 
-    TYPE MEM_ARRAY IS ARRAY (0 TO 31) OF STD_LOGIC_VECTOR(0 TO NbitLong - 1);
+    TYPE MEM_ARRAY IS ARRAY (0 TO 31) OF STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
     SIGNAL RF_COPY : MEM_ARRAY :=
     (
     STD_LOGIC_VECTOR(to_unsigned(0, NbitLong)),
@@ -56,15 +56,15 @@ ARCHITECTURE TEST OF TB_ID IS
     SIGNAL RD2_en_tb        : STD_LOGIC; --enable reading port 2 of the RF
     SIGNAL WR_en_tb         : STD_LOGIC; --enable writing port of the RF
     --Data signals
-    SIGNAL I_CODE_tb      : STD_LOGIC_VECTOR(0 TO IR_N - 1); -- output of the memory to the IR
-    SIGNAL NPC1_IN_tb     : STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1);
-    SIGNAL DATA_IN_tb     : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-    SIGNAL WR_ADDR_IN_tb  : STD_LOGIC_VECTOR(0 TO RF_ADDR - 1);
-    SIGNAL REGA_OUT_tb    : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-    SIGNAL REGB_OUT_tb    : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-    SIGNAL REGIMM_OUT_tb  : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-    SIGNAL WR_ADDR_OUT_tb : STD_LOGIC_VECTOR(0 TO RF_ADDR - 1);
-    SIGNAL NPC1_OUT_tb    : STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1); --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
+    SIGNAL I_CODE_tb      : STD_LOGIC_VECTOR(IR_N - 1 DOWNTO 0); -- output of the memory to the IR
+    SIGNAL NPC1_IN_tb     : STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
+    SIGNAL DATA_IN_tb     : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL WR_ADDR_IN_tb  : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+    SIGNAL REGA_OUT_tb    : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL REGB_OUT_tb    : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL REGIMM_OUT_tb  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL WR_ADDR_OUT_tb : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+    SIGNAL NPC1_OUT_tb    : STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
 
     COMPONENT ID_STAGE IS
         GENERIC
@@ -89,15 +89,15 @@ ARCHITECTURE TEST OF TB_ID IS
             RD2_en        : IN STD_LOGIC; -- Register File Read 2 Enable
             WR_en         : IN STD_LOGIC; --enable writing port of the RF
             -- Data ports
-            I_CODE      : IN STD_LOGIC_VECTOR(0 TO N_BITS_INST - 1); -- output of the memory to the IR
-            NPC1_IN     : IN STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1);
-            DATA_IN     : IN STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-            WR_ADDR_IN  : IN STD_LOGIC_VECTOR(0 TO RF_ADDR - 1);
-            REGA_OUT    : OUT STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-            REGB_OUT    : OUT STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-            REGIMM_OUT  : OUT STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1);
-            WR_ADDR_OUT : OUT STD_LOGIC_VECTOR(0 TO RF_ADDR - 1);
-            NPC1_OUT    : OUT STD_LOGIC_VECTOR(0 TO N_BITS_PC - 1) --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
+            I_CODE      : IN STD_LOGIC_VECTOR(N_BITS_INST - 1 DOWNTO 0); -- output of the memory to the IR
+            NPC1_IN     : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
+            DATA_IN     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+            WR_ADDR_IN  : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+            REGA_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+            REGB_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+            REGIMM_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+            WR_ADDR_OUT : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+            NPC1_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0) --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
         );
     END COMPONENT;
 
@@ -136,9 +136,9 @@ BEGIN
         NPC1_OUT    => NPC1_OUT_tb --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
     );
     P_STIMULI : PROCESS
-        VARIABLE i   : INTEGER                                := 0;
-        VARIABLE j   : INTEGER                                := 0;
-        VARIABLE aux : STD_LOGIC_VECTOR(0 TO N_BITS_DATA - 1) := (OTHERS => '0');
+        VARIABLE i   : INTEGER                                    := 0;
+        VARIABLE j   : INTEGER                                    := 0;
+        VARIABLE aux : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0) := (OTHERS => '0');
     BEGIN
         --############################ TEST 1  ############################--
         REPORT("Starting simulation");
@@ -159,7 +159,7 @@ BEGIN
         FOR i IN 0 TO 15 LOOP
             I_CODE_tb(25 DOWNTO 16) <= STD_LOGIC_VECTOR(to_unsigned(i, RF_ADDR)) & STD_LOGIC_VECTOR(to_unsigned(i + 16, RF_ADDR)); --Addressing different registers
             WAIT UNTIL falling_edge(CLK_tb);
-            ASSERT (REGA_OUT_tb = (0 TO NbitLong - 1 => '0') AND REGB_OUT_tb = (0 TO NbitLong - 1 => '0'))
+            ASSERT (REGA_OUT_tb = (NbitLong - 1 DOWNTO 0 => '0') AND REGB_OUT_tb = (NbitLong - 1 DOWNTO 0 => '0'))
             REPORT " REG A: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))
                 SEVERITY failure;
 
@@ -209,8 +209,8 @@ BEGIN
 
         --############################ TEST 4  ############################--
         REPORT("TEST 4: -Sign extension test");
-        I_CODE_tb(0 TO 27) <= x"DFF7FFF"; --Positive number for 16 and 26 bits immediate
-        IS_I_TYPE_tb       <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
+        I_CODE_tb(27 DOWNTO 0) <= x"DFF7FFF"; --Positive number for 16 and 26 bits immediate
+        IS_I_TYPE_tb           <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := (31 DOWNTO 16 => '0') & x"7FFF";
         ASSERT (REGIMM_OUT_tb = aux)--x"7FFF"))
@@ -224,8 +224,8 @@ BEGIN
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
             SEVERITY failure;
         -------------------------------------------------------------------------------------------------		
-        I_CODE_tb(0 TO 27) <= x"FFFFF00"; --Negative number for 16 and 26 bits immediate
-        IS_I_TYPE_tb       <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
+        I_CODE_tb(27 DOWNTO 0) <= x"FFFFF00"; --Negative number for 16 and 26 bits immediate
+        IS_I_TYPE_tb           <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := ((31 DOWNTO 16 => '1') & x"FF00");
         ASSERT (REGIMM_OUT_tb = aux)
@@ -239,8 +239,8 @@ BEGIN
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
             SEVERITY failure;
         -------------------------------------------------------------------------------------------------		
-        I_CODE_tb(0 TO 27) <= x"FFF7123"; --Positive number for 16 bits immediate but negative for 26 bits immediate
-        IS_I_TYPE_tb       <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
+        I_CODE_tb(27 DOWNTO 0) <= x"FFF7123"; --Positive number for 16 bits immediate but negative for 26 bits immediate
+        IS_I_TYPE_tb           <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := (31 DOWNTO 16 => '0') & x"7123";
         ASSERT (REGIMM_OUT_tb = aux)
@@ -254,8 +254,8 @@ BEGIN
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
             SEVERITY failure;
         -------------------------------------------------------------------------------------------------
-        I_CODE_tb(0 TO 27) <= x"D2FFFEA"; --NEGATIVE number for 16 bits immediate but POSITIVE for 26 bits immediate
-        IS_I_TYPE_tb       <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
+        I_CODE_tb(27 DOWNTO 0) <= x"D2FFFEA"; --NEGATIVE number for 16 bits immediate but POSITIVE for 26 bits immediate
+        IS_I_TYPE_tb           <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := (31 DOWNTO 16 => '1') & x"FFEA";
         ASSERT (REGIMM_OUT_tb = aux)--x"7FFF"))
@@ -324,12 +324,12 @@ BEGIN
         --Here we are mixing I and R type instruction, we read the instruction
         --considering both types in order to see in which address I am reading in port 2 and which immediate
         --I am writing (Modifying the reading address modifies the immeddiate) This shouldn't happend.
-        IS_I_TYPE_tb       <= '1';                                         --I-TYPE INSTRUCTION, 16 bits sign extension and selecting I-type writing address from the instruction
-        I_CODE_tb(0 TO 25) <= "10001" & "10101" & "00011" & "101" & x"00"; --Rd Port1 = d17,WR_ADDR = d21 RD PORT2 = d21, Imm =0x3500 or d13568 (positive)
+        IS_I_TYPE_tb           <= '1';                                         --I-TYPE INSTRUCTION, 16 bits sign extension and selecting I-type writing address from the instruction
+        I_CODE_tb(25 DOWNTO 0) <= "10001" & "10101" & "00011" & "101" & x"00"; --Rd Port1 = d17,WR_ADDR = d21 RD PORT2 = d21, Imm =0x3500 or d13568 (positive)
 
         WAIT UNTIL falling_edge(CLK_tb);
-        DEC_OUTREG_EN_tb   <= '0';                                         -- 0 to disable all pipeline registers
-        I_CODE_tb(0 TO 25) <= "11101" & "11000" & "11100" & "011" & x"0F"; --Changing all input values (output values should not change)
+        DEC_OUTREG_EN_tb       <= '0';                                         -- 0 to disable all pipeline registers
+        I_CODE_tb(25 DOWNTO 0) <= "11101" & "11000" & "11100" & "011" & x"0F"; --Changing all input values (output values should not change)
 
         ASSERT (REGA_OUT_tb = RF_COPY(17) AND REGB_OUT_tb = RF_COPY(21))
         REPORT " REG A exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(17)))) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B exp val " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(21)))) & " REG B obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))
@@ -355,3 +355,8 @@ BEGIN
     END PROCESS;
 
 END TEST;
+
+CONFIGURATION CFG_TEST_ID OF TB_ID IS
+    FOR TEST
+    END FOR;
+END CFG_TEST_ID;
