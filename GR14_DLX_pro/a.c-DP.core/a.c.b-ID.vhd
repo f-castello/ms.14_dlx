@@ -101,18 +101,16 @@ ARCHITECTURE STRUCTURAL OF ID_STAGE IS
 		);
 		PORT
 		(
-			ctrl_in  		: IN STD_LOGIC;
-			zero_padding 	: IN STD_LOGIC;
-        	data_in  		: IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
-        	data_ext 		: OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
+			ctrl_in      : IN STD_LOGIC;
+			zero_padding : IN STD_LOGIC;
+			data_in      : IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
+			data_ext     : OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
 		);
 	END COMPONENT;
 
 BEGIN
-
 	NPC1 : gen_reg GENERIC
-	MAP (
-	N => N_BITS_PC)
+	MAP (N => N_BITS_PC)
 	PORT MAP
 	(
 		clk      => CLK,
@@ -123,21 +121,20 @@ BEGIN
 	);
 
 	IMM : gen_reg GENERIC
-	MAP (
-	N => N_BITS_DATA)
+	MAP (N => N_BITS_DATA)
 	PORT
-	MAP(
+	MAP (
 	clk      => CLK,
 	rst      => RST,
 	ld       => DEC_OUTREG_EN,
 	data_in  => SIGN_EXT_OUT,
 	data_out => REGIMM_OUT
 	);
+
 	WR_ADDR : gen_reg GENERIC
-	MAP (
-	N => RF_ADDR)
+	MAP (N => RF_ADDR)
 	PORT
-	MAP(
+	MAP (
 	clk      => CLK,
 	rst      => RST,
 	ld       => DEC_OUTREG_EN,
@@ -151,8 +148,7 @@ BEGIN
 	Abits => RF_ADDR
 	)
 	PORT
-	MAP
-	(
+	MAP (
 	CLK     => CLK,
 	RESET   => RST,
 	ENABLE  => DEC_OUTREG_EN,
@@ -166,6 +162,7 @@ BEGIN
 	OUT1    => REGA_OUT,
 	OUT2    => REGB_OUT
 	);
+
 	SING_EXT : sign_ext GENERIC
 	MAP (
 	N_IN0 => NBITS_JUMP,
@@ -173,18 +170,17 @@ BEGIN
 	N_OUT => N_BITS_DATA
 	)
 	PORT
-	MAP(
-	ctrl_in => IS_I_TYPE, --1 IF I-type INST(16bits), 0 IF NOT (26 bits)
+	MAP (
+	ctrl_in      => IS_I_TYPE, --1 IF I-type INST(16bits), 0 IF NOT (26 bits)
 	zero_padding => ZERO_PADDING,
-	data_in =>SIGN_EXT_IN,
-	data_ext=>SIGN_EXT_OUT
+	data_in      => SIGN_EXT_IN,
+	data_ext     => SIGN_EXT_OUT
 	);
 
 	MUX_WR_ADDR : gen_mux21 GENERIC
-	MAP (
-	N => RF_ADDR) -- # of bits
+	MAP (N => RF_ADDR) -- # of bits
 	PORT
-	MAP(
+	MAP (
 	sel => IS_I_TYPE, -- selector, 1 IF I-TYPE, 0 OTHERWISE
 	x   => ADD_WR_R_TYPE,
 	y   => ADD_WR_I_TYPE,
@@ -193,12 +189,10 @@ BEGIN
 
 	ADD_RD1_AUX <= I_CODE(25 DOWNTO 21);
 	-- THE FOLLOWING LINE MIGHT NOT BE NECESSARY, THIS COULD BE HANDLED WITH THE RD1 SIGNAL (IF = 0 IT TURN TO 0 THE READING PORT 1 OF THE RF)
-	ADD_RD1       <= ADD_RD1_AUX;--(RF_ADDR - 1 DOWNTO 0 => NOT(JAL_MUX_SEL)) AND ADD_RD1_AUX; --JAL_MUX_SEL MASKS THE RD1 ADDR IN JUMP AND JL INST, SELECTING THE REG 0 (ALWAYS 0)
-	ADD_RD2       <= I_CODE(20 DOWNTO 16);                                --ONLY FOR R-TYPE, DON'T MIND IN OTHER TYPES
-	ADD_WR        <= (RF_ADDR - 1 DOWNTO 0 => JAL_MUX_SEL) OR WR_ADDR_IN; --JAL_MUX_SEL MASKS THE WR ADDR IN JUMP AND LINK INST, SELECTING THE REG 31
-	ADD_WR_I_TYPE <= I_CODE(20 DOWNTO 16);-- I-TYPE INST: 31|OPCODE 6BITS|RS1 5BITS| RD 5BITS|    IMMEDIATE 16BITS     |0
-	ADD_WR_R_TYPE <= I_CODE(15 DOWNTO 11);-- R-TYPE INST: 31|OPCODE 6BITS|RS1 5BITS|RS2 5BITS| RD 5BITS|  FUNC 11BITS  |0
-
-	SIGN_EXT_IN <= I_CODE(25 DOWNTO 0);
-
+	ADD_RD1       <= ADD_RD1_AUX;                                         -- (RF_ADDR - 1 DOWNTO 0 => NOT(JAL_MUX_SEL)) AND ADD_RD1_AUX; --JAL_MUX_SEL MASKS THE RD1 ADDR IN JUMP AND JL INST, SELECTING THE REG 0 (ALWAYS 0)
+	ADD_RD2       <= I_CODE(20 DOWNTO 16);                                -- ONLY FOR R-TYPE, DON'T MIND IN OTHER TYPES
+	ADD_WR        <= (RF_ADDR - 1 DOWNTO 0 => JAL_MUX_SEL) OR WR_ADDR_IN; -- JAL_MUX_SEL MASKS THE WR ADDR IN JUMP AND LINK INST, SELECTING THE REG 31
+	ADD_WR_I_TYPE <= I_CODE(20 DOWNTO 16);                                -- I-TYPE INST: 31|OPCODE 6BITS|RS1 5BITS| RD 5BITS|    IMMEDIATE 16BITS     |0
+	ADD_WR_R_TYPE <= I_CODE(15 DOWNTO 11);                                -- R-TYPE INST: 31|OPCODE 6BITS|RS1 5BITS|RS2 5BITS| RD 5BITS|  FUNC 11BITS  |0
+	SIGN_EXT_IN   <= I_CODE(25 DOWNTO 0);
 END STRUCTURAL;

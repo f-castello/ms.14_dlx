@@ -17,7 +17,7 @@ ARCHITECTURE TEST OF TB_ALU IS
 	SIGNAL CARRY_tb      : STD_LOGIC;
 	SIGNAL OVF_tb        : STD_LOGIC;
 	SIGNAL OUTALU_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
-	SUBTYPE NUM_INPUTS IS NATURAL RANGE 0 TO 20;
+	SUBTYPE NUM_INPUTS IS NATURAL RANGE 0 TO 28;
 	TYPE TEST_VECT IS ARRAY(NUM_INPUTS) OF STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 	SIGNAL TEST_VALUES : TEST_VECT;
 
@@ -35,27 +35,35 @@ ARCHITECTURE TEST OF TB_ALU IS
 
 BEGIN
 	TEST_VALUES <= (
-		x"7FFFFFFF", --[20]
-		x"00000001", --[19]
-		x"00000011", --[18]
-		x"00110000", --[17]
-		x"FFFFFFFF", --[16]
-		x"10000000", --[15]
-		x"10000011", --[14]
-		x"00000010", --[13]
-		x"00000000", --[12]
-		x"80000000", --[11]
+		x"7FFFFFFF", --[0]
+		x"00000001", --[1]
+		x"00000011", --[2]
+		x"00110000", --[3]
+		x"FFFFFFFF", --[4]
+		x"10000000", --[5]
+		x"10000011", --[6]
+		x"00000010", --[7]
+		x"00000000", --[8]
+		x"80000000", --[9]
 		x"00110011", --[10]
-		x"0FFFFFFF", --[9]
-		x"10000021", --[8]
-		x"00000FF1", --[7]
-		x"00000FF2", --[6]
-		x"00001FE3", --[5]
-		x"00000FE2", --[4]
-		x"70000000", --[3]
-		x"EFFFFFFE", --[2]
-		x"00000FF9", --[1]
-		x"F0002211"  --[0]
+		x"0FFFFFFF", --[11]
+		x"10000021", --[12]
+		x"00000FF1", --[13]
+		x"00000FF2", --[14]
+		x"00001FE3", --[15]
+		x"00000FE2", --[16]
+		x"70000000", --[17]
+		x"EFFFFFFE", --[18]
+		x"00000FF9", --[19]
+		x"F0002211", --[20]
+		x"00000FF0", --[21]
+		x"00000FF3", --[22]
+		x"00000003", --[23]
+		x"FF100000", --[24]
+		x"E2000000", --[25]
+		x"000007F8", --[26]
+		x"00000002", --[27]
+		x"000003FC"  --[28]
 		);
 
 	DUT : ALU
@@ -84,8 +92,12 @@ BEGIN
 		DATA2_tb      <= STD_LOGIC_VECTOR(to_unsigned(2, NbitLong));
 		WAIT FOR 2 ns;
 		ASSERT(DATA1_tb = STD_LOGIC_VECTOR(to_unsigned(3, NbitLong)) AND DATA2_tb = STD_LOGIC_VECTOR(to_unsigned(2, NbitLong)))
-		REPORT " OUTALU exp val: " & INTEGER'image(5) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb))) & "OVF obt val : " & STD_LOGIC'image(OVF_tb) & "NEG obt val : " & STD_LOGIC'image(NEG_tb) & "ZERO obt val : " & STD_LOGIC'image(ZERO_tb) & "CARRY obt val : " & STD_LOGIC'image(CARRY_tb)
+		REPORT " OUTALU exp val: " & INTEGER'image(5) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
 			SEVERITY failure;
+
+		--ASSERT(DATA1_tb = STD_LOGIC_VECTOR(to_unsigned(3, NbitLong)) AND DATA2_tb = STD_LOGIC_VECTOR(to_unsigned(2, NbitLong)))
+		--REPORT "OVF exp val : " & STD_LOGIC'image('1') & "OVF obt val : " & STD_LOGIC'image(OVF_tb)
+		--SEVERITY failure;
 
 		ALU_OPCODE_tb <= I_addui;
 		DATA1_tb      <= TEST_VALUES(0);
@@ -206,13 +218,70 @@ BEGIN
 		ASSERT(DATA1_tb = TEST_VALUES(4) AND DATA2_tb = x"0FFFDDEE")
 		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(20)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
 			SEVERITY failure;
+
 		REPORT("TEST 5 result: SUCCESSFUL");
 		--############################ TEST 6 ############################--
-		--REPORT("TEST 6:   - LOGIC OPERATIONS : AND, OR, XOR ");
-		--REPORT("TEST 6 result: SUCCESSFUL");
+		REPORT("TEST 6:   - LOGIC OPERATIONS : AND, OR, XOR ");
+		ALU_OPCODE_tb <= R_and;
+		DATA1_tb      <= TEST_VALUES(13);
+		DATA2_tb      <= TEST_VALUES(14);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13) AND DATA2_tb = TEST_VALUES(14))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(21)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		ALU_OPCODE_tb <= I_ori;
+		DATA1_tb      <= TEST_VALUES(13);
+		DATA2_tb      <= TEST_VALUES(14);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13) AND DATA2_tb = TEST_VALUES(14))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(22)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		ALU_OPCODE_tb <= R_xor;
+		DATA1_tb      <= TEST_VALUES(13);
+		DATA2_tb      <= TEST_VALUES(14);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13) AND DATA2_tb = TEST_VALUES(14))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(23)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		REPORT("TEST 6 result: SUCCESSFUL");
 		--############################ TEST 7 ############################--
-		--REPORT("TEST 7:   - SHIFTS");
-		--REPORT("TEST 7 result: SUCCESSFUL");
+		REPORT("TEST 7:   - SHIFTS");
+
+		ALU_OPCODE_tb <= I_lhi; --shift left by 16
+		DATA1_tb      <= TEST_VALUES(13);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(24)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		ALU_OPCODE_tb <= I_slli; -- shift left by uimm16_27..31]
+		DATA1_tb      <= TEST_VALUES(13);
+		DATA2_tb      <= TEST_VALUES(19);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13) AND DATA2_tb = TEST_VALUES(19))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(25)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		ALU_OPCODE_tb <= I_srli; -- shift right by uimm16_27..31]
+		DATA1_tb      <= TEST_VALUES(13);
+		DATA2_tb      <= TEST_VALUES(1);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13) AND DATA2_tb = TEST_VALUES(1))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(26)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		ALU_OPCODE_tb <= I_srai; -- arithmetic shift 
+		DATA1_tb      <= TEST_VALUES(13);
+		DATA2_tb      <= TEST_VALUES(27);
+		WAIT FOR 2 ns;
+		ASSERT(DATA1_tb = TEST_VALUES(13) AND DATA2_tb = TEST_VALUES(27))
+		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(28)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb)))
+			SEVERITY failure;
+
+		REPORT("TEST 7 result: SUCCESSFUL");
 		--############################ TEST 8 ############################--
 		--REPORT("TEST 8:   - COMPARISONS");
 		--REPORT("TEST 8 result: SUCCESSFUL");
@@ -223,5 +292,4 @@ BEGIN
 		--REPORT("TEST 10:   - SIGNED MULTIPLICATION");
 		--REPORT("TEST 10 result: SUCCESSFUL");
 	END PROCESS;
-
 END TEST;

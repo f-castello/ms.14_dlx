@@ -63,10 +63,6 @@ BEGIN
                 ELSE
                     OUT2 <= (OTHERS => '0'); -- disable output port
                 END IF;
-                -- ELSE -- ENABLE = '0'
-                -- just disable both output ports
-                --OUT1 <= (OTHERS => '0');
-                --OUT2 <= (OTHERS => '0');
             END IF;
         END IF;
     END PROCESS INT_REGS;

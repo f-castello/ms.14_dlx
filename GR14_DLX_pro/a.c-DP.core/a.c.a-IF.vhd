@@ -22,7 +22,6 @@ ENTITY IF_STAGE IS
 		PC_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
 		IR_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
 		NPC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0)
-
 	);
 END IF_STAGE;
 
@@ -57,10 +56,8 @@ ARCHITECTURE STRUCTURAL OF IF_STAGE IS
 	END COMPONENT;
 
 BEGIN
-
 	PC : gen_reg GENERIC
-	MAP (
-	N => N_BITS_PC)
+	MAP (N => N_BITS_PC)
 	PORT MAP
 	(
 		clk      => CLK,
@@ -71,33 +68,33 @@ BEGIN
 	);
 
 	IR : gen_reg GENERIC
-	MAP (
-	N => N_BITS_INST)
+	MAP (N => N_BITS_INST)
 	PORT
-	MAP(
+	MAP (
 	clk      => CLK,
 	rst      => RST,
 	ld       => IR_LATCH_EN,
 	data_in  => IR_IN,
 	data_out => IR_OUT
 	);
+
 	NPC : gen_reg GENERIC
-	MAP (
-	N => N_BITS_PC)
+	MAP (N => N_BITS_PC)
 	PORT
-	MAP(
+	MAP (
 	clk      => CLK,
 	rst      => RST,
 	ld       => NPC_LATCH_EN,
 	data_in  => ADDER_OUT,
 	data_out => NPC_OUT
 	);
+
 	PC_ADDER : pc_add GENERIC
 	MAP (
 	N   => N_BITS_PC,
 	OP2 => N_BYTES_INST)
 	PORT
-	MAP(
+	MAP (
 	data_in  => PC_OUT_SIG,
 	data_out => ADDER_OUT
 	);

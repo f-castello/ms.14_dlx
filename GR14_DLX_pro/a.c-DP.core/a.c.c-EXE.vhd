@@ -53,6 +53,7 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 			data_out     : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
 		);
 	END COMPONENT;
+
 	COMPONENT gen_mux21 IS
 		GENERIC
 		(
@@ -64,6 +65,7 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 		m    : OUT STD_LOGIC_VECTOR(N - 1 DOWNTO 0)
 		);
 	END COMPONENT;
+
 	COMPONENT zero_check IS
 		GENERIC
 		(
@@ -75,6 +77,7 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 			ctrl_out : OUT STD_LOGIC
 		);
 	END COMPONENT;
+
 	COMPONENT cond_branch IS
 		PORT
 		(
@@ -90,6 +93,7 @@ ARCHITECTURE STRUCTURAL OF EXE_STAGE IS
 			N, Z, C, V                       : OUT STD_LOGIC
 		);
 	END COMPONENT;
+
 	COMPONENT ALU IS
 		GENERIC
 			(N : INTEGER := NbitLong);
@@ -126,14 +130,14 @@ BEGIN
 	ZERO : zero_check GENERIC
 	MAP (N => N_BITS_DATA)
 	PORT
-	MAP(
+	MAP (
 	data_in  => REGA_MUXA_IN,
 	ctrl_out => BRANCH_TAKEN
 	);
 
 	COND : cond_branch
 	PORT
-	MAP(
+	MAP (
 	cond_in  => EQ_COND,
 	jump_in  => JUMP_EN,
 	ctrl_in  => BRANCH_TAKEN,
@@ -177,7 +181,7 @@ BEGIN
 	ALU_OUTPUT : gen_reg GENERIC
 	MAP (N => N_BITS_DATA)
 	PORT
-	MAP(
+	MAP (
 	clk      => CLK,
 	rst      => RST,
 	ld       => EXE_OUTREG_EN,
@@ -204,7 +208,7 @@ BEGIN
 	IR2 : gen_reg GENERIC
 	MAP (N => RF_ADDR)
 	PORT
-	MAP(
+	MAP (
 	clk      => CLK,
 	rst      => RST,
 	ld       => EXE_OUTREG_EN,

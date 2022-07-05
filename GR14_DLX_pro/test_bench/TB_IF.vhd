@@ -1,14 +1,13 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
-USE IEEE.std_logic_unsigned.ALL;
-USE IEEE.numeric_std.ALL;
+USE ieee.std_logic_unsigned.ALL;
+USE ieee.numeric_std.ALL;
 USE work.dlx_utils.ALL;
 
 ENTITY TB_IF IS
 END TB_IF;
 
 ARCHITECTURE TEST OF TB_IF IS
-
 	TYPE MEM_ARRAY IS ARRAY (0 TO 19) OF STD_LOGIC_VECTOR(IR_N - 1 DOWNTO 0);
 	CONSTANT IR_MEM_VALS : MEM_ARRAY :=
 	(
@@ -70,7 +69,7 @@ ARCHITECTURE TEST OF TB_IF IS
 BEGIN
 	DUT : IF_STAGE
 	GENERIC
-	MAP(
+	MAP (
 	N_BITS_PC    => NbitLong,
 	N_BITS_INST  => IR_N,
 	N_BYTES_INST => NPC_GAP
@@ -91,7 +90,6 @@ BEGIN
 	);
 
 	P_STIMULI : PROCESS
-		VARIABLE HEIGHT : INTEGER := 0;
 	BEGIN
 		REPORT("Starting simulation");
 		WAIT UNTIL falling_edge(CLK_tb);
@@ -121,12 +119,6 @@ BEGIN
 
 	P_CLOCK : PROCESS (CLK_tb)
 	BEGIN
-		CLK_tb <= NOT(CLK_tb) AFTER 1 ns;
+		CLK_tb <= NOT(CLK_tb) AFTER Tclk / 2;
 	END PROCESS;
-
 END TEST;
-
-CONFIGURATION CFG_TEST_IF OF TB_IF IS
-	FOR TEST
-	END FOR;
-END CFG_TEST_IF;
