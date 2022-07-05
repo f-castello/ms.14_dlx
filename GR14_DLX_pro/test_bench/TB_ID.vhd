@@ -55,6 +55,7 @@ ARCHITECTURE TEST OF TB_ID IS
     SIGNAL RD1_en_tb        : STD_LOGIC; --enable reading port 1 of the RF
     SIGNAL RD2_en_tb        : STD_LOGIC; --enable reading port 2 of the RF
     SIGNAL WR_en_tb         : STD_LOGIC; --enable writing port of the RF
+    SIGNAL ZERO_PADDING_tb  : STD_LOGIC;
     --Data signals
     SIGNAL I_CODE_tb      : STD_LOGIC_VECTOR(IR_N - 1 DOWNTO 0); -- output of the memory to the IR
     SIGNAL NPC1_IN_tb     : STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
@@ -88,6 +89,7 @@ ARCHITECTURE TEST OF TB_ID IS
             RD1_en        : IN STD_LOGIC; -- Register File Read 1 Enable
             RD2_en        : IN STD_LOGIC; -- Register File Read 2 Enable
             WR_en         : IN STD_LOGIC; --enable writing port of the RF
+            ZERO_PADDING  : IN STD_LOGIC; --
             -- Data ports
             I_CODE      : IN STD_LOGIC_VECTOR(N_BITS_INST - 1 DOWNTO 0); -- output of the memory to the IR
             NPC1_IN     : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
@@ -124,6 +126,7 @@ BEGIN
         RD1_en        => RD1_en_tb,        --enable reading port 1 of the RF
         RD2_en        => RD2_en_tb,        --enable reading port 2 of the RF
         WR_en         => WR_en_tb,         --enable writing port of the RF
+        ZERO_PADDING  =>ZERO_PADDING_tb,
         -- Data ports
         I_CODE      => I_CODE_tb, -- output of the memory to the IR
         NPC1_IN     => NPC1_IN_tb,
@@ -147,6 +150,7 @@ BEGIN
         JAL_MUX_SEL_tb   <= '0'; -- 0 in order to don't mask ADD_WR
         DEC_OUTREG_EN_tb <= '1'; -- 1 to enable all pipeline registers
         IS_I_TYPE_tb     <= '0'; -- 0 to select the R_type put it in the WR_ADDR_OUT reg (don't care now)
+        ZERO_PADDING_tb  <= '0';
         RD1_en_tb        <= '1'; -- 1 to enable reading port 1 
         RD2_en_tb        <= '1'; -- 1 to enable reading port 2
         WR_en_tb         <= '0'; -- 0 to disable writing port
@@ -270,9 +274,36 @@ BEGIN
             SEVERITY failure;
 
         REPORT("TEST 4 RESULT: SUCCESSFUL");
+               --############################ TEST 4.2  ############################--        
+		REPORT("TEST 4.2: -Sign extension new features test (zero padding)" );
+	
+		I_CODE_tb(27 DOWNTO 0) <= x"FFFFF01"; --Negative number for 16 and 26 bits immediate
+		IS_I_TYPE_tb <= '1'; --I-TYPE INSTRUCTION, 16 bits sign extension
+		ZERO_PADDING_tb 	<= '1';
+		WAIT UNTIL falling_edge(CLK_tb);
+		aux := ((31 downto 16 => '0') & x"FF01");
+		ASSERT (REGIMM_OUT_tb = aux)
+		REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
+		SEVERITY failure;  
+
+		IS_I_TYPE_tb <= '0'; --J-TYPE INSTRUCTION, 26 bits sign extension
+		WAIT UNTIL falling_edge(CLK_tb);
+		aux := (31 downto 26 => '1') &"11"&  x"FFFF01";
+		ASSERT (REGIMM_OUT_tb = aux)
+		REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
+		SEVERITY failure;
+
+		WAIT UNTIL falling_edge(CLK_tb); 
+		ZERO_PADDING_tb 	<= '1';
+		ASSERT (REGIMM_OUT_tb = aux)
+		REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
+		SEVERITY failure;
+
+		REPORT("TEST 4.2 RESULT: SUCCESSFUL");
         --############################ TEST 5  ############################--
         REPORT("TEST 5: -Writing address in JAL instruction");
         -- We write any address in the writing port but it should be masked.
+        ZERO_PADDING_tb<= '0';
         JAL_MUX_SEL_tb <= '1';     -- 1 in order to mask ADD_WR
         WR_ADDR_IN_tb  <= "10101"; --Any value different form 31 in writing address
         DATA_IN_tb     <= x"F0E0D0C0";

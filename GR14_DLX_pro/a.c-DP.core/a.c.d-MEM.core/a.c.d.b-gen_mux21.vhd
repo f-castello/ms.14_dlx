@@ -1,7 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE work.dlx_utils.ALL;
-
+--Extends signs from 8 or 16 bits, in the case of loading a word, LOAD memory signal choose the input 
 ENTITY gen_mux21 IS
     GENERIC
     (

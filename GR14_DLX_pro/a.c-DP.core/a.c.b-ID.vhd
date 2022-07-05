@@ -24,6 +24,7 @@ ENTITY ID_STAGE IS
 		RD1_en        : IN STD_LOGIC; -- Register File Read 1 Enable
 		RD2_en        : IN STD_LOGIC; -- Register File Read 2 Enable
 		WR_en         : IN STD_LOGIC; --enable writing port of the RF
+		ZERO_PADDING  : IN STD_LOGIC; --
 		-- Data ports
 		I_CODE      : IN STD_LOGIC_VECTOR(N_BITS_INST - 1 DOWNTO 0); -- output of the memory to the IR
 		NPC1_IN     : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
@@ -100,9 +101,10 @@ ARCHITECTURE STRUCTURAL OF ID_STAGE IS
 		);
 		PORT
 		(
-			ctrl_in  : IN STD_LOGIC;
-			data_in  : IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
-			data_ext : OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
+			ctrl_in  		: IN STD_LOGIC;
+			zero_padding 	: IN STD_LOGIC;
+        	data_in  		: IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
+        	data_ext 		: OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
 		);
 	END COMPONENT;
 
@@ -172,9 +174,10 @@ BEGIN
 	)
 	PORT
 	MAP(
-	ctrl_in  => IS_I_TYPE, --1 IF I-type INST(16bits), 0 IF NOT (26 bits)
-	data_in  => SIGN_EXT_IN,
-	data_ext => SIGN_EXT_OUT
+	ctrl_in => IS_I_TYPE, --1 IF I-type INST(16bits), 0 IF NOT (26 bits)
+	zero_padding => ZERO_PADDING,
+	data_in =>SIGN_EXT_IN,
+	data_ext=>SIGN_EXT_OUT
 	);
 
 	MUX_WR_ADDR : gen_mux21 GENERIC
