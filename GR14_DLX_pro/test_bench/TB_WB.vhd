@@ -8,7 +8,7 @@ ENTITY TB_WB IS
 END TB_WB;
 
 ARCHITECTURE TEST OF TB_WB IS
-    TYPE MEM_ARRAY IS ARRAY (0 TO 5) OF STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+    TYPE MEM_ARRAY IS ARRAY (0 TO 7) OF STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
     CONSTANT INP_VALS : MEM_ARRAY :=
     (
     x"F2300100",
@@ -17,6 +17,8 @@ ARCHITECTURE TEST OF TB_WB IS
     x"01000026",
     x"00200007",
     x"FFF00009",
+    x"0000FF0A",
+    x"0D10100C"
     );
     SIGNAL CLK_tb          : STD_LOGIC := '0';
     SIGNAL RST_tb          : STD_LOGIC;
@@ -57,29 +59,29 @@ BEGIN
     )
     PORT MAP
     (
-        CLK          => CLK_tb;
-        RST          => RST_tb;
-        WRT_LATCH_EN => WRT_LATCH_EN_tb;
-        JAL_MUX_SEL  => JAL_MUX_SEL_tb;
-        WB_MUX_SEL   => WB_MUX_SEL_tb;
-        MUX_IN2      => MUX_IN2_tb;
-        MUX_IN1      => MUX_IN1_tb;
-        MUX_IN0      => MUX_IN0_tb;
+        CLK          => CLK_tb,
+        RST          => RST_tb,
+        WRT_LATCH_EN => WRT_LATCH_EN_tb,
+        JAL_MUX_SEL  => JAL_MUX_SEL_tb,
+        WB_MUX_SEL   => WB_MUX_SEL_tb,
+        MUX_IN2      => MUX_IN2_tb,
+        MUX_IN1      => MUX_IN1_tb,
+        MUX_IN0      => MUX_IN0_tb,
         WRT_OUT      => WRT_OUT_tb
     );
 
     P_STIMULI : PROCESS
     BEGIN
         REPORT("Starting simulation");
-        RST_tb <= '0'; -- resetting (active-low)
-        WAIT UNTIL falling_edge(CLK_tb);
-        RST_tb          <= '1';
+        RST_tb          <= '0'; -- resetting (active-low)
         WRT_LATCH_EN_tb <= '1';
         JAL_MUX_SEL_tb  <= '0';
         WB_MUX_SEL_tb   <= '0';
         MUX_IN0_tb      <= (OTHERS => '0');
         MUX_IN1_tb      <= (OTHERS => '0');
         MUX_IN2_tb      <= (OTHERS => '0');
+        WAIT UNTIL falling_edge(CLK_tb);
+        RST_tb <= '1';
 
         --############################ TEST 1  ############################--
         REPORT("TEST 1:   - Input on 00 stable");
@@ -166,7 +168,8 @@ BEGIN
 
         --############################ TEST 6  ############################--
         REPORT("TEST 6:   - Reset during normal operation");
-        RST_tb <= '0';
+        WRT_LATCH_EN_tb <= '1';
+        RST_tb          <= '0';
         WAIT UNTIL falling_edge(CLK_tb);
         ASSERT (WRT_OUT_tb = (WRT_OUT_tb'RANGE => '0'))
         REPORT " WRT_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(WRT_OUT_tb)))
