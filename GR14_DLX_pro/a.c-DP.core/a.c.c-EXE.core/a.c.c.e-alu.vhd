@@ -110,11 +110,11 @@ BEGIN
 					TMP(0) := '1';
 				END IF;
 			WHEN R_mult =>
-				TMP := STD_LOGIC_VECTOR(SIGNED('0' & DATA1((N / 2) - 1 DOWNTO 0)) * SIGNED('0' & DATA2((N / 2) - 1 DOWNTO 0)));
+				TMP := STD_LOGIC_VECTOR(SIGNED('0' & DATA1((N / 2) - 1 DOWNTO 0)) * SIGNED(DATA2((N / 2) - 1 DOWNTO 0)));
 				NEG <= TMP(N - 1);
 				OVF <= (DATA1(N - 1) AND DATA2(N - 1) AND NOT TMP(N - 1)) OR (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
 			WHEN R_multu =>
-				TMP := STD_LOGIC_VECTOR(UNSIGNED('0' & DATA1((N / 2) - 1 DOWNTO 0)) * UNSIGNED('0' & DATA2((N / 2) - 1 DOWNTO 0)));
+				TMP := STD_LOGIC_VECTOR(UNSIGNED('0' & DATA1((N / 2) - 1 DOWNTO 0)) * UNSIGNED(DATA2((N / 2) - 1 DOWNTO 0)));
 				OVF <= TMP(N);
 			WHEN OTHERS => -- faults + NOPs
 				NULL;
