@@ -5,8 +5,8 @@ USE work.dlx_utils.ALL;
 ENTITY MEM_STAGE IS
 GENERIC 
 	(
-		N_BITS_PC   : NATURAL := NbitLong; -- # of bits
-		N_BITS_DATA : NATURAL := NbitLong;
+		N_BITS_PC   : NATURAL := N_BITS_PC; -- # of bits
+		N_BITS_DATA : NATURAL := N_BITS_DATA;
 		RF_ADDR     : NATURAL := RF_ADDR -- # OF BITS FOR REGISTER FILE ADDRESS
 		
 	);
@@ -51,11 +51,14 @@ END MEM_STAGE;
 ARCHITECTURE STRUCTURAL OF MEM_STAGE IS
 
 --signals
+		SIGNAL DRAM_WE_AUX      : STD_LOGIC;
+		SIGNAL BYTE_LEN_AUX		: STD_LOGIC_VECTOR(1 downto 0);
 		SIGNAL JUMP_MUX_IN_1	: STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0); -- Input 1 of the multiplexer for jumping (JUMP) connected to alu output
 		SIGNAL MEM_ADDR_IN		: STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); -- address of data memory
 		SIGNAL BRA_OUT			: STD_LOGIC;
 		SIGNAL SIGN_EXT_OUT 	: STD_LOGIC_VECTOR(N_BITS_DATA -1 DOWNTO 0);
 		SIGNAL LMD_IN   		: STD_LOGIC_VECTOR(N_BITS_DATA -1 DOWNTO 0);
+		SIGNAL ALU_OUTPUT_OUT_AUX: STD_LOGIC_VECTOR(N_BITS_DATA -1 DOWNTO 0);
 		SIGNAL BRA_IN_AUX		: STD_LOGIC_VECTOR(0 DOWNTO 0); --auxiliary signal to connect to the register (requires an std_logic_vector)
 		SIGNAL BRA_OUT_AUX		: STD_LOGIC_VECTOR(0 DOWNTO 0); --auxiliary signal to connect to the register
 
@@ -102,8 +105,19 @@ COMPONENT gen_mux21 IS
 END COMPONENT;
 
 BEGIN
+	--Bypassing signals to the memory
+	DRAM_WE_AUX <= DRAM_WE;
+	DRAM_WE_OUT <= DRAM_WE_AUX; 
+	BYTE_LEN_AUX<=BYTE_LEN_IN;
+	BYTE_LEN_OUT<=BYTE_LEN_IN;
+
+	MEM_ADDR_OUT<=ALU_OUTPUT_OUT_AUX;
+	ALU_OUTPUT_OUT<=ALU_OUTPUT_OUT_AUX;
+
+	--Fixing problems in connections between STD_LOGIC_VECTOR AND STD_LOGIC	
 	BRA_IN_AUX(0) 	<= BRA_IN;
 	BRA_OUT 		<= BRA_OUT_AUX(0);
+
 	-- MUXES --
 	ADDR_MUX: gen_mux21 GENERIC MAP(
 		N		=>N_BITS_DATA)
@@ -140,7 +154,7 @@ BEGIN
 		rst 		=>RST, 
 		ld 			=>MEM_OUTREG_EN,
         data_in 	=>ALU_OUTPUT_IN,
-        data_out	=>ALU_OUTPUT_OUT
+        data_out	=>ALU_OUTPUT_OUT_AUX
 
 	);	
 	LMD: gen_reg GENERIC MAP(
@@ -170,11 +184,20 @@ BEGIN
         data_in		=>IR_IN,
         data_out	=>IR_OUT
 	);
+	MEM_DATA_IN_REG: gen_reg GENERIC MAP(
+		N			=> N_BITS_DATA)
+	PORT MAP(
+		clk 		=>CLK, 
+		rst 		=>RST, 
+		ld 			=>MEM_OUTREG_EN,
+        data_in		=>MEM_DATA_IN,
+        data_out	=>MEM_DATA_IN_PRIME
+	);
 
 
 	-- Sign extension block
 	SIGN_EXT_BLOCK: sign_ext GENERIC MAP(
-        N_IN0		=>N_BITS_DATA/2,
+        N_IN0		=>N_BITS_DATA,
         N_IN1		=>8,
         N_OUT		=>N_BITS_DATA)
     PORT MAP(
