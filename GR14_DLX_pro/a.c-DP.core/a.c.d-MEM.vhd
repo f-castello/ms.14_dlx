@@ -31,7 +31,7 @@ GENERIC
 		JUMP_MUX_IN_0  		: IN STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0); -- Input 0 of the multiplexer for jumping (NPC)
 		ALU_OUTPUT_IN		: IN STD_LOGIC_VECTOR(N_BITS_DATA-1 downto 0); -- 
 		MEM_DATA_IN    		: IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); -- input data of data memory
-		MEM_DATA_OUT   		: IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); --input of sign extention module
+		MEM_DATA_OUT_INT 	: IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); --input of sign extention module
 
 		NPC_IN				: IN STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0); --
 		IR_IN				: IN STD_LOGIC_VECTOR(RF_ADDR-1 downto 0);   
@@ -40,8 +40,8 @@ GENERIC
 		NPC_OUT				: OUT STD_LOGIC_VECTOR(N_BITS_PC-1 downto 0); --   
 		MEM_ADDR_OUT	    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); -- address data memory (connected to alu output)
 		MEM_DATA_IN_PRIME   : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); -- input data of data memory
-		LMD_OUT           	: OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); --output of the memory ->
 		ALU_OUTPUT_OUT  	: OUT STD_LOGIC_VECTOR(N_BITS_DATA-1 downto 0); --output of register ALU_OUTPUT
+		MEM_DATA_OUT 		: OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); --Output data from memory (after mux)
 		ADDR_MUX_OUT		: OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 downto 0)
 
 	);
@@ -57,7 +57,6 @@ ARCHITECTURE STRUCTURAL OF MEM_STAGE IS
 		SIGNAL MEM_ADDR_IN		: STD_LOGIC_VECTOR(N_BITS_DATA - 1 downto 0); -- address of data memory
 		SIGNAL BRA_OUT			: STD_LOGIC;
 		SIGNAL SIGN_EXT_OUT 	: STD_LOGIC_VECTOR(N_BITS_DATA -1 DOWNTO 0);
-		SIGNAL LMD_IN   		: STD_LOGIC_VECTOR(N_BITS_DATA -1 DOWNTO 0);
 		SIGNAL ALU_OUTPUT_OUT_AUX: STD_LOGIC_VECTOR(N_BITS_DATA -1 DOWNTO 0);
 		SIGNAL BRA_IN_AUX		: STD_LOGIC_VECTOR(0 DOWNTO 0); --auxiliary signal to connect to the register (requires an std_logic_vector)
 		SIGNAL BRA_OUT_AUX		: STD_LOGIC_VECTOR(0 DOWNTO 0); --auxiliary signal to connect to the register
@@ -65,9 +64,9 @@ ARCHITECTURE STRUCTURAL OF MEM_STAGE IS
 COMPONENT sign_ext IS
     GENERIC
     (
-        N_IN0 : NATURAL := NbitLong/2;  -- first input # of bits (must be greater than N_IN1) (half word in this case)
+        N_IN0 : NATURAL := N_BITS_DATA/2;  -- first input # of bits (must be greater than N_IN1) (half word in this case)
         N_IN1 : NATURAL := 8; -- second input # of bits (reduced size) (Byte in this case)
-        N_OUT : NATURAL := NbitLong   -- unique output # of bits (must be greater than both input sizes) (Word size in this case)
+        N_OUT : NATURAL := N_BITS_DATA   -- unique output # of bits (must be greater than both input sizes) (Word size in this case)
     );
     PORT
     (
@@ -124,17 +123,17 @@ BEGIN
 	PORT MAP(
 		sel 	=>BRA_OUT,
 		x 		=>JUMP_MUX_IN_0,
-		y 		=>ALU_OUTPUT_IN,
+		y 		=>ALU_OUTPUT_OUT_AUX,
 		m 		=>ADDR_MUX_OUT	
 	);
 	
 	DATA_MUX: gen_mux21 GENERIC MAP(
 		N=>N_BITS_DATA)
 	PORT MAP(
-		sel 	=>ZERO_PADDING,
+		sel 	=>MEM_OUT_SEL,
 		x 		=>SIGN_EXT_OUT,
-		y 		=>MEM_DATA_OUT,
-		m 		=>LMD_IN	
+		y 		=>MEM_DATA_OUT_INT,
+		m 		=>MEM_DATA_OUT	
 	);
 	-- REGISTERS --
 	BRA: gen_reg GENERIC MAP(
@@ -157,15 +156,6 @@ BEGIN
         data_out	=>ALU_OUTPUT_OUT_AUX
 
 	);	
-	LMD: gen_reg GENERIC MAP(
-		N			=> N_BITS_DATA)
-	PORT MAP(
-		clk 		=> CLK, 
-		rst 		=>RST, 
-		ld 			=>MEM_OUTREG_EN,
-        data_in		=>LMD_IN,
-        data_out	=>LMD_OUT
-	);
 	NPC3: gen_reg GENERIC MAP(
 		N			=> N_BITS_PC)
 	PORT MAP(
@@ -197,13 +187,13 @@ BEGIN
 
 	-- Sign extension block
 	SIGN_EXT_BLOCK: sign_ext GENERIC MAP(
-        N_IN0		=>N_BITS_DATA,
+        N_IN0		=>N_BITS_DATA/2,
         N_IN1		=>8,
         N_OUT		=>N_BITS_DATA)
     PORT MAP(
-        ctrl_in		=>BYTE_LEN_IN(0), -- if 0, byte extension, HW extension otherwise
+        ctrl_in		=>BYTE_LEN_IN(0), -- if 0, byte extension, Half W extension otherwise
 		zero_padding=>ZERO_PADDING,
-        data_in  	=>MEM_DATA_OUT,
+        data_in  	=>MEM_DATA_OUT_INT(15 DOWNTO 0),
         data_ext 	=>SIGN_EXT_OUT
     );	
 	
