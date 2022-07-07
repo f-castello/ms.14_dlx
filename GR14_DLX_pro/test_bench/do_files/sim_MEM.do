@@ -5,7 +5,7 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.b-gen
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.c-sign_ext.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.vhd
 vcom -reportprogress 300 -work work ../TB_MEM.vhd
-vsim -t 10ps work.cfg_test_mem
+vsim -t ps work.tb_mem
 add wave -position insertpoint sim:/tb_mem/*
 add wave -position insertpoint  \
 sim:/tb_mem/DUT/SIGN_EXT_BLOCK/data_ext

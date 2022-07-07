@@ -16,9 +16,9 @@ ENTITY WB_STAGE IS
         JAL_MUX_SEL  : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
         WB_MUX_SEL   : IN STD_LOGIC; -- Primary Outcome Selector
         -- Data ports
-        MUX_IN2 : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); -- Mux Input #2
-        MUX_IN1 : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); -- Mux Input #1
-        MUX_IN0 : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); -- Mux Input #0
+        MUX_IN2 : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); -- Mux Input #2 ("1-" -> NPC)
+        MUX_IN1 : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); -- Mux Input #1 ("01" -> MEM Out)
+        MUX_IN0 : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0); -- Mux Input #0 ("00" -> ALU Out)
         WRT_OUT : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0) -- Pipe Register Output
     );
 END WB_STAGE;
