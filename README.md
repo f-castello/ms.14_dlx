@@ -40,5 +40,5 @@ Refer to the table below to record the general progress of this project (note th
 | `pc_add`      | DONE | DONE | DONE |       |
 | `reg_file`    | DONE | DONE | DONE |       |
 | `sign_ext`    | DONE | DONE |  WIP |       |
-| `WB`          | DONE | DONE |  WIP |       |
+| `WB`          | DONE | DONE | DONE |       |
 | `zero_check`  | DONE | DONE | DONE |       |
