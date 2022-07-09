@@ -1,46 +1,54 @@
 ALU TESTBENCH 
 
-
+The CARRY is set if:
+- the addition of two numbers causes a carry out of the most significant bits added
+- if the subtraction of two numbers requires a borrow into the most significant bits subtracted
 TEST 1 : 
 	- UNSIGNED ADDITION 
-	 1. O = 0, C = 0, Z = 0 00000003 + 00000002 = 00000005
-	 2. O = 1, C = 1, Z = 0 7FFFFFFF + 00000001 = 80000000
-	 3. O = 0, C = 0, Z = 0 00000011 + 00110000 = 00110011
+	 1. O = 0, C = 0, Z = 0, N = 0  00000003 + 00000002 = 00000005
+	 2. O = 1, C = 1, Z = 1, N = 0  FFFFFFFF + 00000001 = 00000000
 
 TEST 2 : 
 	- SIGNED ADDITION 
-	 1. O = 1 , N = 1 , C = 1, Z = 0  7FFFFFFF + 00000001 = 80000000, two positive operands and negative result
-	 2. O = 1 , N = 0 , C = 1, Z = 0  FFFFFFFF + 10000000 = 0FFFFFFF, two negative operands and positive result
+	 1. O = 1 , N = 1 , C = 0, Z = 0  7FFFFFFF + 00000001 = 80000000, two positive operands and negative result
+	 2. O = 1 , N = 0 , C = 1, Z = 0  FFFFFFFF + 80000000 = 7FFFFFFF, two negative operands and positive result
 	 3. O = 0 , N = 0 , C = 0, Z = 0  10000011 + 00000010 = 10000021
 
 TEST 3 :
 	- I_beqz 
-	 O = 0 , N = 0 , C = 0, Z = 0     00000FF1 + 00000000 = 00000FF1
+	 1. O = 0 , N = 0 , C = 0, Z = 0   00000FF1 + 00000000 = 00000FF1
+	 2. O = 0 , N = 0 , C = 0, Z = 1   FFFFFFFF + 80000000 = 00000000, two negative operands and positive result 
 
 	-I_bnez
 	 1. O = 0 , N = 0 , C = 0, Z = 0     00000FF1 + 00000FF2 = 00001FE3
-	 2. O = 1 , N = 0 , C = 1, Z = 0     FFFFFFFF + 10000000 = 0FFFFFFF
+	 2. O = 0 , N = 0 , C = 1, Z = 0     FFFFFFFF + 10000000 = 0FFFFFFF
+	 3. O = 0 , N = 0 , C = 0, Z = 1   	 00000FF1 + 00000000 = 00000000
+
 TEST 4 :
 	- UNSIGNED SUBTRACTION 
 	 1. O = 0 , N = 0 , C = 0, Z = 0     00000FF2 - 00000010 = 00000FE2
 	 2. O = 0 , N = 0 , C = 0, Z = 1     FFFFFFFF - FFFFFFFF = 00000000
+
 TEST 5 :
 	- SIGNED SUBTRACTION 
-	 1. O = 0 , N = 0 , C = 0, Z = 0      70000000 - 80000000 = EFFFFFFE
-	 2. O = 0, N = 0 , C = 1, Z = 0      FFFFFFFF - FFFFFFFF = 00000000
-	 3. O = 1                            FFFFFFDD - FFFFFFDB = 00000020
+	  The carry(borrow) flag is also set if the subtraction of two numbers requires a borrow int the most significant bit  subtracted
+	 1. O = 0 ,N = 0 , C = 1, Z = 0    70000000 - 80000000 = EFFFFFFE
+	 2. O = 1, N = 0 , C = 0, Z = 0     FFFFFFFF - FFFFFFFF = 00000000
+	 3. O = 0, N = 0 , C = 0, Z = 0     FFFFFFDD - FFFFFFDB = 00000020
 
 TEST 6 : 
 	- LOGIC OPERATIONS 
 	 1. ***AND*** 00000FF1 & 00000FF2 = 00000FF0
 	 2. ***OR**** 00000FF1 | 00000FF2 = 00000FF3
 	 3. ***XOR*** 00000FF1 ^ 00000FF2 = 00000003
+
 TEST 7 : 
  	- SHIFTS
  	 1. 00000FF1 << 16 = FF10000
  	 2. 00000FF1 << 25 (last five bits of 00000FF9) = E2000000
  	 3. 00000FF1 >> 1  (last five bits of 00000001) = 000007F8
  	 4. 00000FF1 >> 2 (arithmetic)                  = 000003FC
+
 TEST 8 : 
 	- COMPARISONS
 	 1. EQUAL 
@@ -53,11 +61,17 @@ TEST 8 :
 	 8. GREATER THAN unsigned 7FFFFFFF > 00000001 -> 1
 	 9. LOWER AND EQUAL THAN unsigned 7FFFFFFF <= 00000001 -> 0
 	 10. GREATER AND EQUAL THAN unsigned 00000001 >= 7FFFFFFF -> 0
+
 TEST 9 :
-	- UNSIGNED MULTIPLICATION
-	00000002 * 00000011 = 00000022 
+	- SIGNED MULTIPLICATION -> WORST CASE 16+16 = 32
+	00000002 * 00000011     = 00000022 
+	FFFF(FFFF) * FFFF(FFFF) = 00000001 
+
 TEST 10 : 
-	- SIGNED MULTIPLICATION
-	F0002211 * 00000003 = 2D0006633 (9) ->  00006633  O='1'
+	- UNSIGNED MULTIPLICATION -> WORST CASE 16+16 = 32
+	1. F000(2211) * 0000(0003) = 00006633
+	2. FFFF(FFFF) * 0000(0003) = 0002FFFD
+	3. FFFF(FFFF) * FFFF(FFFF) = FFFE0001
+
  
 

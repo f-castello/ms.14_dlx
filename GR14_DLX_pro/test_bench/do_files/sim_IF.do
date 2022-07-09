@@ -9,4 +9,4 @@ add wave *
 add wave -position insertpoint  \
 sim:/tb_if/IR_MEM_VALS
 add wave -position insertpoint sim:/tb_if/DUT/*
-run 100 ns
+run 83 ns

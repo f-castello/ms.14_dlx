@@ -5,29 +5,28 @@ USE work.dlx_utils.ALL;
 ENTITY IF_STAGE IS
 	GENERIC
 	(
-		N_BITS_PC    : NATURAL := NbitLong; -- # of bits
-		N_BITS_INST  : NATURAL := IR_N;
+		N_BITS_DATA  : NATURAL := NbitLong; -- # of bits
 		N_BYTES_INST : NATURAL := NPC_GAP
 	);
 	PORT
 	(
 		-- Control ports
-		CLK          : IN STD_LOGIC;
-		RST          : IN STD_LOGIC;
-		IR_LATCH_EN  : IN STD_LOGIC; -- Instruction Register Latch Enable
-		NPC_LATCH_EN : IN STD_LOGIC; -- NPC Register Latch Enable
+		CLK         : IN STD_LOGIC;
+		RST         : IN STD_LOGIC;
+		IF_LATCH_EN : IN STD_LOGIC; -- (NPC, IR) Register Latch Enable
+		PC_LATCH_EN : IN STD_LOGIC; -- PC Register Latch Enable
 		-- Data ports
-		PC_IN   : IN STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
-		IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_INST - 1 DOWNTO 0); -- output of the memory to the IR
-		PC_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
-		IR_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
-		NPC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0)
+		PC_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+		IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
+		PC_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+		IR_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+		NPC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
 	);
 END IF_STAGE;
 
 ARCHITECTURE STRUCTURAL OF IF_STAGE IS
-	SIGNAL PC_OUT_SIG : STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
-	SIGNAL ADDER_OUT  : STD_LOGIC_VECTOR(N_BITS_PC - 1 DOWNTO 0);
+	SIGNAL PC_OUT_SIG : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+	SIGNAL ADDER_OUT  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
 	COMPONENT gen_reg IS
 		GENERIC
@@ -57,42 +56,43 @@ ARCHITECTURE STRUCTURAL OF IF_STAGE IS
 
 BEGIN
 	PC : gen_reg GENERIC
-	MAP (N => N_BITS_PC)
+	MAP (N => N_BITS_DATA)
 	PORT MAP
 	(
 		clk      => CLK,
 		rst      => RST,
-		ld       => IR_LATCH_EN,
+		ld       => PC_LATCH_EN,
 		data_in  => PC_IN,
 		data_out => PC_OUT_SIG
 	);
 
 	IR : gen_reg GENERIC
-	MAP (N => N_BITS_INST)
+	MAP (N => N_BITS_DATA)
 	PORT
 	MAP (
 	clk      => CLK,
 	rst      => RST,
-	ld       => IR_LATCH_EN,
+	ld       => IF_LATCH_EN,
 	data_in  => IR_IN,
 	data_out => IR_OUT
 	);
 
 	NPC : gen_reg GENERIC
-	MAP (N => N_BITS_PC)
+	MAP (N => N_BITS_DATA)
 	PORT
 	MAP (
 	clk      => CLK,
 	rst      => RST,
-	ld       => NPC_LATCH_EN,
+	ld       => IF_LATCH_EN,
 	data_in  => ADDER_OUT,
 	data_out => NPC_OUT
 	);
 
 	PC_ADDER : pc_add GENERIC
 	MAP (
-	N   => N_BITS_PC,
-	OP2 => N_BYTES_INST)
+	N   => N_BITS_DATA,
+	OP2 => N_BYTES_INST
+	)
 	PORT
 	MAP (
 	data_in  => PC_OUT_SIG,

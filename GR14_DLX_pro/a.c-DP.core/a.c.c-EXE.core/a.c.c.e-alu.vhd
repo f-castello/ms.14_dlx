@@ -18,7 +18,7 @@ END ALU;
 ARCHITECTURE ARITH OF ALU IS
 BEGIN
 	PROCESS (ALU_OPCODE, DATA1, DATA2)
-		VARIABLE D1_EXT, D2_EXT, TMP : STD_LOGIC_VECTOR(N DOWNTO 0); -- temporary result on (N + 1) bits
+		VARIABLE TMP : STD_LOGIC_VECTOR(N DOWNTO 0); -- temporary result on (N + 1) bits
 	BEGIN
 		-- default values
 		NEG   <= '0';
@@ -65,9 +65,9 @@ BEGIN
 			WHEN I_slli | R_sll =>
 				TMP := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED('0' & DATA1), TO_INTEGER(UNSIGNED(DATA2(4 DOWNTO 0)))));
 			WHEN I_srli | R_srl =>
-				TMP := STD_LOGIC_VECTOR(SHIFT_RIGHT(UNSIGNED('0' & DATA1), TO_INTEGER(UNSIGNED(DATA2(4 DOWNTO 0)))));
+				TMP := STD_LOGIC_VECTOR(SHIFT_RIGHT(UNSIGNED(DATA1 & '0'), TO_INTEGER(UNSIGNED(DATA2(4 DOWNTO 0)))));
 			WHEN I_srai | R_sra =>
-				TMP := STD_LOGIC_VECTOR(SHIFT_RIGHT(SIGNED('0' & DATA1), TO_INTEGER(UNSIGNED(DATA2))));
+				TMP := STD_LOGIC_VECTOR(SHIFT_RIGHT(SIGNED(DATA1 & '0'), TO_INTEGER(UNSIGNED(DATA2))));
 				NEG <= TMP(N - 1);
 			WHEN I_seqi | R_seq =>
 				IF (SIGNED(DATA1) = SIGNED(DATA2)) THEN
@@ -110,22 +110,24 @@ BEGIN
 					TMP(0) := '1';
 				END IF;
 			WHEN R_mult =>
-				TMP := STD_LOGIC_VECTOR(SIGNED('0' & DATA1((N / 2) - 1 DOWNTO 0)) * SIGNED(DATA2((N / 2) - 1 DOWNTO 0)));
+				TMP(N - 1 DOWNTO 0) := STD_LOGIC_VECTOR(SIGNED(DATA1((N / 2) - 1 DOWNTO 0)) * SIGNED(DATA2((N / 2) - 1 DOWNTO 0)));
 				NEG <= TMP(N - 1);
-				OVF <= (DATA1(N - 1) AND DATA2(N - 1) AND NOT TMP(N - 1)) OR (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
 			WHEN R_multu =>
-				TMP := STD_LOGIC_VECTOR(UNSIGNED('0' & DATA1((N / 2) - 1 DOWNTO 0)) * UNSIGNED(DATA2((N / 2) - 1 DOWNTO 0)));
-				OVF <= TMP(N);
+				TMP(N - 1 DOWNTO 0) := STD_LOGIC_VECTOR(UNSIGNED(DATA1((N / 2) - 1 DOWNTO 0)) * UNSIGNED(DATA2((N / 2) - 1 DOWNTO 0)));
 			WHEN OTHERS => -- faults + NOPs
 				NULL;
 		END CASE;
-
-		OUTALU <= TMP(N - 1 DOWNTO 0); -- actual output assignment
 
 		IF (TMP(N - 1 DOWNTO 0) = (N - 1 DOWNTO 0 => '0')) THEN
 			ZERO <= '1';
 		END IF;
 
-		CARRY <= TMP(N - 1);
+		IF (ALU_OPCODE = I_srli OR ALU_OPCODE = R_srl OR ALU_OPCODE = I_srai OR ALU_OPCODE = R_sra) THEN
+			CARRY  <= TMP(0);          -- carry on LSB
+			OUTALU <= TMP(N DOWNTO 1); -- actual output assignment
+		ELSE
+			CARRY  <= TMP(N);              -- carry on MSB
+			OUTALU <= TMP(N - 1 DOWNTO 0); -- actual output assignment
+		END IF;
 	END PROCESS;
 END ARITH;

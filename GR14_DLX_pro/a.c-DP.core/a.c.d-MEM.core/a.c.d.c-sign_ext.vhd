@@ -5,9 +5,9 @@ USE work.dlx_utils.ALL;
 ENTITY sign_ext IS
     GENERIC
     (
-        N_IN0 : NATURAL := N_BITS_DATA / 2; -- first input # of bits (must be greater than N_IN1): half word in this case
-        N_IN1 : NATURAL := 8;               -- second input # of bits (reduced size): byte in this case
-        N_OUT : NATURAL := N_BITS_DATA      -- unique output # of bits (must be greater than both input sizes): word size in this case
+        N_IN0 : NATURAL := NbitShort; -- first input # of bits (must be greater than N_IN1): half word in this case
+        N_IN1 : NATURAL := NbitByte;  -- second input # of bits (reduced size): byte in this case
+        N_OUT : NATURAL := NbitLong   -- unique output # of bits (must be greater than both input sizes): word size in this case
     );
     PORT
     (
@@ -20,12 +20,15 @@ END sign_ext;
 
 ARCHITECTURE datafl OF sign_ext IS
 BEGIN
-    data_ext <= (N_OUT - N_IN1 - 1 DOWNTO 0 => data_in(N_IN1 - 1)) -- sign extension BYTE
-        & data_in (N_IN1 - 1 DOWNTO 0) WHEN (ctrl_in = '0' AND zero_padding = '0') ELSE
-        (N_OUT - N_IN1 - 1 DOWNTO 0 => '0')
-        & data_in (N_IN1 - 1 DOWNTO 0) WHEN (ctrl_in = '0' AND zero_padding = '1') -- zero padding BYTE
+    data_ext <=
+        (N_OUT - N_IN1 - 1 DOWNTO 0 => data_in(N_IN1 - 1)) & data_in(N_IN1 - 1 DOWNTO 0) -- sign extension BYTE
+        WHEN (ctrl_in = '0' AND zero_padding = '0')
         ELSE
-        (N_OUT - N_IN0 - 1 DOWNTO 0 => data_in(N_IN0 - 1)) & data_in WHEN (ctrl_in = '1' AND zero_padding = '0') -- sign extension HALF-WORD
+        (N_OUT - N_IN1 - 1 DOWNTO 0 => '0') & data_in(N_IN1 - 1 DOWNTO 0) -- zero padding BYTE
+        WHEN (ctrl_in = '0' AND zero_padding = '1')
         ELSE
-        (N_OUT - N_IN0 - 1 DOWNTO 0 => '0') & data_in;
+        (N_OUT - N_IN0 - 1 DOWNTO 0 => data_in(N_IN0 - 1)) & data_in -- sign extension HALF-WORD
+        WHEN (ctrl_in = '1' AND zero_padding = '0')
+        ELSE
+        (N_OUT - N_IN0 - 1 DOWNTO 0 => '0') & data_in; -- sign extension actual MSB
 END datafl;
