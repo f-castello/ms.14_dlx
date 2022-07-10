@@ -13,7 +13,7 @@ PACKAGE dlx_utils IS
     CONSTANT MICRO_N   : NATURAL := 150;
     CONSTANT FUNC_N    : NATURAL := 11;
     CONSTANT OPCODE_N  : NATURAL := 6;
-    CONSTANT CW_N      : NATURAL := 24;
+    CONSTANT CW_N      : NATURAL := 23;
     CONSTANT Tclk      : TIME    := 2 ns;
 
     -- Custom types

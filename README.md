@@ -28,7 +28,7 @@ Refer to the table below to record the general progress of this project (note th
 | `cond_branch`  | DONE | DONE | DONE |       |
 | `cpsr`         | DONE | DONE | DONE |       |
 | `CU_HW`        |  WIP |  WIP |      |       |
-| `DLX`          |  WIP |      |      |       |
+| `DLX`          | DONE |      |      |       |
 | `DP`           | DONE |  WIP |  WIP |       |
 | `EXE`          | DONE | DONE | DONE |       |
 | `gen_mux_21`   | DONE | DONE | DONE |       |

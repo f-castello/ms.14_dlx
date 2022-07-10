@@ -61,7 +61,7 @@ BEGIN
 			WHEN I_xori | R_xor =>
 				TMP := ('0' & DATA1) XOR ('0' & DATA2);
 			WHEN I_lhi =>
-				TMP := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED('0' & DATA1), N / 2));
+				TMP := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED('0' & DATA2), N / 2));
 			WHEN I_slli | R_sll =>
 				TMP := STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED('0' & DATA1), TO_INTEGER(UNSIGNED(DATA2(4 DOWNTO 0)))));
 			WHEN I_srli | R_srl =>
@@ -118,16 +118,18 @@ BEGIN
 				NULL;
 		END CASE;
 
-		IF (TMP(N - 1 DOWNTO 0) = (N - 1 DOWNTO 0 => '0')) THEN
-			ZERO <= '1';
-		END IF;
-
 		IF (ALU_OPCODE = I_srli OR ALU_OPCODE = R_srl OR ALU_OPCODE = I_srai OR ALU_OPCODE = R_sra) THEN
-			CARRY  <= TMP(0);          -- carry on LSB
-			OUTALU <= TMP(N DOWNTO 1); -- actual output assignment
-		ELSE
-			CARRY  <= TMP(N);              -- carry on MSB
-			OUTALU <= TMP(N - 1 DOWNTO 0); -- actual output assignment
+			CARRY  <= TMP(0); -- carry @ LSB
+			OUTALU <= TMP(N DOWNTO 1);
+			IF (TMP(N DOWNTO 1) = (N DOWNTO 1 => '0')) THEN
+				ZERO <= '1'; -- zero result @ N..1
+			END IF;
+		ELSE              -- normal
+			CARRY  <= TMP(N); -- carry @ MSB
+			OUTALU <= TMP(N - 1 DOWNTO 0);
+			IF (TMP(N - 1 DOWNTO 0) = (N - 1 DOWNTO 0 => '0')) THEN
+				ZERO <= '1'; -- zero result @ N-1..0
+			END IF;
 		END IF;
 	END PROCESS;
 END ARITH;

@@ -20,17 +20,17 @@ ARCHITECTURE TEST OF TB_WB IS
     x"0000FF0A",
     x"0D10100C"
     );
-    SIGNAL CLK_tb          : STD_LOGIC := '0';
-    SIGNAL RST_tb          : STD_LOGIC;
-    SIGNAL WB_LATCH_EN_tb  : STD_LOGIC; -- Write Back Register Latch Enable
-    SIGNAL JAL_MUX_SEL5_tb : STD_LOGIC; -- 'Jal' Op Auxiliary Selector
-    SIGNAL WB_MUX_SEL_tb   : STD_LOGIC; -- Primary Outcome Selector
-    SIGNAL IR_IN_tb        : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
-    SIGNAL MUX_IN2_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Mux Input #2
-    SIGNAL MUX_IN1_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Mux Input #1
-    SIGNAL MUX_IN0_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Mux Input #0
-    SIGNAL WRT_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Pipe Register Output
-    SIGNAL IR_OUT_tb       : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+    SIGNAL CLK_tb         : STD_LOGIC := '0';
+    SIGNAL RST_tb         : STD_LOGIC;
+    SIGNAL WB_LATCH_EN_tb : STD_LOGIC; -- Write Back Register Latch Enable
+    SIGNAL JAL_MUX_SEL_tb : STD_LOGIC; -- 'Jal' Op Auxiliary Selector
+    SIGNAL WB_MUX_SEL_tb  : STD_LOGIC; -- Primary Outcome Selector
+    SIGNAL IR_IN_tb       : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+    SIGNAL MUX_IN2_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Mux Input #2
+    SIGNAL MUX_IN1_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Mux Input #1
+    SIGNAL MUX_IN0_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Mux Input #0
+    SIGNAL WRT_OUT_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Pipe Register Output
+    SIGNAL IR_OUT_tb      : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 
     COMPONENT WB_STAGE IS
         GENERIC
@@ -41,11 +41,11 @@ ARCHITECTURE TEST OF TB_WB IS
         PORT
         (
             -- Control ports
-            CLK          : IN STD_LOGIC;
-            RST          : IN STD_LOGIC;
-            WB_LATCH_EN  : IN STD_LOGIC; -- (WRT, IR4) Registers Enable
-            JAL_MUX_SEL5 : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
-            WB_MUX_SEL   : IN STD_LOGIC; -- Primary Outcome Selector
+            CLK         : IN STD_LOGIC;
+            RST         : IN STD_LOGIC;
+            WB_LATCH_EN : IN STD_LOGIC; -- (WRT, IR4) Registers Enable
+            JAL_MUX_SEL : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
+            WB_MUX_SEL  : IN STD_LOGIC; -- Primary Outcome Selector
             -- Data ports
             IR_IN   : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
             MUX_IN2 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #2 ("1-" -> NPC)
@@ -65,30 +65,30 @@ BEGIN
     )
     PORT MAP
     (
-        CLK          => CLK_tb,
-        RST          => RST_tb,
-        WB_LATCH_EN  => WB_LATCH_EN_tb,
-        JAL_MUX_SEL5 => JAL_MUX_SEL5_tb,
-        WB_MUX_SEL   => WB_MUX_SEL_tb,
-        IR_IN        => IR_IN_tb,
-        MUX_IN2      => MUX_IN2_tb,
-        MUX_IN1      => MUX_IN1_tb,
-        MUX_IN0      => MUX_IN0_tb,
-        WRT_OUT      => WRT_OUT_tb,
-        IR_OUT       => IR_OUT_tb
+        CLK         => CLK_tb,
+        RST         => RST_tb,
+        WB_LATCH_EN => WB_LATCH_EN_tb,
+        JAL_MUX_SEL => JAL_MUX_SEL_tb,
+        WB_MUX_SEL  => WB_MUX_SEL_tb,
+        IR_IN       => IR_IN_tb,
+        MUX_IN2     => MUX_IN2_tb,
+        MUX_IN1     => MUX_IN1_tb,
+        MUX_IN0     => MUX_IN0_tb,
+        WRT_OUT     => WRT_OUT_tb,
+        IR_OUT      => IR_OUT_tb
     );
 
     P_STIMULI : PROCESS
     BEGIN
         REPORT("Starting simulation");
-        RST_tb          <= '0'; -- resetting (active-low)
-        WB_LATCH_EN_tb  <= '1';
-        JAL_MUX_SEL5_tb <= '0';
-        WB_MUX_SEL_tb   <= '0';
-        IR_IN_tb        <= (OTHERS => '0');
-        MUX_IN0_tb      <= (OTHERS => '0');
-        MUX_IN1_tb      <= (OTHERS => '0');
-        MUX_IN2_tb      <= (OTHERS => '0');
+        RST_tb         <= '0'; -- resetting (active-low)
+        WB_LATCH_EN_tb <= '1';
+        JAL_MUX_SEL_tb <= '0';
+        WB_MUX_SEL_tb  <= '0';
+        IR_IN_tb       <= (OTHERS => '0');
+        MUX_IN0_tb     <= (OTHERS => '0');
+        MUX_IN1_tb     <= (OTHERS => '0');
+        MUX_IN2_tb     <= (OTHERS => '0');
         WAIT UNTIL falling_edge(CLK_tb);
         RST_tb <= '1';
 
@@ -114,9 +114,9 @@ BEGIN
 
         --############################ TEST 2  ############################--
         REPORT("TEST 2:   - Input on 01 stable");
-        MUX_IN1_tb      <= INP_VALS(5);
-        JAL_MUX_SEL5_tb <= '0';
-        WB_MUX_SEL_tb   <= '1';
+        MUX_IN1_tb     <= INP_VALS(5);
+        JAL_MUX_SEL_tb <= '0';
+        WB_MUX_SEL_tb  <= '1';
         WAIT UNTIL falling_edge(CLK_tb);
         ASSERT (WRT_OUT_tb = INP_VALS(5))
         REPORT " WRT_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(WRT_OUT_tb)))
@@ -133,9 +133,9 @@ BEGIN
 
         --############################ TEST 3  ############################--
         REPORT("TEST 3:   - Input on 10 stable");
-        MUX_IN2_tb      <= INP_VALS(3);
-        JAL_MUX_SEL5_tb <= '1';
-        WB_MUX_SEL_tb   <= '0';
+        MUX_IN2_tb     <= INP_VALS(3);
+        JAL_MUX_SEL_tb <= '1';
+        WB_MUX_SEL_tb  <= '0';
         WAIT UNTIL falling_edge(CLK_tb);
         ASSERT (WRT_OUT_tb = INP_VALS(3))
         REPORT " WRT_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(WRT_OUT_tb)))
@@ -152,9 +152,9 @@ BEGIN
 
         --############################ TEST 4  ############################--
         REPORT("TEST 4:   - Input on 11 stable");
-        MUX_IN2_tb      <= INP_VALS(1);
-        JAL_MUX_SEL5_tb <= '1';
-        WB_MUX_SEL_tb   <= '1';
+        MUX_IN2_tb     <= INP_VALS(1);
+        JAL_MUX_SEL_tb <= '1';
+        WB_MUX_SEL_tb  <= '1';
         WAIT UNTIL falling_edge(CLK_tb);
         ASSERT (WRT_OUT_tb = INP_VALS(1))
         REPORT " WRT_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(WRT_OUT_tb)))
