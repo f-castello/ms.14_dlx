@@ -8,6 +8,6 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.core/a.c.c.e-alu
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.core/a.c.c.f-cpsr.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.vhd
 vcom -reportprogress 300 -work work ../TB_EXE.vhd
-vsim work.tb_exe(test) -t 10ps
+vsim -voptargs=+acc -t 10ps work.tb_exe
 add wave -position insertpoint sim:/tb_exe/*
 run 30 ns

@@ -5,11 +5,11 @@ USE work.dlx_utils.ALL;
 ENTITY DP IS
     GENERIC
     (
-        N_BITS_DATA  : NATURAL := NbitLong; -- # of bits
-        N_BYTES_INST : NATURAL := NPC_GAP;
-        RF_ADDR      : NATURAL := RF_ADDR;  -- # OF BITS FOR REGISTER FILE ADDRESS
-        N_BITS_JUMP  : NATURAL := NbitJump; -- # OF BITS OF THE INPUT OF THE SIGN EXTENTION
-        N_BITS_IMM   : NATURAL := NbitShort
+        N_BITS_DATA  : NATURAL := NbitLong; -- # of bits for data
+        N_BYTES_INST : NATURAL := NPC_GAP;  -- distance between consequent istructions
+        RF_ADDR      : NATURAL := RF_ADDR;  -- # of bits for RF address
+        N_BITS_JUMP  : NATURAL := NbitJump; -- # of bits for Jump Ops
+        N_BITS_IMM   : NATURAL := NbitShort -- # of bits for Immediate Ops
     );
     PORT
     (
@@ -17,48 +17,48 @@ ENTITY DP IS
         CLK : IN STD_LOGIC;
         RST : IN STD_LOGIC;
         -- IF_STAGE
-        IF_LATCH_EN : IN STD_LOGIC; -- (NPC, IR) Register Latch Enable
-        PC_LATCH_EN : IN STD_LOGIC; -- PC Register Latch Enable
+        IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR) Register Enable
+        PC_LATCH_EN : IN STD_LOGIC; -- Program Counter Register Enable
         -- ID_STAGE
-        JAL_MUX_SEL2  : IN STD_LOGIC;
+        JAL_MUX_SEL2  : IN STD_LOGIC; -- Jump And Link RF OR Operand
         DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
         IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
         RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
         RD2_EN        : IN STD_LOGIC; -- Register File Read 2 Enable
-        WR_EN         : IN STD_LOGIC; --enable writing port of the RF
-        ZERO_PADDING2 : IN STD_LOGIC; --
+        WR_EN         : IN STD_LOGIC; -- Register File Write Enable
+        ZERO_PADDING2 : IN STD_LOGIC; -- Choose Zero Padding over normal Sign Extension
         -- EXE_STAGE
-        MUXA_SEL      : IN STD_LOGIC; -- MUXA Sel
-        MUXB_SEL      : IN STD_LOGIC; -- MUXB Sel
+        MUXA_SEL      : IN STD_LOGIC; -- MUXA Selector
+        MUXB_SEL      : IN STD_LOGIC; -- MUXB Selector
         EXE_OUTREG_EN : IN STD_LOGIC; -- (ALU Output, ALU Flags, NPC2, IR2, Pad OP, Zero OP) Registers Enable
         EQ_COND       : IN STD_LOGIC; -- Branch if (not) Equal to Zero
         JUMP_EN       : IN STD_LOGIC; -- Jump Enable Signal for Cond Selection
         ALU_OPCODE    : IN ALU_MSG;   -- Custom Type for ALU Ops
         -- MEM_STAGE
-        MEM_OUTREG_EN : IN STD_LOGIC;
-        ZERO_PADDING4 : IN STD_LOGIC;
-        MEM_OUT_SEL   : IN STD_LOGIC; -- 0 sel sign extension output, otherwise data mem output	
-        BYTE_LEN_IN   : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-        DRAM_WE       : IN STD_LOGIC;
+        MEM_OUTREG_EN : IN STD_LOGIC;                    -- (NPC3, IR3, BRA, ALU2MEM, OP2MEM) Registers Enable
+        ZERO_PADDING4 : IN STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
+        MEM_OUT_SEL   : IN STD_LOGIC;                    -- Memory Output Mux Selector
+        BYTE_LEN_IN   : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- Memory Output Modifier
+        DRAM_WE       : IN STD_LOGIC;                    -- Data RAM Write Enable
 
-        DRAM_WE_OUT  : OUT STD_LOGIC;
-        BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
+        DRAM_WE_OUT  : OUT STD_LOGIC;                    -- Bypass to External Memory
+        BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Bypass to External Memory
         -- WB_STAGE
         WB_LATCH_EN  : IN STD_LOGIC; -- Write Back Register Latch Enable
-        JAL_MUX_SEL5 : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
-        WB_MUX_SEL   : IN STD_LOGIC; -- Primary Outcome Selector
+        JAL_MUX_SEL5 : IN STD_LOGIC; -- Jump And Link Mux Selector
+        WB_MUX_SEL   : IN STD_LOGIC; -- Write Back MUX Sel
 
         --############################ DATA ############################--
         -- IF_STAGE
-        IR_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
+        IR_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Instruction Word from External Memory
 
-        PC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+        PC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Program Counter to External Memory
         -- MEM_STAGE
-        MEM_DATA_IN      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data of data memory
-        MEM_DATA_OUT_INT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input of sign extention module
+        MEM_DATA_IN      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Data from External Memory (direct)
+        MEM_DATA_OUT_INT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Data from External Memory (ext/pad)
 
-        MEM_ADDR_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- address data memory (connected to alu output)
-        MEM_DATA_IN_PRIME : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)  -- input data of data memory
+        MEM_ADDR_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Address to External Memory
+        MEM_DATA_IN_PRIME : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)  -- Data to External Memory
     );
 END DP;
 

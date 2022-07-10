@@ -49,7 +49,7 @@ ARCHITECTURE STRUCTURAL OF MEM_STAGE IS
 	SIGNAL BRA_IN_AUX         : STD_LOGIC_VECTOR(0 DOWNTO 0); --auxiliary signal to connect to the register (requires an std_logic_vector)
 	SIGNAL BRA_OUT_AUX        : STD_LOGIC_VECTOR(0 DOWNTO 0); --auxiliary signal to connect to the register
 
-	COMPONENT sign_ext IS
+	COMPONENT sign_ext_alt IS
 		GENERIC
 		(
 			N_IN0 : NATURAL := NbitShort; -- first input # of bits (must be greater than N_IN1): half word in this case
@@ -179,7 +179,7 @@ BEGIN
 	data_out => MEM_DATA_IN_PRIME
 	);
 
-	SIGN_EXT_BLOCK : sign_ext GENERIC
+	SIGN_EXT_BLOCK : sign_ext_alt GENERIC
 	MAP (
 	N_IN0 => NbitShort,
 	N_IN1 => NbitByte,

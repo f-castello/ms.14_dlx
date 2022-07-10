@@ -28,3 +28,7 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.core/a.c.e.b-gen_
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.vhd
 
 vcom -reportprogress 300 -work work ../../a.c-DP.vhd
+vcom -reportprogress 300 -work work ../TB_DP.vhd
+vsim -voptargs=+acc work.tb_dp
+add wave *
+run 80 ns

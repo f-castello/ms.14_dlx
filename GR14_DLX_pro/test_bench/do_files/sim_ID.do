@@ -6,7 +6,7 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.b-ID.core/a.c.b.b-gen_
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.b-ID.core/a.c.b.c-reg_file.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.b-ID.vhd
 vcom -reportprogress 300 -work work ../TB_ID.vhd
-vsim -t 10ps work.tb_id
+vsim -voptargs=+acc -t 10ps work.tb_id
 add wave *
 add wave -position insertpoint  \
 sim:/tb_id/DUT/RF/ADD_WR

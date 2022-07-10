@@ -22,23 +22,24 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 
 # Integration tracking
 Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet):
-| DESIGN        | VHDL | _TB_ |  SIM | SYNTH |
-|---------------|:----:|:----:|:----:|:-----:|
-| `alu`         | DONE | DONE | DONE |       |
-| `cond_branch` | DONE | DONE | DONE |       |
-| `cpsr`        | DONE | DONE | DONE |       |
-| `CU_HW`       |  WIP |  WIP |      |       |
-| `DLX`         |  WIP |      |      |       |
-| `DP`          | DONE |  WIP |  WIP |       |
-| `EXE`         | DONE | DONE | DONE |       |
-| `gen_mux_21`  | DONE | DONE | DONE |       |
-| `gen_mux_41`  | DONE | DONE | DONE |       |
-| `gen_reg`     | DONE | DONE | DONE |       |
-| `ID`          | DONE | DONE | DONE |       |
-| `IF`          | DONE | DONE | DONE |       |
-| `MEM`         | DONE | DONE | DONE |       |
-| `pc_add`      | DONE | DONE | DONE |       |
-| `reg_file`    | DONE | DONE | DONE |       |
-| `sign_ext`    | DONE | DONE | DONE |       |
-| `WB`          | DONE | DONE | DONE |       |
-| `zero_check`  | DONE | DONE | DONE |       |
+| DESIGN         | VHDL | _TB_ |  SIM | SYNTH |
+|----------------|:----:|:----:|:----:|:-----:|
+| `alu`          | DONE | DONE | DONE |       |
+| `cond_branch`  | DONE | DONE | DONE |       |
+| `cpsr`         | DONE | DONE | DONE |       |
+| `CU_HW`        |  WIP |  WIP |      |       |
+| `DLX`          |  WIP |      |      |       |
+| `DP`           | DONE |  WIP |  WIP |       |
+| `EXE`          | DONE | DONE | DONE |       |
+| `gen_mux_21`   | DONE | DONE | DONE |       |
+| `gen_mux_41`   | DONE | DONE | DONE |       |
+| `gen_reg`      | DONE | DONE | DONE |       |
+| `ID`           | DONE | DONE | DONE |       |
+| `IF`           | DONE | DONE | DONE |       |
+| `MEM`          | DONE | DONE | DONE |       |
+| `pc_add`       | DONE | DONE | DONE |       |
+| `reg_file`     | DONE | DONE | DONE |       |
+| `sign_ext_alt` | DONE | DONE | DONE |       |
+| `sign_ext`     | DONE | DONE | DONE |       |
+| `WB`           | DONE | DONE | DONE |       |
+| `zero_check`   | DONE | DONE | DONE |       |

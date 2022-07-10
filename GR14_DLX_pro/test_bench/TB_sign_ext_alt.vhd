@@ -3,15 +3,15 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.ALL;
 USE work.dlx_utils.ALL;
 
-ENTITY TB_sign_ext IS
-END TB_sign_ext;
+ENTITY TB_sign_ext_alt IS
+END TB_sign_ext_alt;
 
-ARCHITECTURE test OF TB_sign_ext IS
-    COMPONENT sign_ext
+ARCHITECTURE test OF TB_sign_ext_alt IS
+    COMPONENT sign_ext_alt
         GENERIC
         (
-            N_IN0 : NATURAL := NbitJump;
-            N_IN1 : NATURAL := NbitShort;
+            N_IN0 : NATURAL := NbitShort;
+            N_IN1 : NATURAL := NbitByte;
             N_OUT : NATURAL := NbitLong
         );
         PORT
@@ -25,15 +25,15 @@ ARCHITECTURE test OF TB_sign_ext IS
 
     SIGNAL CTRL_IN      : STD_LOGIC;
     SIGNAL ZERO_PADDING : STD_LOGIC;
-    SIGNAL DATA_IN      : STD_LOGIC_VECTOR(NbitJump - 1 DOWNTO 0);
+    SIGNAL DATA_IN      : STD_LOGIC_VECTOR(NbitShort - 1 DOWNTO 0);
     SIGNAL DATA_EXT     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 
 BEGIN
-    dut : sign_ext GENERIC
-    MAP (NbitJump, NbitShort, NbitLong) PORT MAP
+    dut : sign_ext_alt GENERIC
+    MAP (NbitShort, NbitByte, NbitLong) PORT MAP
     (CTRL_IN, ZERO_PADDING, DATA_IN, DATA_EXT);
 
     CTRL_IN      <= '0', '1' AFTER 2 * Tclk;
     ZERO_PADDING <= '0', '1' AFTER Tclk, '0' AFTER 2 * Tclk, '1' AFTER 3 * Tclk;
-    DATA_IN      <= (NbitJump - NbitShort - 1 DOWNTO 0 => '0') & (NbitShort - 1 DOWNTO 0 => '1');
+    DATA_IN      <= (NbitShort - NbitByte - 1 DOWNTO 0 => '1') & (NbitByte - 1 DOWNTO 0 => '0');
 END test;

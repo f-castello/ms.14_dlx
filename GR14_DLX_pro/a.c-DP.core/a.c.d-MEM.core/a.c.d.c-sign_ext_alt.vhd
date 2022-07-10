@@ -2,7 +2,7 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE work.dlx_utils.ALL;
 
-ENTITY sign_ext IS
+ENTITY sign_ext_alt IS
     GENERIC
     (
         N_IN0 : NATURAL := NbitShort; -- first input # of bits (must be greater than N_IN1): half word in this case
@@ -16,9 +16,9 @@ ENTITY sign_ext IS
         data_in      : IN STD_LOGIC_VECTOR(N_IN0 - 1 DOWNTO 0);
         data_ext     : OUT STD_LOGIC_VECTOR(N_OUT - 1 DOWNTO 0)
     );
-END sign_ext;
+END sign_ext_alt;
 
-ARCHITECTURE datafl OF sign_ext IS
+ARCHITECTURE datafl OF sign_ext_alt IS
 BEGIN
     data_ext <=
         (N_OUT - N_IN1 - 1 DOWNTO 0 => data_in(N_IN1 - 1)) & data_in(N_IN1 - 1 DOWNTO 0) -- sign extension BYTE
