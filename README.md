@@ -27,7 +27,7 @@ Refer to the table below to record the general progress of this project (note th
 | `alu`          | DONE | DONE | DONE |       |
 | `cond_branch`  | DONE | DONE | DONE |       |
 | `cpsr`         | DONE | DONE | DONE |       |
-| `CU_HW`        |  WIP |  WIP |      |       |
+| `CU_HW`        | DONE | DONE | DONE |       |
 | `DLX`          | DONE |      |      |       |
 | `DP`           | DONE |  WIP |  WIP |       |
 | `EXE`          | DONE | DONE | DONE |       |
