@@ -145,6 +145,8 @@ ARCHITECTURE PRO OF DLX IS
         );
     END COMPONENT;
 
+    SIGNAL IR_IN : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- interface between Instruction Memory and Datapath
+
     SIGNAL IF_LATCH_EN   : STD_LOGIC;
     SIGNAL DEC_OUTREG_EN : STD_LOGIC;
     SIGNAL IS_I_TYPE     : STD_LOGIC;
@@ -206,7 +208,7 @@ BEGIN
         WB_LATCH_EN       => WB_LATCH_EN,
         JAL_MUX_SEL       => JAL_MUX_SEL,
         WB_MUX_SEL        => WB_MUX_SEL,
-        IR_IN             => Instr_In,
+        IR_IN             => IR_IN,
         PC_OUT            => ProgCount_Out,
         MEM_DATA_OUT_INT  => DataMem_Read,
         MEM_ADDR_OUT      => DataMem_Addr,
@@ -251,4 +253,13 @@ BEGIN
     WR_EN         => WR_EN,
     WB_LATCH_EN   => WB_LATCH_EN
     );
+
+    PROCESS (Clock, ResetN) -- delay the whole Datapath by 1 cc with respect to the Control Unit
+    BEGIN
+        IF (ResetN = '0') THEN
+            IR_IN <= (OTHERS => '0');
+        ELSIF rising_edge(Clock) THEN
+            IR_IN <= Instr_In;
+        END IF;
+    END PROCESS;
 END PRO;

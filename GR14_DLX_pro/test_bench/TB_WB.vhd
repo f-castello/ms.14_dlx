@@ -78,7 +78,7 @@ BEGIN
         IR_OUT      => IR_OUT_tb
     );
 
-    P_STIMULI : PROCESS
+    P_STIMULI : PROCESS IS
     BEGIN
         REPORT("Starting simulation");
         RST_tb         <= '0'; -- resetting (active-low)

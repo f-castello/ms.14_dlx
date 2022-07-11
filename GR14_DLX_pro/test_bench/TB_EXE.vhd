@@ -108,9 +108,7 @@ BEGIN
 		V_FLAG       => V_FLAG_tb
 	);
 
-	P_STIMULI : PROCESS
-		VARIABLE i         : INTEGER                                 := 0;
-		VARIABLE j         : INTEGER                                 := 0;
+	P_STIMULI : PROCESS IS
 		VARIABLE aux       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0) := (OTHERS => '0');
 		VARIABLE aux_bit   : STD_LOGIC_VECTOR(0 DOWNTO 0)            := (OTHERS => '0');
 		VARIABLE aux_bit2  : STD_LOGIC_VECTOR(0 DOWNTO 0)            := (OTHERS => '0');

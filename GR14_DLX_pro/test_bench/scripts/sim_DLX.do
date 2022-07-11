@@ -17,6 +17,7 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.core/a.c.c.c-zer
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.core/a.c.c.d-cond_branch.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.core/a.c.c.e-alu.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.core/a.c.c.f-cpsr.vhd
+vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.vhd
 
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.a-gen_reg.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.b-gen_mux21.vhd
@@ -28,7 +29,9 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.core/a.c.e.b-gen_
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.vhd
 
 vcom -reportprogress 300 -work work ../../a.c-DP.vhd
-vcom -reportprogress 300 -work work ../TB_DP.vhd
-vsim -voptargs=+acc work.tb_dp
+vcom -reportprogress 300 -work work ../../a.b-CU_HW.vhd
+vcom -reportprogress 300 -work work ../../a-DLX.vhd
+vcom -reportprogress 300 -work work ../TB_DLX.vhd
+vsim -voptargs=+acc work.tb_dlx
 add wave *
 run 80 ns

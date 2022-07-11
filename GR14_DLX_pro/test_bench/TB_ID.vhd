@@ -84,8 +84,8 @@ ARCHITECTURE TEST OF TB_ID IS
             IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
             RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
             RD2_EN        : IN STD_LOGIC; -- Register File Read 2 Enable
-            WR_EN         : IN STD_LOGIC; --enable writing port of the RF
-            ZERO_PADDING2 : IN STD_LOGIC; --
+            WR_EN         : IN STD_LOGIC; -- enable writing port of the RF
+            ZERO_PADDING2 : IN STD_LOGIC;
             -- Data ports
             I_CODE      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
             NPC1_IN     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
@@ -95,7 +95,7 @@ ARCHITECTURE TEST OF TB_ID IS
             REGB_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
             REGIMM_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
             WR_ADDR_OUT : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
-            NPC1_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0) --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
+            NPC1_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
         );
     END COMPONENT;
 
@@ -115,11 +115,11 @@ BEGIN
         CLK           => CLK_tb,
         RST           => RST_tb,
         JAL_MUX_SEL   => JAL_MUX_SEL_tb,   --
-        DEC_OUTREG_EN => DEC_OUTREG_EN_tb, --(A, B, Imm, NPC1, IR1) Registers Enable
-        IS_I_TYPE     => IS_I_TYPE_tb,     --Detect I-Type Instructions for Sign Extension & Writing Address Selection
-        RD1_EN        => RD1_EN_tb,        --enable reading port 1 of the RF
-        RD2_EN        => RD2_EN_tb,        --enable reading port 2 of the RF
-        WR_EN         => WR_EN_tb,         --enable writing port of the RF
+        DEC_OUTREG_EN => DEC_OUTREG_EN_tb, -- (A, B, Imm, NPC1, IR1) Registers Enable
+        IS_I_TYPE     => IS_I_TYPE_tb,     -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
+        RD1_EN        => RD1_EN_tb,        -- enable reading port 1 of the RF
+        RD2_EN        => RD2_EN_tb,        -- enable reading port 2 of the RF
+        WR_EN         => WR_EN_tb,         -- enable writing port of the RF
         ZERO_PADDING2 => ZERO_PADDING2_tb,
         -- Data ports
         I_CODE      => I_CODE_tb, -- output of the memory to the IR
@@ -130,11 +130,10 @@ BEGIN
         REGB_OUT    => REGB_OUT_tb,
         REGIMM_OUT  => REGIMM_OUT_tb,
         WR_ADDR_OUT => WR_ADDR_OUT_tb,
-        NPC1_OUT    => NPC1_OUT_tb --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
+        NPC1_OUT    => NPC1_OUT_tb
     );
 
-    P_STIMULI : PROCESS
-        VARIABLE i   : INTEGER                                 := 0;
+    P_STIMULI : PROCESS IS
         VARIABLE j   : INTEGER                                 := 0;
         VARIABLE aux : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0) := (OTHERS => '0');
     BEGIN

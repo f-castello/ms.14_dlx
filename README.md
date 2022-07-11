@@ -21,25 +21,27 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 3. Every `.vhd` source file MUST be both **well commented** and **formatted** by using [this beautifier tool](https://marketplace.visualstudio.com/items?itemName=Vinrobot.vhdl-formatter) for VS Code before final submission.
 
 # Integration tracking
-Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet):
-| DESIGN         | VHDL | _TB_ |  SIM | SYNTH |
+Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet, and finally _N/A_ means that the required step is not available or not required in this context):
+| COMPONENT      | VHDL | _TB_ |  SIM | SYNTH |
 |----------------|:----:|:----:|:----:|:-----:|
-| `alu`          | DONE | DONE | DONE |       |
-| `cond_branch`  | DONE | DONE | DONE |       |
-| `cpsr`         | DONE | DONE | DONE |       |
-| `CU_HW`        | DONE | DONE | DONE |       |
-| `DLX`          | DONE |      |      |       |
-| `DP`           | DONE |  WIP |  WIP |       |
-| `EXE`          | DONE | DONE | DONE |       |
-| `gen_mux_21`   | DONE | DONE | DONE |       |
-| `gen_mux_41`   | DONE | DONE | DONE |       |
-| `gen_reg`      | DONE | DONE | DONE |       |
-| `ID`           | DONE | DONE | DONE |       |
-| `IF`           | DONE | DONE | DONE |       |
-| `MEM`          | DONE | DONE | DONE |       |
-| `pc_add`       | DONE | DONE | DONE |       |
-| `reg_file`     | DONE | DONE | DONE |       |
-| `sign_ext_alt` | DONE | DONE | DONE |       |
-| `sign_ext`     | DONE | DONE | DONE |       |
-| `WB`           | DONE | DONE | DONE |       |
-| `zero_check`   | DONE | DONE | DONE |       |
+| `alu`          | DONE | DONE | DONE |  WIP  |
+| `cond_branch`  | DONE | DONE | DONE |  WIP  |
+| `cpsr`         | DONE | DONE | DONE |  WIP  |
+| `CU_HW`        | DONE | DONE | DONE |  WIP  |
+| `DLX`          | DONE |  WIP |  WIP |  WIP  |
+| `DP`           | DONE |  N/A |  WIP |  WIP  |
+| `EXE`          | DONE | DONE | DONE |  WIP  |
+| `gen_mux_21`   | DONE | DONE | DONE |  WIP  |
+| `gen_mux_41`   | DONE | DONE | DONE |  WIP  |
+| `gen_reg`      | DONE | DONE | DONE |  WIP  |
+| `ID`           | DONE | DONE | DONE |  WIP  |
+| `IF`           | DONE | DONE | DONE |  WIP  |
+| `MEM`          | DONE | DONE | DONE |  WIP  |
+| `pc_add`       | DONE | DONE | DONE |  WIP  |
+| `reg_file`     | DONE | DONE | DONE |  WIP  |
+| `ROMEM`        | DONE | DONE | DONE |  N/A  |
+| `RWMEM`        | DONE | DONE | DONE |  N/A  |
+| `sign_ext_alt` | DONE | DONE | DONE |  WIP  |
+| `sign_ext`     | DONE | DONE | DONE |  WIP  |
+| `WB`           | DONE | DONE | DONE |  WIP  |
+| `zero_check`   | DONE | DONE | DONE |  WIP  |
