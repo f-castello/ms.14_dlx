@@ -21,7 +21,7 @@ ms22.14@led-x3850-2.polito.it:/home/ms22.14/
 3. Every `.vhd` source file MUST be both **well commented** and **formatted** by using [this beautifier tool](https://marketplace.visualstudio.com/items?itemName=Vinrobot.vhdl-formatter) for VS Code before final submission.
 
 # Integration tracking
-Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet, and finally _N/A_ means that the required step is not available or not required in this context):
+Refer to the table below to record the general progress of this project (note that _WIP_ = work-in-progress, whereas a blank cell indicates that the corresponding step is not _DONE_ and nobody has started working on it yet, and finally _N/A_ means that a specific step is not available or not required in this context):
 | COMPONENT      | VHDL | _TB_ |  SIM | SYNTH |
 |----------------|:----:|:----:|:----:|:-----:|
 | `alu`          | DONE | DONE | DONE |  WIP  |
