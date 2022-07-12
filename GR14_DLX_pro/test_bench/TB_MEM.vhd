@@ -169,11 +169,14 @@ BEGIN
 		ASSERT (NPC_OUT_tb = x"00000000")
 		REPORT " NPC_OUT exp val: " & INTEGER'image(0) & " NPT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC_OUT_tb)))
 			SEVERITY failure;
-		ASSERT (MEM_ADDR_OUT_tb = x"00000000")
-		REPORT " MEM_ADDR_OUT exp val: " & INTEGER'image(0) & " MEM_ADDR_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_ADDR_OUT_tb)))
+		--Now MEM_ADDR_OUT doesn't have a register so we cannot "reset" its value
+		aux := x"FF00FF02";
+		ASSERT (MEM_ADDR_OUT_tb = aux)
+		REPORT " MEM_ADDR_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_ADDR_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_ADDR_OUT_tb)))
 			SEVERITY failure;
-		ASSERT (MEM_DATA_IN_PRIME_tb = x"00000000")
-		REPORT " MEM_DATA_IN_PRIME exp val: " & INTEGER'image(0) & " MEM_DATA_IN_PRIME obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_IN_PRIME_tb)))
+		aux := x"000FF030";
+		ASSERT (MEM_DATA_IN_PRIME_tb = aux)
+		REPORT " MEM_DATA_IN_PRIME exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_IN_PRIME obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_IN_PRIME_tb)))
 			SEVERITY failure;
 		aux := x"FFF00400";
 		ASSERT (MEM_DATA_OUT_tb = x"FFF00400")
@@ -339,15 +342,18 @@ BEGIN
 		ASSERT (NPC_OUT_tb = aux)
 		REPORT " NPC_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " NPT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC_OUT_tb)))
 			SEVERITY failure;
-		aux := x"FE00FF02";
+		-- THe following two signals previously had a register in their path. In the new version they don't, so now they are not affected by the enable signal
+		--------------------------------------------------------------------------------------------------------------------------------------------------------
+		aux := x"00000000";
 		WAIT UNTIL falling_edge(CLK_tb);
 		ASSERT (MEM_ADDR_OUT_tb = aux)
 		REPORT " MEM_ADDR_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_ADDR_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_ADDR_OUT_tb)))
 			SEVERITY failure;
-		aux := x"040FF030";
+		aux := x"040AA000";
 		ASSERT (MEM_DATA_IN_PRIME_tb = aux)
 		REPORT " MEM_DATA_IN_PRIME exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_IN_PRIME obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_IN_PRIME_tb)))
 			SEVERITY failure;
+		----------------------------------------------------------------------------------------------------------------------------------------------------------
 		aux := x"FE00FF02";
 		ASSERT (ALU_OUTPUT_OUT_tb = aux)
 		REPORT " ALU_OUTPUT_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " ALU_OUTPUT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUTPUT_OUT_tb)))
