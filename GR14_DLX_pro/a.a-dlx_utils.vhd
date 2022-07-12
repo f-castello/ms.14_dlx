@@ -15,7 +15,7 @@ PACKAGE dlx_utils IS
     CONSTANT OPCODE_N  : NATURAL := 6;
     CONSTANT CW_N      : NATURAL := 24;
     CONSTANT Tclk      : TIME    := 2 ns;
-
+    CONSTANT RWMEM_DEPTH: NATURAL:= 128;
     -- Custom types
     TYPE ALU_MSG IS (
         R_sll,
