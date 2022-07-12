@@ -19,9 +19,9 @@ entity RWMEM is
 	port (
 			CLK   				: in std_logic;
 			RST					: in std_logic;
-			ADDR				: in std_logic_vector(6 downto 0);
+			ADDR				: in std_logic_vector(Data_size - 1 downto 0);
 			ENABLE				: in std_logic;
-			READNOTWRITE		: in std_logic;
+			WR_EN		: in std_logic;
 			DATA_READY			: out std_logic;
 			INOUT_DATA			: inout std_logic_vector(Data_size-1 downto 0);
 			BYTE_LEN			: IN STD_LOGIC_VECTOR(1 DOWNTO 0)
@@ -29,7 +29,7 @@ entity RWMEM is
 end RWMEM;
 
 architecture beh of RWMEM is
-	type DRAMtype is array (0 to RAM_DEPTH - 1) of std_logic_vector(instr_size - 1 downto 0);
+	type DRAMtype is array (0 to RAM_DEPTH-1) of std_logic_vector(instr_size - 1 downto 0);
 	signal DRAM_mem : DRAMtype;
 	signal tmp_data: std_logic_vector(Data_size - 1 downto 0);
 	signal int_data_ready,mem_ready: std_logic;
@@ -54,13 +54,13 @@ architecture beh of RWMEM is
 begin  -- beh
 	--write_process
 	WR_PROCESS:
-	process (CLK, RST,READNOTWRITE)
+	process (CLK, RST,WR_EN)
 		file mem_fp: text;
-		variable index: integer range 0 to RAM_DEPTH;
+		variable index: integer:= 0;
 		variable file_line : line;
 		variable tmp_data_u : std_logic_vector(INSTR_SIZE-1 downto 0);
 	begin  -- process
-		if RST = '1' then  	 -- asynchronous reset (active low)
+		if RST = '0' then  	 -- asynchronous reset (active low)
 --			while index < RAM_DEPTH loop
 --				DRAM_mem(index) <= std_logic_vector(to_unsigned(index,instr_size));
 --				index := index + 1;
@@ -71,13 +71,14 @@ begin  -- beh
 				file_path_init,
 				READ_MODE
 			);
-
-			--while (not endfile(mem_fp)) loop
-			while (index < RAM_DEPTH) loop
+			index := 0;
+			while (not endfile(mem_fp)) loop
+			--while (index < RAM_DEPTH) loop
 				readline(mem_fp,file_line);
 				hread(file_line,tmp_data_u);
 				DRAM_mem(index) <= tmp_data_u;
 				index := index + 1;
+				
 			end loop;
 
 			file_close(mem_fp);
@@ -89,7 +90,7 @@ begin  -- beh
 				counter <= counter + 1;
 				if (counter = data_delay) then
 					counter <= 0;
-					if (READNOTWRITE = '0') then
+					if (WR_EN = '1') then
 						IF (BYTE_LEN = "00") THEN --SAVING BYTE
 							DRAM_Mem(to_integer(unsigned(ADDR))) <= (Data_size - 1 DOWNTO 8 => '0') & INOUT_DATA(7 downto 0);
 						

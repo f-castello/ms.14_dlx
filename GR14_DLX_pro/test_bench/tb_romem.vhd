@@ -100,7 +100,7 @@ BEGIN
     generic map (
         
     
-        FILE_PATH       =>"../../romem/hex.txt",
+        FILE_PATH       =>"../../romem/hex2.txt",
         ENTRIES         => RWMEM_DEPTH,
         WORD_SIZE      => NbitLong,
     	DATA_DELAY      => 0
@@ -119,13 +119,13 @@ BEGIN
     BEGIN
         ENABLE_TB <= '0';
         WAIT UNTIL falling_edge(CLK_tb);
-        RST_TB <= '1';
+        RST_TB <= '0';
         
         ---
         WAIT UNTIL falling_edge(CLK_tb);
         REPORT("Starting simulation");
         REPORT("TEST 1: Writing byte in memory");
-        RST_TB          <= '0';
+        RST_TB          <= '1'; --no reseting
         ENABLE_TB       <= '1'; --enabling memory       
         index           := 0;
         while (index < MEM_COPY'length) loop

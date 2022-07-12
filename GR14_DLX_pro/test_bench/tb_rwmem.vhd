@@ -52,9 +52,9 @@ ARCHITECTURE TEST OF TB_RWMEM IS
 
                 SIGNAL CLK_TB   				: std_logic := '0';
     			SIGNAL RST_TB					: std_logic;
-    			SIGNAL ADDR_TB			    	: STD_LOGIC_VECTOR(6 downto 0);
+    			SIGNAL ADDR_TB			    	: STD_LOGIC_VECTOR(NbitLong - 1 downto 0);
     			SIGNAL ENABLE_TB		 		: STD_LOGIC;
-    			SIGNAL READNOTWRITE_TB		    : STD_LOGIC;
+    			SIGNAL WR_EN_TB		    : STD_LOGIC;
     			SIGNAL DATA_READY_TB			: STD_LOGIC;
     			SIGNAL INOUT_DATA_TB			: std_logic_vector(NbitLong-1 downto 0);
                 SIGNAL W_DATA_TB                : std_logic_vector(NbitLong-1 downto 0);
@@ -74,9 +74,9 @@ ARCHITECTURE TEST OF TB_RWMEM IS
     	port (
     			CLK   				: in std_logic;
     			RST					: in std_logic;
-    			ADDR				: in std_logic_vector(6 downto 0);
+    			ADDR				: in std_logic_vector(Data_size - 1 downto 0);
     			ENABLE				: in std_logic;
-    			READNOTWRITE		: in std_logic;
+    			WR_EN		: in std_logic;
     			DATA_READY			: out std_logic;
     			INOUT_DATA			: INOUT std_logic_vector(Data_size-1 downto 0);
                 BYTE_LEN			: IN STD_LOGIC_VECTOR(1 DOWNTO 0)
@@ -97,7 +97,7 @@ BEGIN
         RST =>RST_TB, 
         ADDR =>ADDR_TB, 
         ENABLE =>ENABLE_TB, 
-        READNOTWRITE =>READNOTWRITE_TB, 
+        WR_EN =>WR_EN_TB, 
         DATA_READY =>DATA_READY_TB, 
         INOUT_DATA =>INOUT_DATA_TB,
 		BYTE_LEN => BYTE_LEN_TB 
@@ -108,15 +108,15 @@ BEGIN
     BEGIN
         ENABLE_TB <= '0';
         WAIT UNTIL falling_edge(CLK_tb);
-        RST_TB <= '1';
+        RST_TB <= '0';
         
         ---
         WAIT UNTIL falling_edge(CLK_tb);
         REPORT("Starting simulation");
         REPORT("TEST 1: Writing byte in memory");
-        RST_TB          <= '0';
+        RST_TB          <= '1';
         ENABLE_TB       <= '1'; --enabling memory
-        READNOTWRITE_TB <= '0'; --writing mode
+        WR_EN_TB <= '1'; --writing mode
         BYTE_LEN_TB	    <= "00";
         index           := 0;
         while (index < MEM_EXAMPLE'length/4) loop
@@ -162,7 +162,7 @@ BEGIN
         END LOOP;
         
         REPORT("TEST 4: Reading byte in memory");
-        READNOTWRITE_TB <= '1'; --reading mode
+        WR_EN_TB <= '0'; --reading mode
         BYTE_LEN_TB	    <= "00"; --reading byte
         index           := 0;
         while (index < MEM_EXAMPLE'length/4) loop
@@ -203,6 +203,6 @@ BEGIN
 	BEGIN
 		CLK_tb <= NOT(CLK_tb) AFTER Tclk / 2;
 	END PROCESS;
-    INOUT_DATA_TB <= W_DATA_TB when (ENABLE_TB = '1' and READNOTWRITE_TB = '0') else (others=>'Z');
+    INOUT_DATA_TB <= W_DATA_TB when (ENABLE_TB = '1' and WR_EN_TB = '1') else (others=>'Z');
     
 END TEST;

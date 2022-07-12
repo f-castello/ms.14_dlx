@@ -41,15 +41,16 @@ begin
 		variable index : integer := 0;
 		variable tmp_data_u : std_logic_vector(WORD_SIZE-1 downto 0);
 	begin  -- process FILL_MEM_P
-		if (Rst = '1') then
+		if (Rst = '0') then
 			file_open(
 				mem_fp,
 				file_path,
 				READ_MODE
 			);
 
-			--while (not endfile(mem_fp)) loop
-			while (index < 53) loop
+			index := 0;
+			while (not endfile(mem_fp)) loop
+			--while (index < 53) loop
 				readline(mem_fp,file_line);
 				hread(file_line,tmp_data_u);
 				Memory(index) <= conv_integer(unsigned(tmp_data_u));
@@ -60,13 +61,14 @@ begin
 
 			count <= 0;
 		elsif CLK'event and clk= '1' then
+			REPORT("NOT RESETING");
 			if (ENABLE = '1' ) then
 				count <= count + 1;
 				if (count = data_delay) then
 					count <= 0;
 					valid <= '1';
-					idout <=conv_std_logic_vector(Memory(conv_integer(unsigned(ADDRESS))),WORD_SIZE
-					);
+					idout <=conv_std_logic_vector(Memory(conv_integer(unsigned(ADDRESS))),WORD_SIZE);
+					REPORT("Starting simulation");
 				end if;
 			else
 				count <= 0;

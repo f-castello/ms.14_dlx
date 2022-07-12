@@ -31,7 +31,29 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.vhd
 vcom -reportprogress 300 -work work ../../a.b-CU_HW.vhd
 vcom -reportprogress 300 -work work ../../a-DLX.vhd
+vcom -reportprogress 300 -work work ../../rwmem/rwmem.vhd
+vcom -reportprogress 300 -work work ../../romem/romem.vhd
 vcom -reportprogress 300 -work work ../TB_DLX.vhd
 vsim -voptargs=+acc work.tb_dlx
 add wave *
+add wave -position insertpoint  \
+sim:/tb_dlx/DATA_MEM/DRAM_mem
+add wave -position insertpoint  \
+sim:/tb_dlx/INST_MEM/Memory
+add wave -position insertpoint  \
+sim:/tb_dlx/INST_MEM/idout
+add wave -position insertpoint  \
+sim:/tb_dlx/INST_MEM/DATA
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/PC_LATCH_EN
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/JUMP_EN
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/IF_LATCH_EN
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/DEC_OUTREG_EN
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/EXE_OUTREG_EN
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/MEM_OUTREG_EN
 run 80 ns
