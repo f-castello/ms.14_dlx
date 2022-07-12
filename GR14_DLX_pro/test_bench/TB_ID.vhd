@@ -47,7 +47,7 @@ ARCHITECTURE TEST OF TB_ID IS
     SIGNAL CLK_tb : STD_LOGIC := '0';
     -- Control signals
     SIGNAL RST_tb           : STD_LOGIC;
-    SIGNAL JAL_MUX_SEL2_tb  : STD_LOGIC;
+    SIGNAL JAL_MUX_SEL_tb   : STD_LOGIC;
     SIGNAL DEC_OUTREG_EN_tb : STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
     SIGNAL IS_I_TYPE_tb     : STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
     SIGNAL RD1_EN_tb        : STD_LOGIC; --enable reading port 1 of the RF
@@ -79,13 +79,13 @@ ARCHITECTURE TEST OF TB_ID IS
             -- Control ports
             CLK           : IN STD_LOGIC;
             RST           : IN STD_LOGIC;
-            JAL_MUX_SEL2  : IN STD_LOGIC;
+            JAL_MUX_SEL   : IN STD_LOGIC;
             DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
             IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
             RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
             RD2_EN        : IN STD_LOGIC; -- Register File Read 2 Enable
-            WR_EN         : IN STD_LOGIC; --enable writing port of the RF
-            ZERO_PADDING2 : IN STD_LOGIC; --
+            WR_EN         : IN STD_LOGIC; -- enable writing port of the RF
+            ZERO_PADDING2 : IN STD_LOGIC;
             -- Data ports
             I_CODE      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
             NPC1_IN     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
@@ -95,7 +95,7 @@ ARCHITECTURE TEST OF TB_ID IS
             REGB_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
             REGIMM_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
             WR_ADDR_OUT : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
-            NPC1_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0) --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
+            NPC1_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
         );
     END COMPONENT;
 
@@ -114,12 +114,12 @@ BEGIN
         -- Control ports
         CLK           => CLK_tb,
         RST           => RST_tb,
-        JAL_MUX_SEL2  => JAL_MUX_SEL2_tb,  --
-        DEC_OUTREG_EN => DEC_OUTREG_EN_tb, --(A, B, Imm, NPC1, IR1) Registers Enable
-        IS_I_TYPE     => IS_I_TYPE_tb,     --Detect I-Type Instructions for Sign Extension & Writing Address Selection
-        RD1_EN        => RD1_EN_tb,        --enable reading port 1 of the RF
-        RD2_EN        => RD2_EN_tb,        --enable reading port 2 of the RF
-        WR_EN         => WR_EN_tb,         --enable writing port of the RF
+        JAL_MUX_SEL   => JAL_MUX_SEL_tb,   --
+        DEC_OUTREG_EN => DEC_OUTREG_EN_tb, -- (A, B, Imm, NPC1, IR1) Registers Enable
+        IS_I_TYPE     => IS_I_TYPE_tb,     -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
+        RD1_EN        => RD1_EN_tb,        -- enable reading port 1 of the RF
+        RD2_EN        => RD2_EN_tb,        -- enable reading port 2 of the RF
+        WR_EN         => WR_EN_tb,         -- enable writing port of the RF
         ZERO_PADDING2 => ZERO_PADDING2_tb,
         -- Data ports
         I_CODE      => I_CODE_tb, -- output of the memory to the IR
@@ -130,11 +130,10 @@ BEGIN
         REGB_OUT    => REGB_OUT_tb,
         REGIMM_OUT  => REGIMM_OUT_tb,
         WR_ADDR_OUT => WR_ADDR_OUT_tb,
-        NPC1_OUT    => NPC1_OUT_tb --IN EX STAGE, THE INPUT 0 OF FIRST MUX SHOULD BE THIS REGISTER?
+        NPC1_OUT    => NPC1_OUT_tb
     );
 
-    P_STIMULI : PROCESS
-        VARIABLE i   : INTEGER                                 := 0;
+    P_STIMULI : PROCESS IS
         VARIABLE j   : INTEGER                                 := 0;
         VARIABLE aux : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0) := (OTHERS => '0');
     BEGIN
@@ -142,7 +141,7 @@ BEGIN
         REPORT("Starting simulation");
         REPORT("TEST 1:   - RF reset test");
         RST_tb           <= '0'; -- Reset registers
-        JAL_MUX_SEL2_tb  <= '0'; -- 0 in order to don't mask ADD_WR
+        JAL_MUX_SEL_tb   <= '0'; -- 0 in order to don't mask ADD_WR
         DEC_OUTREG_EN_tb <= '1'; -- 1 to enable all pipeline registers
         IS_I_TYPE_tb     <= '0'; -- 0 to select the R_type put it in the WR_ADDR_OUT reg (don't care now)
         ZERO_PADDING2_tb <= '0';
@@ -295,7 +294,7 @@ BEGIN
         REPORT("TEST 5: -Writing address in JAL instruction");
         -- We write any address in the writing port but it should be masked.
         ZERO_PADDING2_tb <= '0';
-        JAL_MUX_SEL2_tb  <= '1';     -- 1 in order to mask ADD_WR
+        JAL_MUX_SEL_tb   <= '1';     -- 1 in order to mask ADD_WR
         WR_ADDR_IN_tb    <= "10101"; --Any value different form 31 in writing address
         DATA_IN_tb       <= x"F0E0D0C0";
         WR_EN_tb         <= '1';
@@ -313,8 +312,8 @@ BEGIN
 
         --############################ TEST 6  ############################--
         REPORT("TEST 6: -Writing reg 0    -Reading ports with reading enable = 0");
-        JAL_MUX_SEL2_tb <= '0'; -- 0 in order to don't mask ADD_WR
-        WR_ADDR_IN_tb   <= "00000";
+        JAL_MUX_SEL_tb <= '0'; -- 0 in order to don't mask ADD_WR
+        WR_ADDR_IN_tb  <= "00000";
 
         WAIT UNTIL falling_edge(CLK_tb);
         I_CODE_tb(25 DOWNTO 21) <= STD_LOGIC_VECTOR(to_unsigned(0, RF_ADDR)); --Addressing last reg in port 1

@@ -20,7 +20,6 @@ ENTITY DP IS
         IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR) Register Enable
         PC_LATCH_EN : IN STD_LOGIC; -- Program Counter Register Enable
         -- ID_STAGE
-        JAL_MUX_SEL2  : IN STD_LOGIC; -- Jump And Link RF OR Operand
         DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
         IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
         RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
@@ -44,9 +43,9 @@ ENTITY DP IS
         DRAM_WE_OUT  : OUT STD_LOGIC;                    -- Bypass to External Memory
         BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Bypass to External Memory
         -- WB_STAGE
-        WB_LATCH_EN  : IN STD_LOGIC; -- Write Back Register Latch Enable
-        JAL_MUX_SEL5 : IN STD_LOGIC; -- Jump And Link Mux Selector
-        WB_MUX_SEL   : IN STD_LOGIC; -- Write Back MUX Sel
+        WB_LATCH_EN : IN STD_LOGIC; -- Write Back Register Latch Enable
+        JAL_MUX_SEL : IN STD_LOGIC; -- Jump And Link RF OR/Mux Selector
+        WB_MUX_SEL  : IN STD_LOGIC; -- Write Back MUX Sel
 
         --############################ DATA ############################--
         -- IF_STAGE
@@ -54,15 +53,14 @@ ENTITY DP IS
 
         PC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Program Counter to External Memory
         -- MEM_STAGE
-        MEM_DATA_IN      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Data from External Memory (direct)
-        MEM_DATA_OUT_INT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Data from External Memory (ext/pad)
+        MEM_DATA_OUT_INT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Data from External Memory
 
         MEM_ADDR_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Address to External Memory
         MEM_DATA_IN_PRIME : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)  -- Data to External Memory
     );
 END DP;
 
-ARCHITECTURE modular OF DP IS
+ARCHITECTURE PIPELINED OF DP IS
     SIGNAL PC_MEM2IF : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
     COMPONENT IF_STAGE
@@ -87,8 +85,8 @@ ARCHITECTURE modular OF DP IS
         );
     END COMPONENT;
 
-    SIGNAL NPC_IF2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-    SIGNAL IR_IF2ID  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL NPC_IF2ID_MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL IR_IF2ID      : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
     SIGNAL IR_WB2ID : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 
@@ -108,7 +106,7 @@ ARCHITECTURE modular OF DP IS
             -- Control ports
             CLK           : IN STD_LOGIC;
             RST           : IN STD_LOGIC;
-            JAL_MUX_SEL2  : IN STD_LOGIC;
+            JAL_MUX_SEL   : IN STD_LOGIC;
             DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
             IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
             RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
@@ -176,8 +174,6 @@ ARCHITECTURE modular OF DP IS
         );
     END COMPONENT;
 
-    SIGNAL NPC_IF2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-
     SIGNAL NPC_EXE2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
     SIGNAL ZOP_EXE2MEM : STD_LOGIC;
     SIGNAL ALU_EXE2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
@@ -234,11 +230,11 @@ ARCHITECTURE modular OF DP IS
         PORT
         (
             -- Control ports
-            CLK          : IN STD_LOGIC;
-            RST          : IN STD_LOGIC;
-            WB_LATCH_EN  : IN STD_LOGIC; -- (WRT, IR4) Registers Enable
-            JAL_MUX_SEL5 : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
-            WB_MUX_SEL   : IN STD_LOGIC; -- Primary Outcome Selector
+            CLK         : IN STD_LOGIC;
+            RST         : IN STD_LOGIC;
+            WB_LATCH_EN : IN STD_LOGIC; -- (WRT, IR4) Registers Enable
+            JAL_MUX_SEL : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
+            WB_MUX_SEL  : IN STD_LOGIC; -- Primary Outcome Selector
             -- Data ports
             IR_IN   : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
             MUX_IN2 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #2 ("1-" -> NPC)
@@ -248,8 +244,8 @@ ARCHITECTURE modular OF DP IS
             IR_OUT  : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0)
         );
     END COMPONENT;
-BEGIN
 
+BEGIN
     FETCH : IF_STAGE
     GENERIC
     MAP (
@@ -266,7 +262,7 @@ BEGIN
         IR_IN       => IR_IN,
         PC_OUT      => PC_OUT,
         IR_OUT      => IR_IF2ID,
-        NPC_OUT     => NPC_IF2ID
+        NPC_OUT     => NPC_IF2ID_MEM
     );
 
     DECODE : ID_STAGE
@@ -283,7 +279,7 @@ BEGIN
     (
     CLK           => CLK,
     RST           => RST,
-    JAL_MUX_SEL2  => JAL_MUX_SEL2,
+    JAL_MUX_SEL   => JAL_MUX_SEL,
     DEC_OUTREG_EN => DEC_OUTREG_EN,
     IS_I_TYPE     => IS_I_TYPE,
     RD1_EN        => RD1_EN,
@@ -291,7 +287,7 @@ BEGIN
     WR_EN         => WR_EN,
     ZERO_PADDING2 => ZERO_PADDING2,
     I_CODE        => IR_IF2ID,
-    NPC1_IN       => NPC_IF2ID,
+    NPC1_IN       => NPC_IF2ID_MEM,
     DATA_IN       => WRT_WB2ID,
     WR_ADDR_IN    => IR_WB2ID,
     REGA_OUT      => A_ID2EXE,
@@ -355,9 +351,9 @@ BEGIN
     DRAM_WE_OUT       => DRAM_WE_OUT,
     BYTE_LEN_OUT      => BYTE_LEN_OUT,
     BRA_IN            => ZOP_EXE2MEM,
-    JUMP_MUX_IN_0     => NPC_IF2MEM,
+    JUMP_MUX_IN_0     => NPC_IF2ID_MEM,
     ALU_OUTPUT_IN     => ALU_EXE2MEM,
-    MEM_DATA_IN       => MEM_DATA_IN,
+    MEM_DATA_IN       => PAD_EXE2MEM,
     MEM_DATA_OUT_INT  => MEM_DATA_OUT_INT,
     NPC_IN            => NPC_EXE2MEM,
     IR_IN             => IR_EXE2MEM,
@@ -379,16 +375,16 @@ BEGIN
     PORT
     MAP
     (
-    CLK          => CLK,
-    RST          => RST,
-    WB_LATCH_EN  => WB_LATCH_EN,
-    JAL_MUX_SEL5 => JAL_MUX_SEL5,
-    WB_MUX_SEL   => WB_MUX_SEL,
-    IR_IN        => IR_MEM2WB,
-    MUX_IN2      => NPC_MEM2WB,
-    MUX_IN1      => MEM_MEM2WB,
-    MUX_IN0      => ALU_MEM2WB,
-    WRT_OUT      => WRT_WB2ID,
-    IR_OUT       => IR_WB2ID
+    CLK         => CLK,
+    RST         => RST,
+    WB_LATCH_EN => WB_LATCH_EN,
+    JAL_MUX_SEL => JAL_MUX_SEL,
+    WB_MUX_SEL  => WB_MUX_SEL,
+    IR_IN       => IR_MEM2WB,
+    MUX_IN2     => NPC_MEM2WB,
+    MUX_IN1     => MEM_MEM2WB,
+    MUX_IN0     => ALU_MEM2WB,
+    WRT_OUT     => WRT_WB2ID,
+    IR_OUT      => IR_WB2ID
     );
-END modular;
+END PIPELINED;

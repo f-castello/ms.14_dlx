@@ -9,7 +9,7 @@ END TB_MEM;
 
 ARCHITECTURE TEST OF TB_MEM IS
 	TYPE MEM_ARRAY IS ARRAY (0 TO 31) OF STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
-	SIGNAL DATA_MEM : MEM_ARRAY := (
+	CONSTANT DATA_MEM : MEM_ARRAY := (
 		STD_LOGIC_VECTOR(to_unsigned(0, NbitLong)),
 		STD_LOGIC_VECTOR(to_unsigned(101111, NbitLong)),
 		STD_LOGIC_VECTOR(to_unsigned(202, NbitLong)),
@@ -138,8 +138,7 @@ BEGIN
 		ADDR_MUX_OUT      => ADDR_MUX_OUT_tb
 	);
 
-	P_STIMULI : PROCESS
-		VARIABLE i           : INTEGER                                 := 0;
+	P_STIMULI : PROCESS IS
 		VARIABLE j           : INTEGER                                 := 0;
 		VARIABLE aux         : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0) := (OTHERS => '0');
 		VARIABLE aux_DRAM_WE : STD_LOGIC_VECTOR(0 DOWNTO 0)            := (OTHERS => '0');

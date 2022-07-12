@@ -10,10 +10,10 @@ PACKAGE dlx_utils IS
     CONSTANT NbitLong  : NATURAL := 32;
     CONSTANT RF_ADDR   : NATURAL := 5;
     CONSTANT NPC_GAP   : NATURAL := 4;
-    CONSTANT MICRO_N   : NATURAL := 150;
+    CONSTANT MICRO_N   : NATURAL := 154;
     CONSTANT FUNC_N    : NATURAL := 11;
     CONSTANT OPCODE_N  : NATURAL := 6;
-    CONSTANT CW_N      : NATURAL := 24;
+    CONSTANT CW_N      : NATURAL := 22;
     CONSTANT Tclk      : TIME    := 2 ns;
     CONSTANT RWMEM_DEPTH: NATURAL:= 128;
     -- Custom types

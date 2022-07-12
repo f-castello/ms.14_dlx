@@ -25,8 +25,6 @@ ARCHITECTURE INTEGER OF reg_file IS
     SIGNAL REGISTERS : REG_ARRAY; -- internal memory
 
 BEGIN
-    REGISTERS(0) <= (OTHERS => '0'); -- reg 0 always 0s
-
     INT_REGS : PROCESS (RESET, CLK)
     BEGIN
         IF (RESET = '0') THEN
