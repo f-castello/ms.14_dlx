@@ -26,6 +26,9 @@ ARCHITECTURE TEST OF TB_DLX IS
     SIGNAL Inout_data_mem_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- data towards DRAM
     -- SIGNAL TO SOLVE ADDRESS CONFLICT BETWEEN MEMORY AND PC
     SIGNAL PC_PRIME : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+    -- SIGNAL TO SOLVE ADDRESS CONFLICT BETWEEN ALU OUTPUT AND ADDDRESS IN OF RWMEM
+    SIGNAL DataMem_Addr_prime_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+
 
     COMPONENT DLX IS
         GENERIC
@@ -165,7 +168,7 @@ BEGIN
     MAP (
     CLK        => Clock_tb,
     RST        => ResetN_tb,
-    ADDR       => DataMem_Addr_tb,
+    ADDR       => DataMem_Addr_prime_tb,
     ENABLE     => '1',
     WR_EN      => DataMem_WrEn_tb, -- '1' write mode, '0' reading mode
     DATA_READY => DATA_READY_RWMEM_TB,
@@ -177,6 +180,8 @@ BEGIN
         (OTHERS => 'Z');
     DataMem_Read_tb <= Inout_data_mem_tb;
     PC_PRIME        <= ("00" & ProgCount_Out_tb(NbitLong - 1 DOWNTO 2));
+
+    DataMem_Addr_prime_tb <=  (31 downto 7 => '0') & DataMem_Addr_tb(6 downto 0);
 
     P_STIMULI : PROCESS
     BEGIN

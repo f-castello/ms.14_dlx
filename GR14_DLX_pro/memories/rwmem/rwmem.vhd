@@ -106,7 +106,7 @@ BEGIN
 	END PROCESS WR_PROCESS;
 
 	rewrite_contenent(DRAM_mem, FILE_PATH); -- refresh the file
-	INOUT_DATA <= tmp_data WHEN int_data_ready = '1' ELSE
+	INOUT_DATA <= tmp_data WHEN int_data_ready = '1' AND WR_EN = '0' ELSE
 		(OTHERS => 'Z');
 	data_ready <= int_data_ready OR mem_ready;--delay add
 END behav;

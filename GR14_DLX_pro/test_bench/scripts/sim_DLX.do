@@ -49,6 +49,20 @@ sim:/tb_dlx/INST_MEM/DATA
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/JUMP_EN
 add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/MEMORY/ALU_OUTPUT_OUT_AUX
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/WRITE_BACK/MUX_OUT
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/MEMORY/SIGN_EXTEND/ctrl_in
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/CONTROL/BYTE_LEN
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/CONTROL/ZERO_PADDING4
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/MEMORY/SIGN_EXTEND/data_ext
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/DECODE/RF/REGISTERS
+add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/IF_LATCH_EN
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/DEC_OUTREG_EN
@@ -56,4 +70,4 @@ add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/EXE_OUTREG_EN
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/MEM_OUTREG_EN
-run 80 ns
+run 150 ns
