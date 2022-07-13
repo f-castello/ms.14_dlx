@@ -20,6 +20,7 @@ ENTITY IF_STAGE IS
 		IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
 		PC_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 		IR_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+		ADD_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 		NPC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
 	);
 END IF_STAGE;
@@ -27,6 +28,8 @@ END IF_STAGE;
 ARCHITECTURE STRUCTURAL OF IF_STAGE IS
 	SIGNAL PC_OUT_SIG : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 	SIGNAL ADDER_OUT  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+	SIGNAL NPC_INTA   : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+	SIGNAL NPC_INTB   : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
 	COMPONENT gen_reg IS
 		GENERIC
@@ -77,7 +80,7 @@ BEGIN
 	data_out => IR_OUT
 	);
 
-	NPC : gen_reg GENERIC
+	NPC0 : gen_reg GENERIC
 	MAP (N => N_BITS_DATA)
 	PORT
 	MAP (
@@ -85,6 +88,28 @@ BEGIN
 	rst      => RST,
 	ld       => IF_LATCH_EN,
 	data_in  => ADDER_OUT,
+	data_out => NPC_INTA
+	);
+
+	NPCA : gen_reg GENERIC
+	MAP (N => N_BITS_DATA)
+	PORT
+	MAP (
+	clk      => CLK,
+	rst      => RST,
+	ld       => IF_LATCH_EN,
+	data_in  => NPC_INTA,
+	data_out => NPC_INTB
+	);
+
+	NPCB : gen_reg GENERIC
+	MAP (N => N_BITS_DATA)
+	PORT
+	MAP (
+	clk      => CLK,
+	rst      => RST,
+	ld       => IF_LATCH_EN,
+	data_in  => NPC_INTB,
 	data_out => NPC_OUT
 	);
 
@@ -99,5 +124,6 @@ BEGIN
 	data_out => ADDER_OUT
 	);
 
-	PC_OUT <= PC_OUT_SIG;
+	PC_OUT  <= PC_OUT_SIG;
+	ADD_OUT <= ADDER_OUT;
 END STRUCTURAL;

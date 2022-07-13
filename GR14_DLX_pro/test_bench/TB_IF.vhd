@@ -36,10 +36,12 @@ ARCHITECTURE TEST OF TB_IF IS
 	SIGNAL IF_LATCH_EN_tb : STD_LOGIC; -- (NPC, IR) Register Latch Enable
 	SIGNAL PC_LATCH_EN_tb : STD_LOGIC; -- PC Register Latch Enable
 	-- Data ports
-	SIGNAL PC_IN_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
-	SIGNAL IR_IN_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- output of the memory to the IR
-	SIGNAL PC_OUT_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
-	SIGNAL IR_OUT_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+	SIGNAL PC_IN_tb   : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+	SIGNAL IR_IN_tb   : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- output of the memory to the IR
+	SIGNAL PC_OUT_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+	SIGNAL ADD_OUT_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+	SIGNAL IR_OUT_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+	SIGNAL NPC_OUT_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 
 	COMPONENT IF_STAGE IS
 		GENERIC
@@ -59,6 +61,7 @@ ARCHITECTURE TEST OF TB_IF IS
 			IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
 			PC_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 			IR_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+			ADD_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 			NPC_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
 		);
 	END COMPONENT;
@@ -81,9 +84,11 @@ BEGIN
 		IR_IN   => IR_IN_tb,
 		PC_OUT  => PC_OUT_tb,
 		IR_OUT  => IR_OUT_tb,
-		NPC_OUT => PC_IN_tb
+		ADD_OUT => ADD_OUT_tb,
+		NPC_OUT => NPC_OUT_tb
 	);
 
+	PC_IN_tb <= ADD_OUT_tb;
 	P_STIMULI : PROCESS IS
 	BEGIN
 		REPORT("Starting simulation");
@@ -92,18 +97,29 @@ BEGIN
 		PC_LATCH_EN_tb <= '1';
 		IR_IN_tb       <= IR_MEM_VALS(TO_INTEGER(UNSIGNED(PC_OUT_tb)/4) MOD 19);
 		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (PC_OUT_tb = (NbitLong - 1 DOWNTO 0 => '0') AND PC_IN_tb = (NbitLong - 1 DOWNTO 0 => '0'))
+		ASSERT (PC_OUT_tb = (NbitLong - 1 DOWNTO 0 => '0') AND PC_IN_tb = ((NbitLong - 1 DOWNTO 3 => '0') & "100"))
 		REPORT " PC_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(PC_OUT_tb))) & " PC_IN: exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(PC_IN_tb))) & " IR_IN: " & INTEGER'image(TO_INTEGER(UNSIGNED(IR_IN_tb)))
 			SEVERITY failure;
 
 		------------------- TEST INIT ------------------
 		FOR i IN 0 TO 19 LOOP
-			WAIT UNTIL falling_edge(CLK_tb);
-			RST_tb   <= '1'; --resetting (active-low)
+			--WAIT UNTIL falling_edge(CLK_tb);
+			RST_tb   <= '1'; --NO resetting (active-low)
 			IR_IN_tb <= IR_MEM_VALS(TO_INTEGER(UNSIGNED(PC_OUT_tb)/4) MOD 19);
+			ASSERT (PC_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(i * 4, PC_OUT_tb'length)))
+			REPORT "i = " & INTEGER'image(i) & " - PC_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(PC_OUT_tb))) & "PC_OUT exp val:" & INTEGER'image(i * 4)
+				SEVERITY failure;
+			ASSERT (PC_IN_tb = STD_LOGIC_VECTOR(to_unsigned(i * 4 + 4, PC_OUT_tb'length)))
+			REPORT "i = " & INTEGER'image(i) & " PC_IN: " & INTEGER'image(TO_INTEGER(UNSIGNED(PC_IN_tb))) & " PC_IN exp val: " & INTEGER'image(i * 4 + 4)
+				SEVERITY failure;
+			IF (i > 2) THEN
+				ASSERT NPC_OUT_tb = STD_LOGIC_VECTOR(to_unsigned((i - 2) * 4, NPC_OUT_tb'length))
+				REPORT "i = " & INTEGER'image(i) & " NPC_OUT_tb: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC_OUT_tb))) & " NPC_OUT_tb exp val: " & INTEGER'image((i - 2) * 4)
+					SEVERITY failure;
+			END IF;
 			WAIT UNTIL falling_edge(CLK_tb);
-			ASSERT (PC_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(i * 4, PC_OUT_tb'length)) AND PC_IN_tb = STD_LOGIC_VECTOR(to_unsigned(i * 4 + 4, PC_OUT_tb'length)) AND IR_OUT_tb = IR_MEM_VALS(i MOD 19))
-			REPORT " PC_OUT: " & INTEGER'image(TO_INTEGER(UNSIGNED(PC_OUT_tb))) & " PC_IN: exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(PC_IN_tb))) & " IR_IN: " & INTEGER'image(TO_INTEGER(UNSIGNED(IR_OUT_tb)))
+			ASSERT IR_OUT_tb = IR_MEM_VALS(i MOD 19)
+			REPORT " IR_IN: " & INTEGER'image(TO_INTEGER(UNSIGNED(IR_OUT_tb)))
 				SEVERITY failure;
 		END LOOP;
 		REPORT("Ending simulation");

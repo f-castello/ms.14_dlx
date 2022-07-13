@@ -166,7 +166,7 @@ BEGIN
 	data_out => IR_OUT
 	);
 
-	SIGN_EXT_BLOCK : sign_ext_alt GENERIC
+	SIGN_EXTEND : sign_ext_alt GENERIC
 	MAP (
 	N_IN0 => NbitShort,
 	N_IN1 => NbitByte,

@@ -158,7 +158,7 @@ BEGIN
 	OUT2    => REGB_OUT
 	);
 
-	SING_EXT : sign_ext GENERIC
+	SIGN_EXTEND : sign_ext GENERIC
 	MAP (
 	N_IN0 => N_BITS_JUMP,
 	N_IN1 => N_BITS_IMM,
