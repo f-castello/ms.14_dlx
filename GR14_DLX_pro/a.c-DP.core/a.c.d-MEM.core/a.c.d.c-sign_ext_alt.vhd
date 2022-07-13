@@ -18,7 +18,7 @@ ENTITY sign_ext_alt IS
     );
 END sign_ext_alt;
 
-ARCHITECTURE datafl OF sign_ext_alt IS
+ARCHITECTURE dflow OF sign_ext_alt IS
 BEGIN
     data_ext <=
         (N_OUT - N_IN1 - 1 DOWNTO 0 => data_in(N_IN1 - 1)) & data_in(N_IN1 - 1 DOWNTO 0) -- sign extension BYTE
@@ -31,4 +31,4 @@ BEGIN
         WHEN (ctrl_in = '1' AND zero_padding = '0')
         ELSE
         (N_OUT - N_IN0 - 1 DOWNTO 0 => '0') & data_in; -- sign extension actual MSB
-END datafl;
+END dflow;

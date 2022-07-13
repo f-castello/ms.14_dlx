@@ -1,6 +1,5 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
-USE ieee.std_logic_unsigned.ALL;
 USE ieee.numeric_std.ALL;
 USE work.dlx_utils.ALL;
 
@@ -36,7 +35,7 @@ BEGIN
             IF (ENABLE = '1') THEN
                 IF (WR = '1') THEN
                     IF (ADD_WR /= (Abits - 1 DOWNTO 0 => '0')) THEN
-                        REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN; -- REG(ADW) = DIN
+                        REGISTERS(TO_INTEGER(UNSIGNED(ADD_WR))) <= DATAIN; -- REG(ADW) = DIN
                     END IF;
                 END IF;
                 IF (RD1 = '1') THEN
@@ -45,7 +44,7 @@ BEGIN
                     ELSIF (ADD_RD1 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
                         OUT1 <= DATAIN;                            -- bypass register
                     ELSE
-                        OUT1 <= REGISTERS(to_integer(unsigned(ADD_RD1))); -- DOUT1 = REG(ADR1)
+                        OUT1 <= REGISTERS(TO_INTEGER(UNSIGNED(ADD_RD1))); -- DOUT1 = REG(ADR1)
                     END IF;
                 ELSE
                     OUT1 <= (OTHERS => '0'); -- disable output port
@@ -56,7 +55,7 @@ BEGIN
                     ELSIF (ADD_RD2 = ADD_WR AND WR = '1') THEN -- simultaneous read & write
                         OUT2 <= DATAIN;                            -- bypass register
                     ELSE
-                        OUT2 <= REGISTERS(to_integer(unsigned(ADD_RD2))); -- DOUT2 = REG(ADR2)
+                        OUT2 <= REGISTERS(TO_INTEGER(UNSIGNED(ADD_RD2))); -- DOUT2 = REG(ADR2)
                     END IF;
                 ELSE
                     OUT2 <= (OTHERS => '0'); -- disable output port

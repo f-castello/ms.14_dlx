@@ -36,21 +36,24 @@ elaborate DLX -architecture PRO
 compile
 
 # Unconstrained reporting:
-report_timing > ./report/DLX_time_prov.rpt
+report_timing > ./report/DLX_timing_prov.rpt
 report_area > ./report/DLX_area_prov.rpt
 
 report_power > ./report/DLX_power_prov.rpt
 report_power -cell > ./report/DLX_power-cell_prov.rpt
 report_power -net > ./report/DLX_power-net_prov.rpt
 
+# Defining new period variable:
+set T 3
+
 # Creating synchronous constraint:
-create_clock -name "Clock" -period 2 Clock
+create_clock -name "Clock" -period $T Clock
 
 # Creating combinational constraint:
-set_max_delay 2 -from [all_inputs] -to [all_outputs]
+set_max_delay $T -from [all_inputs] -to [all_outputs]
 
 # Forcing maximum dynamic power:
-set_max_dynamic_power 800 uW
+set_max_dynamic_power 4 mW
 
 # Optimized compilation:
 compile -map_effort high

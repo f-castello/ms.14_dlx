@@ -31,9 +31,11 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.vhd
 vcom -reportprogress 300 -work work ../../a.b-CU_HW.vhd
 vcom -reportprogress 300 -work work ../../a-DLX.vhd
-vcom -reportprogress 300 -work work ../../rwmem/rwmem.vhd
-vcom -reportprogress 300 -work work ../../romem/romem.vhd
+
+vcom -reportprogress 300 -work work ../../memories/rwmem/rwmem.vhd
+vcom -reportprogress 300 -work work ../../memories/romem/romem.vhd
 vcom -reportprogress 300 -work work ../TB_DLX.vhd
+
 vsim -voptargs=+acc work.tb_dlx
 add wave *
 add wave -position insertpoint  \

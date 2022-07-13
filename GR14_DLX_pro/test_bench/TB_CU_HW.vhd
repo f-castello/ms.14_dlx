@@ -63,14 +63,14 @@ ARCHITECTURE TEST OF TB_CU_HW IS
     -- expected codings (unimplemented/invalid -> nop)
     TYPE MICRO_MEM IS ARRAY (0 TO MICRO_N - 1) OF STD_LOGIC_VECTOR(CW_N - 1 DOWNTO 0);
     CONSTANT cw_code_tb : MICRO_MEM := (
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1100000111111000000000",
         "1100000111111000001111",
         "1111000111111000000000",
         "1111000110111000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1111001110011000000011",
         "1111011110011000000011",
         "1111001110011000000011",
@@ -79,12 +79,12 @@ ARCHITECTURE TEST OF TB_CU_HW IS
         "1111001110011000000011",
         "1111001110011000000011",
         "1111011110011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1100101011111000000000",
         "1100101011111000000111",
         "1111011110011000000011",
-        "0000000000000000000000",
+        "1100000010011000000000", -- nop
         "1111011110011000000011",
         "1111011110011000000011",
         "1111001110011000000011",
@@ -93,130 +93,130 @@ ARCHITECTURE TEST OF TB_CU_HW IS
         "1111001110011000000011",
         "1111001110011000000011",
         "1111001110011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1111001110011000001011",
         "1111001110011000011011",
-        "0000000000000000000000",
+        "1100000010011000000000",
         "1111001110011010111011",
         "1111001110011100001011",
         "1111001110011100011011",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1111101110011001000000",
         "1111101110011001010000",
-        "0000000000000000000000",
+        "1100000010011000000000",
         "1111101110011001110000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1111011110011000000011",
         "1111011110011000000011",
         "1111011110011000000011",
         "1111011110011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1101101010011000000011",
-        "0000000000000000000000",
-        "1101101010011000000011",
-        "1101101010011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "1101101010011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "1101101010011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1100000010011000000000",
         "1101101010011000000011",
         "1101101010011000000011",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1101101010011000000011",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1101101010011000000011",
-        "1101101010011000000011",
-        "1101101010011000000011",
-        "1101101010011000000011",
-        "0000000000000000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
         "1101101010011000000011",
         "1101101010011000000011",
         "1101101010011000000011",
         "1101101010011000000011",
         "1101101010011000000011",
         "1101101010011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
+        "1101101010011000000011",
+        "1100000010011000000000",
         "1101101010011000000011",
         "1101101010011000000011",
         "1101101010011000000011",
         "1101101010011000000011",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000",
-        "0000000000000000000000"
+        "1101101010011000000011",
+        "1101101010011000000011",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1101101010011000000011",
+        "1101101010011000000011",
+        "1101101010011000000011",
+        "1101101010011000000011",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000",
+        "1100000010011000000000"
     );
 
     -- expected ALU Ops
@@ -494,20 +494,31 @@ BEGIN
                 REPORT "Control error inside pipe stage one."
                     SEVERITY failure;
             ELSE
-                ASSERT (IF_STAGE_tb = '0')
+                ASSERT (IF_STAGE_tb = cw_code_tb(16#15#)(CW_N - 1))
                 REPORT "Control error inside pipe stage one."
                     SEVERITY failure;
             END IF;
-            IF (i > 0 AND i <= 16#3E#) THEN
+            IF (i = 0) THEN
+                ASSERT (ID_STAGE_tb = (ID_STAGE_tb'RANGE => '0'))
+                REPORT "Control error inside pipe stage two."
+                    SEVERITY failure;
+            ELSIF (i <= 16#3E#) THEN
                 ASSERT (ID_STAGE_tb = cw_code_tb(i + 16#3D#)(CW_N - 2 DOWNTO CW_N - 6))
                 REPORT "Control error inside pipe stage two."
                     SEVERITY failure;
             ELSE
-                ASSERT (ID_STAGE_tb = (ID_STAGE_tb'RANGE => '0'))
+                ASSERT (ID_STAGE_tb = cw_code_tb(16#15#)(CW_N - 2 DOWNTO CW_N - 6))
                 REPORT "Control error inside pipe stage two."
                     SEVERITY failure;
             END IF;
-            IF (i > 1 AND i <= 16#3F#) THEN
+            IF (i <= 1) THEN
+                ASSERT (EXE_STAGE_tb = (EXE_STAGE_tb'RANGE => '0'))
+                REPORT "Control error inside pipe stage three."
+                    SEVERITY failure;
+                ASSERT (ALU_OPCODE_tb = nop)
+                REPORT "Wrong arithmetic/logic operation selection."
+                    SEVERITY failure;
+            ELSIF (i <= 16#3F#) THEN
                 ASSERT (EXE_STAGE_tb = cw_code_tb(i + 16#3C#)(CW_N - 7 DOWNTO CW_N - 11))
                 REPORT "Control error inside pipe stage three."
                     SEVERITY failure;
@@ -515,29 +526,32 @@ BEGIN
                 REPORT "Wrong arithmetic/logic operation selection."
                     SEVERITY failure;
             ELSE
-                ASSERT (EXE_STAGE_tb = (EXE_STAGE_tb'RANGE => '0'))
+                ASSERT (EXE_STAGE_tb = cw_code_tb(16#15#)(CW_N - 7 DOWNTO CW_N - 11))
                 REPORT "Control error inside pipe stage three."
                     SEVERITY failure;
-
                 ASSERT (ALU_OPCODE_tb = nop)
                 REPORT "Wrong arithmetic/logic operation selection."
                     SEVERITY failure;
             END IF;
-            IF (i > 2 AND i <= 16#40#) THEN
+            IF (i <= 2) THEN
+                ASSERT (MEM_STAGE_tb = (MEM_STAGE_tb'RANGE => '0'))
+                REPORT "Control error inside pipe stage four."
+                    SEVERITY failure;
+            ELSIF (i <= 16#40#) THEN
                 ASSERT (MEM_STAGE_tb = cw_code_tb(i + 16#3B#)(CW_N - 12 DOWNTO CW_N - 18))
                 REPORT "Control error inside pipe stage four."
                     SEVERITY failure;
             ELSE
-                ASSERT (MEM_STAGE_tb = (MEM_STAGE_tb'RANGE => '0'))
+                ASSERT (MEM_STAGE_tb = cw_code_tb(16#15#)(CW_N - 12 DOWNTO CW_N - 18))
                 REPORT "Control error inside pipe stage four."
                     SEVERITY failure;
             END IF;
-            IF (i > 3) THEN
-                ASSERT (WB_STAGE_tb = cw_code_tb(i + 16#3A#)(CW_N - 19 DOWNTO CW_N - 22))
+            IF (i <= 3) THEN
+                ASSERT (WB_STAGE_tb = (WB_STAGE_tb'RANGE => '0'))
                 REPORT "Control error inside pipe stage five."
                     SEVERITY failure;
             ELSE
-                ASSERT (WB_STAGE_tb = (WB_STAGE_tb'RANGE => '0'))
+                ASSERT (WB_STAGE_tb = cw_code_tb(i + 16#3A#)(CW_N - 19 DOWNTO CW_N - 22))
                 REPORT "Control error inside pipe stage five."
                     SEVERITY failure;
             END IF;
@@ -553,7 +567,7 @@ BEGIN
                 REPORT "Control error inside pipe stage one."
                     SEVERITY failure;
             ELSE
-                ASSERT (IF_STAGE_tb = '0')
+                ASSERT (IF_STAGE_tb = cw_code_tb(16#15#)(CW_N - 1))
                 REPORT "Control error inside pipe stage one."
                     SEVERITY failure;
             END IF;
@@ -562,7 +576,7 @@ BEGIN
                 REPORT "Control error inside pipe stage two."
                     SEVERITY failure;
             ELSE
-                ASSERT (ID_STAGE_tb = (ID_STAGE_tb'RANGE => '0'))
+                ASSERT (ID_STAGE_tb = cw_code_tb(16#15#)(CW_N - 2 DOWNTO CW_N - 6))
                 REPORT "Control error inside pipe stage two."
                     SEVERITY failure;
             END IF;
@@ -574,7 +588,7 @@ BEGIN
                 REPORT "Wrong arithmetic/logic operation selection."
                     SEVERITY failure;
             ELSE
-                ASSERT (EXE_STAGE_tb = (EXE_STAGE_tb'RANGE => '0'))
+                ASSERT (EXE_STAGE_tb = cw_code_tb(16#15#)(CW_N - 7 DOWNTO CW_N - 11))
                 REPORT "Control error inside pipe stage three."
                     SEVERITY failure;
                 ASSERT (ALU_OPCODE_tb = nop)
@@ -586,7 +600,7 @@ BEGIN
                 REPORT "Control error inside pipe stage four."
                     SEVERITY failure;
             ELSE
-                ASSERT (MEM_STAGE_tb = (MEM_STAGE_tb'RANGE => '0'))
+                ASSERT (MEM_STAGE_tb = cw_code_tb(16#15#)(CW_N - 12 DOWNTO CW_N - 18))
                 REPORT "Control error inside pipe stage four."
                     SEVERITY failure;
             END IF;
@@ -595,7 +609,7 @@ BEGIN
                 REPORT "Control error inside pipe stage five."
                     SEVERITY failure;
             ELSE
-                ASSERT (WB_STAGE_tb = (WB_STAGE_tb'RANGE => '0'))
+                ASSERT (WB_STAGE_tb = cw_code_tb(16#15#)(CW_N - 19 DOWNTO CW_N - 22))
                 REPORT "Control error inside pipe stage five."
                     SEVERITY failure;
             END IF;
@@ -612,7 +626,7 @@ BEGIN
                 REPORT "Control error inside pipe stage one."
                     SEVERITY failure;
             ELSE
-                ASSERT (IF_STAGE_tb = '0')
+                ASSERT (IF_STAGE_tb = cw_code_tb(16#15#)(CW_N - 1))
                 REPORT "Control error inside pipe stage one."
                     SEVERITY failure;
             END IF;
@@ -621,7 +635,7 @@ BEGIN
                 REPORT "Control error inside pipe stage two."
                     SEVERITY failure;
             ELSE
-                ASSERT (ID_STAGE_tb = (ID_STAGE_tb'RANGE => '0'))
+                ASSERT (ID_STAGE_tb = cw_code_tb(16#15#)(CW_N - 2 DOWNTO CW_N - 6))
                 REPORT "Control error inside pipe stage two."
                     SEVERITY failure;
             END IF;
@@ -634,7 +648,7 @@ BEGIN
                 REPORT "Wrong floating point operation selection."
                     SEVERITY failure;
             ELSE
-                ASSERT (EXE_STAGE_tb = (EXE_STAGE_tb'RANGE => '0'))
+                ASSERT (EXE_STAGE_tb = cw_code_tb(16#15#)(CW_N - 7 DOWNTO CW_N - 11))
                 REPORT "Control error inside pipe stage three."
                     SEVERITY failure;
 
@@ -647,7 +661,7 @@ BEGIN
                 REPORT "Control error inside pipe stage four."
                     SEVERITY failure;
             ELSE
-                ASSERT (MEM_STAGE_tb = (MEM_STAGE_tb'RANGE => '0'))
+                ASSERT (MEM_STAGE_tb = cw_code_tb(16#15#)(CW_N - 12 DOWNTO CW_N - 18))
                 REPORT "Control error inside pipe stage four."
                     SEVERITY failure;
             END IF;
@@ -656,7 +670,7 @@ BEGIN
                 REPORT "Control error inside pipe stage five."
                     SEVERITY failure;
             ELSE
-                ASSERT (WB_STAGE_tb = (WB_STAGE_tb'RANGE => '0'))
+                ASSERT (WB_STAGE_tb = cw_code_tb(16#15#)(CW_N - 19 DOWNTO CW_N - 22))
                 REPORT "Control error inside pipe stage five."
                     SEVERITY failure;
             END IF;

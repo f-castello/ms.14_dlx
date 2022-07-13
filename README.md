@@ -28,8 +28,8 @@ Refer to the table below to record the general progress of this project (note th
 | `cond_branch`  | DONE | DONE | DONE |  WIP  |
 | `cpsr`         | DONE | DONE | DONE |  WIP  |
 | `CU_HW`        | DONE | DONE | DONE |  WIP  |
-| `DLX`          | DONE |  WIP |  WIP |  WIP  |
-| `DP`           | DONE |  N/A |  WIP |  WIP  |
+| `DLX`          | DONE | DONE | DONE |  WIP  |
+| `DP`           | DONE |  N/A | DONE |  WIP  |
 | `EXE`          | DONE | DONE | DONE |  WIP  |
 | `gen_mux_21`   | DONE | DONE | DONE |  WIP  |
 | `gen_mux_41`   | DONE | DONE | DONE |  WIP  |
@@ -39,8 +39,8 @@ Refer to the table below to record the general progress of this project (note th
 | `MEM`          | DONE | DONE | DONE |  WIP  |
 | `pc_add`       | DONE | DONE | DONE |  WIP  |
 | `reg_file`     | DONE | DONE | DONE |  WIP  |
-| `ROMEM`        | DONE | DONE | DONE |  N/A  |
-| `RWMEM`        | DONE | DONE | DONE |  N/A  |
+| `romem`        | DONE | DONE | DONE |  N/A  |
+| `rwmem`        | DONE | DONE | DONE |  N/A  |
 | `sign_ext_alt` | DONE | DONE | DONE |  WIP  |
 | `sign_ext`     | DONE | DONE | DONE |  WIP  |
 | `WB`           | DONE | DONE | DONE |  WIP  |

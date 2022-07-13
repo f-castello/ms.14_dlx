@@ -9,7 +9,7 @@ ENTITY cond_branch IS
     );
 END cond_branch;
 
-ARCHITECTURE datafl OF cond_branch IS
+ARCHITECTURE dflow OF cond_branch IS
 BEGIN
     -- if (jump_in) {
     --     if (cond_in) {
@@ -22,4 +22,4 @@ BEGIN
     -- }
 
     ctrl_out <= (ctrl_in XNOR cond_in) AND jump_in;
-END datafl;
+END dflow;

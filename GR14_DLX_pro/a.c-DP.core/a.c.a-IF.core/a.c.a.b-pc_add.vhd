@@ -1,6 +1,5 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
-USE ieee.std_logic_unsigned.ALL;
 USE ieee.numeric_std.ALL;
 USE work.dlx_utils.ALL;
 
@@ -18,9 +17,6 @@ ENTITY pc_add IS
 END pc_add;
 
 ARCHITECTURE behav OF pc_add IS
-    SIGNAL second : STD_LOGIC_VECTOR(N - 1 DOWNTO 0); -- integer to std_logic_vector
-
 BEGIN
-    second   <= STD_LOGIC_VECTOR(to_signed(OP2, second'LENGTH));
-    data_out <= data_in + second;
+    data_out <= STD_LOGIC_VECTOR(SIGNED(data_in) + TO_SIGNED(OP2, data_in'LENGTH));
 END behav;
