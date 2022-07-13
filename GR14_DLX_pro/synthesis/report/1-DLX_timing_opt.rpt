@@ -1,0 +1,123 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'DLX' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DLX
+Version: F-2011.09-SP3
+Date   : Wed Jul 13 19:02:12 2022
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: CONTROL/cw3_reg[12]
+              (rising edge-triggered flip-flop clocked by Clock)
+  Endpoint: DATAPATH/EXECUTE/ALU_FLAGS/Z_reg
+            (rising edge-triggered flip-flop clocked by Clock)
+  Path Group: Clock
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DLX                5K_hvratio_1_4        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock Clock (rise edge)                                 0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  CONTROL/cw3_reg[12]/CK (DFFR_X1)                        0.00 #     0.00 r
+  CONTROL/cw3_reg[12]/QN (DFFR_X1)                        0.07       0.07 r
+  CONTROL/U108/ZN (INV_X1)                                0.03       0.10 f
+  CONTROL/MUXB_SEL (CU_HW_MICRO_SIZE154_FUNC_SIZE11_OPCODE_SIZE6_IR_SIZE32_CW_SIZE20)
+                                                          0.00       0.10 f
+  DATAPATH/MUXB_SEL (DP_N_BITS_DATA32_N_BYTES_INST4_RF_ADDR5_N_BITS_JUMP26_N_BITS_IMM16)
+                                                          0.00       0.10 f
+  DATAPATH/EXECUTE/MUXB_SEL (EXE_STAGE_N_BITS_DATA32_RF_ADDR5)
+                                                          0.00       0.10 f
+  DATAPATH/EXECUTE/MUXB/sel (gen_mux21_N32_3)             0.00       0.10 f
+  DATAPATH/EXECUTE/MUXB/U12/Z (BUF_X1)                    0.05       0.15 f
+  DATAPATH/EXECUTE/MUXB/U63/ZN (AOI22_X1)                 0.06       0.21 r
+  DATAPATH/EXECUTE/MUXB/U35/ZN (INV_X1)                   0.03       0.24 f
+  DATAPATH/EXECUTE/MUXB/m[11] (gen_mux21_N32_3)           0.00       0.24 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/DATA2[11] (ALU_N32)       0.00       0.24 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/B[11] (ALU_N32_DW02_mult_0)
+                                                          0.00       0.24 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U80/ZN (INV_X1)       0.04       0.29 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U463/ZN (INV_X1)      0.03       0.32 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U5/ZN (INV_X1)        0.10       0.42 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U207/ZN (NOR2_X1)     0.06       0.49 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U75/ZN (XNOR2_X1)     0.07       0.55 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U73/ZN (XNOR2_X1)     0.06       0.62 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_4_10/S (FA_X1)     0.14       0.75 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_5_9/S (FA_X1)      0.12       0.87 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_6_8/S (FA_X1)      0.14       1.01 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_7_7/S (FA_X1)      0.12       1.13 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_8_6/S (FA_X1)      0.14       1.27 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_9_5/S (FA_X1)      0.12       1.38 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_10_4/S (FA_X1)     0.14       1.52 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_11_3/S (FA_X1)     0.12       1.64 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_12_2/S (FA_X1)     0.14       1.78 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S2_13_1/S (FA_X1)     0.12       1.89 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S1_14_0/CO (FA_X1)
+                                                          0.10       1.99 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/S4_0/S (FA_X1)        0.14       2.13 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U26/ZN (NAND2_X1)     0.04       2.17 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/U23/ZN (NAND3_X1)     0.04       2.21 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/B[14] (ALU_N32_DW01_add_0)
+                                                          0.00       2.21 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U52/ZN (INV_X1)
+                                                          0.04       2.25 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U105/ZN (NOR2_X1)
+                                                          0.03       2.28 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U130/ZN (OR2_X1)
+                                                          0.06       2.34 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U217/ZN (NAND2_X1)
+                                                          0.03       2.37 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U63/ZN (NAND4_X1)
+                                                          0.05       2.42 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U24/ZN (NAND2_X1)
+                                                          0.04       2.46 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U61/ZN (NAND3_X1)
+                                                          0.04       2.50 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U60/ZN (AND2_X1)
+                                                          0.05       2.55 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U97/ZN (NAND2_X1)
+                                                          0.03       2.58 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U166/ZN (NAND2_X1)
+                                                          0.03       2.61 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/U165/ZN (XNOR2_X1)
+                                                          0.06       2.67 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1/SUM[23] (ALU_N32_DW01_add_0)
+                                                          0.00       2.67 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/r79/PRODUCT[25] (ALU_N32_DW02_mult_0)
+                                                          0.00       2.67 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/U570/ZN (AOI22_X1)        0.06       2.72 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/U143/ZN (AND4_X1)         0.06       2.78 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/U208/ZN (AND2_X1)         0.04       2.83 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/U141/ZN (NAND4_X1)        0.04       2.87 f
+  DATAPATH/EXECUTE/ALRITH_LOG_U/U146/ZN (NOR2_X1)         0.04       2.91 r
+  DATAPATH/EXECUTE/ALRITH_LOG_U/ZERO (ALU_N32)            0.00       2.91 r
+  DATAPATH/EXECUTE/ALU_FLAGS/FL2 (cpsr)                   0.00       2.91 r
+  DATAPATH/EXECUTE/ALU_FLAGS/U4/Z (MUX2_X1)               0.05       2.96 r
+  DATAPATH/EXECUTE/ALU_FLAGS/Z_reg/D (DFFR_X2)            0.01       2.97 r
+  data arrival time                                                  2.97
+
+  clock Clock (rise edge)                                 3.00       3.00
+  clock network delay (ideal)                             0.00       3.00
+  DATAPATH/EXECUTE/ALU_FLAGS/Z_reg/CK (DFFR_X2)           0.00       3.00 r
+  library setup time                                     -0.03       2.97
+  data required time                                                 2.97
+  --------------------------------------------------------------------------
+  data required time                                                 2.97
+  data arrival time                                                 -2.97
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1

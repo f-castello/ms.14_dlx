@@ -1,0 +1,81 @@
+ 
+****************************************
+Report : power
+        -cell
+        -analysis_effort low
+        -sort_mode cell_internal_power
+Design : DLX
+Version: F-2011.09-SP3
+Date   : Wed Jul 13 18:53:42 2022
+****************************************
+
+
+Library(s) Used:
+
+    NangateOpenCellLibrary (File: /home/mariagrazia.graziano/do/libnangate/NangateOpenCellLibrary_typical_ecsm.db)
+
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+Design        Wire Load Model            Library
+------------------------------------------------
+DLX                    5K_hvratio_1_4    NangateOpenCellLibrary
+
+
+Global Operating Voltage = 1.1  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ns
+    Dynamic Power Units = 1uW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+
+  Attributes
+  ----------
+      h  -  Hierarchical cell
+
+                        Cell      Driven Net  Tot Dynamic      Cell
+                        Internal  Switching   Power            Leakage
+Cell                    Power     Power       (% Cell/Tot)     Power      Attrs
+--------------------------------------------------------------------------------
+DATAPATH                 556.1476       N/A        N/A (N/A)   294689.6250
+                                                                          h
+CONTROL                   79.2794       N/A        N/A (N/A)   13486.7959 h
+IR_IN_reg[26]              0.8294    0.0179      0.847 (98%)     85.3740   
+IR_IN_reg[10]              0.8242    0.0181      0.842 (98%)     85.3875   
+IR_IN_reg[3]               0.8237    0.0185      0.842 (98%)     85.3952   
+IR_IN_reg[19]              0.8222    0.0181      0.840 (98%)     85.3885   
+IR_IN_reg[23]              0.8218    0.0170      0.839 (98%)     85.3701   
+IR_IN_reg[18]              0.8207    0.0172      0.838 (98%)     85.3753   
+IR_IN_reg[15]              0.8204    0.0174      0.838 (98%)     85.3790   
+IR_IN_reg[20]              0.8199    0.0169      0.837 (98%)     85.3694   
+IR_IN_reg[2]               0.8174    0.0167      0.834 (98%)     85.3692   
+IR_IN_reg[9]               0.8166    0.0165      0.833 (98%)     85.3677   
+IR_IN_reg[6]               0.8166    0.0171      0.834 (98%)     85.3785   
+IR_IN_reg[29]              0.8166    0.0184      0.835 (98%)     85.4044   
+IR_IN_reg[0]               0.8160    0.0179      0.834 (98%)     85.3966   
+IR_IN_reg[16]              0.8155    0.0162      0.832 (98%)     85.3644   
+IR_IN_reg[21]              0.8152    0.0171      0.832 (98%)     85.3812   
+IR_IN_reg[1]               0.8152    0.0165      0.832 (98%)     85.3705   
+IR_IN_reg[25]              0.8150    0.0167      0.832 (98%)     85.3736   
+IR_IN_reg[27]              0.8144    0.0172      0.832 (98%)     85.3850   
+IR_IN_reg[8]               0.8135    0.0174      0.831 (98%)     85.3892   
+IR_IN_reg[13]              0.8129    0.0173      0.830 (98%)     85.3893   
+IR_IN_reg[11]              0.8115    0.0165      0.828 (98%)     85.3754   
+IR_IN_reg[24]              0.8114    0.0167      0.828 (98%)     85.3789   
+IR_IN_reg[22]              0.8107    0.0175      0.828 (98%)     85.3963   
+IR_IN_reg[4]               0.8106    0.0173      0.828 (98%)     85.3925   
+IR_IN_reg[28]              0.8100    0.0158      0.826 (98%)     85.3652   
+IR_IN_reg[12]              0.8096    0.0172      0.827 (98%)     85.3927   
+IR_IN_reg[7]               0.8089    0.0170      0.826 (98%)     85.3895   
+IR_IN_reg[31]              0.8087    0.0164      0.825 (98%)     85.3795   
+IR_IN_reg[5]               0.8068    0.0172      0.824 (98%)     85.3964   
+IR_IN_reg[17]              0.8053    0.0157      0.821 (98%)     85.3689   
+IR_IN_reg[14]              0.8027    0.0158      0.818 (98%)     85.3764   
+IR_IN_reg[30]              0.8026    0.0164      0.819 (98%)     85.3880   
+--------------------------------------------------------------------------------
+Totals (34 cells)        661.493uW     N/A         N/A (N/A)    310.909uW
+1

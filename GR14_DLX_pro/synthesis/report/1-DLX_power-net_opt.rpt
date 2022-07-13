@@ -1,0 +1,201 @@
+ 
+****************************************
+Report : power
+        -net
+        -analysis_effort low
+        -sort_mode net_switching_power
+Design : DLX
+Version: F-2011.09-SP3
+Date   : Wed Jul 13 19:02:15 2022
+****************************************
+
+
+Library(s) Used:
+
+    NangateOpenCellLibrary (File: /home/mariagrazia.graziano/do/libnangate/NangateOpenCellLibrary_typical_ecsm.db)
+
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+Design        Wire Load Model            Library
+------------------------------------------------
+DLX                    5K_hvratio_1_4    NangateOpenCellLibrary
+
+
+Global Operating Voltage = 1.1  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ns
+    Dynamic Power Units = 1uW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+
+  Attributes
+  ----------
+      a  -  Switching activity information annotated on net
+      d  -  Default switching activity information on net
+
+                             Total      Static   Toggle   Switching
+Net                          Net Load   Prob.    Rate     Power      Attrs
+--------------------------------------------------------------------------------
+IF_LATCH_EN                   59.285    0.483    0.0325      1.1672  
+DEC_OUTREG_EN                 59.496    0.435    0.0294      1.0575  
+EXE_OUTREG_EN                 58.445    0.392    0.0264      0.9320  
+MEM_OUTREG_EN                 59.755    0.353    0.0236      0.8539  
+ProgCount_Out[2]               6.948    0.224    0.1512      0.6357  
+ALU_OPCODE[1]                 26.870    0.864    0.0314      0.5100  
+IS_I_TYPE                     15.760    0.207    0.0396      0.3773  
+ProgCount_Out[3]               4.430    0.211    0.0763      0.2046  
+ALU_OPCODE[4]                 11.603    0.110    0.0270      0.1897  
+MUXB_SEL                       7.211    0.220    0.0416      0.1814  
+MUXA_SEL                       6.358    0.208    0.0409      0.1572  
+ALU_OPCODE[6]                  6.365    0.789    0.0334      0.1286  
+ProgCount_Out[4]               4.430    0.187    0.0389      0.1043  
+BYTE_LEN_INT[0]               21.927    0.027    0.0076      0.1009  
+ALU_OPCODE[0]                  3.424    0.839    0.0367      0.0761  
+ALU_OPCODE[2]                  4.081    0.136    0.0303      0.0748  
+WR_EN                          4.081    0.139    0.0288      0.0711  
+ALU_OPCODE[5]                  3.213    0.198    0.0334      0.0650  
+MEM_OUT_SEL                   49.840    0.006    0.0021      0.0632  
+ALU_OPCODE[3]                  3.226    0.850    0.0318      0.0620  
+ProgCount_Out[5]               4.430    0.137    0.0182      0.0488  
+RD1_EN                         2.027    0.208    0.0397      0.0487  
+IR_IN[26]                      2.027    0.239    0.0305      0.0373  
+IR_IN[7]                       1.962    0.250    0.0314      0.0373  
+IR_IN[1]                       1.962    0.243    0.0312      0.0371  
+IR_IN[2]                       1.962    0.248    0.0312      0.0370  
+IR_IN[27]                      1.962    0.250    0.0311      0.0369  
+IR_IN[10]                      1.962    0.245    0.0309      0.0367  
+IR_IN[21]                      1.962    0.244    0.0308      0.0365  
+IR_IN[8]                       1.962    0.237    0.0307      0.0365  
+IR_IN[24]                      1.962    0.243    0.0307      0.0364  
+IR_IN[13]                      1.962    0.242    0.0307      0.0364  
+IR_IN[9]                       1.962    0.238    0.0306      0.0363  
+IR_IN[30]                      1.962    0.241    0.0306      0.0363  
+IR_IN[29]                      1.962    0.239    0.0306      0.0363  
+IR_IN[19]                      1.962    0.239    0.0306      0.0363  
+IR_IN[23]                      1.962    0.244    0.0305      0.0363  
+IR_IN[17]                      1.962    0.254    0.0305      0.0362  
+IR_IN[25]                      1.962    0.245    0.0305      0.0362  
+IR_IN[5]                       1.962    0.241    0.0305      0.0362  
+IR_IN[0]                       1.962    0.241    0.0303      0.0360  
+IR_IN[20]                      1.962    0.247    0.0303      0.0360  
+IR_IN[14]                      1.962    0.240    0.0303      0.0359  
+IR_IN[31]                      1.962    0.238    0.0302      0.0359  
+IR_IN[6]                       1.962    0.233    0.0300      0.0357  
+IR_IN[11]                      1.962    0.246    0.0300      0.0357  
+IR_IN[18]                      1.962    0.250    0.0300      0.0356  
+IR_IN[15]                      1.962    0.236    0.0300      0.0356  
+IR_IN[28]                      1.962    0.240    0.0300      0.0356  
+IR_IN[3]                       1.962    0.234    0.0299      0.0355  
+IR_IN[4]                       1.962    0.244    0.0298      0.0354  
+IR_IN[12]                      1.962    0.238    0.0297      0.0353  
+IR_IN[16]                      1.962    0.243    0.0297      0.0352  
+IR_IN[22]                      1.962    0.236    0.0296      0.0351  
+DataMem_Addr[0]                2.381    0.069    0.0222      0.0320  
+WB_MUX_SEL                     6.346    0.028    0.0079      0.0303  
+JAL_MUX_SEL                   15.209    0.011    0.0030      0.0273  
+DataMem_Addr[2]                2.381    0.048    0.0188      0.0270  
+DataMem_Addr[3]                2.381    0.045    0.0173      0.0250  
+ZERO_PADDING2                  2.077    0.067    0.0197      0.0247  
+DataMem_Addr[4]                2.381    0.045    0.0167      0.0240  
+DataMem_Addr[5]                2.381    0.043    0.0154      0.0222  
+ProgCount_Out[6]               4.430    0.064    0.0076      0.0204  
+DataMem_Addr[6]                2.381    0.041    0.0141      0.0203  
+DataMem_Addr[23]               2.446    0.040    0.0131      0.0193  
+DataMem_Addr[26]               2.381    0.041    0.0133      0.0191  
+DataMem_Addr[30]               2.381    0.041    0.0132      0.0191  
+DataMem_Addr[17]               2.381    0.041    0.0132      0.0190  
+DataMem_Addr[25]               2.381    0.040    0.0132      0.0190  
+DataMem_Addr[29]               2.381    0.041    0.0132      0.0190  
+DataMem_Addr[27]               2.381    0.040    0.0132      0.0190  
+DataMem_Addr[7]                2.381    0.039    0.0131      0.0189  
+DataMem_Addr[18]               2.381    0.041    0.0131      0.0189  
+DataMem_Addr[31]               2.381    0.041    0.0131      0.0188  
+DataMem_Addr[20]               2.381    0.041    0.0131      0.0188  
+DataMem_Addr[28]               2.381    0.041    0.0131      0.0188  
+DataMem_Addr[19]               2.381    0.040    0.0130      0.0188  
+DataMem_Addr[10]               2.381    0.040    0.0130      0.0187  
+DataMem_Addr[16]               2.381    0.041    0.0130      0.0187  
+DataMem_Addr[24]               2.381    0.041    0.0130      0.0187  
+DataMem_Addr[22]               2.381    0.040    0.0130      0.0187  
+DataMem_Addr[21]               2.381    0.041    0.0129      0.0186  
+DataMem_Addr[8]                2.381    0.038    0.0126      0.0182  
+DataMem_Addr[15]               2.381    0.039    0.0126      0.0182  
+DataMem_Addr[1]                2.381    0.038    0.0124      0.0179  
+DataMem_Addr[9]                2.381    0.038    0.0124      0.0179  
+DataMem_Addr[14]               2.381    0.036    0.0120      0.0174  
+DataMem_Addr[13]               2.381    0.037    0.0120      0.0172  
+DataMem_Addr[11]               2.381    0.037    0.0119      0.0172  
+DataMem_Addr[12]               2.381    0.038    0.0119      0.0171  
+EQ_COND                        2.936    0.031    0.0087      0.0154  
+RD2_EN                         2.027    0.034    0.0102      0.0124  
+JUMP_EN                        1.337    0.037    0.0103      0.0083  
+ProgCount_Out[7]               4.430    0.026    0.0031      0.0082  
+ZERO_PADDING4                  3.439    0.011    0.0035      0.0072  
+ProgCount_Out[0]               4.566    0.021    0.0023      0.0064  
+ProgCount_Out[30]              5.111    0.019    0.0020      0.0063  
+ProgCount_Out[1]               4.566    0.024    0.0023      0.0062  
+ProgCount_Out[12]              4.430    0.019    0.0023      0.0061  
+ProgCount_Out[19]              4.430    0.021    0.0022      0.0059  
+ProgCount_Out[11]              4.430    0.019    0.0022      0.0058  
+ProgCount_Out[18]              4.430    0.021    0.0022      0.0058  
+ProgCount_Out[10]              4.430    0.018    0.0021      0.0058  
+ProgCount_Out[20]              4.430    0.020    0.0021      0.0057  
+ProgCount_Out[16]              4.430    0.019    0.0021      0.0057  
+ProgCount_Out[25]              4.430    0.019    0.0021      0.0057  
+ProgCount_Out[9]               4.430    0.018    0.0021      0.0056  
+ProgCount_Out[24]              4.430    0.019    0.0021      0.0056  
+ProgCount_Out[8]               4.430    0.018    0.0021      0.0056  
+ProgCount_Out[26]              4.430    0.019    0.0020      0.0055  
+ProgCount_Out[27]              4.430    0.019    0.0020      0.0055  
+ProgCount_Out[28]              4.430    0.019    0.0020      0.0055  
+ProgCount_Out[29]              4.430    0.019    0.0020      0.0055  
+ProgCount_Out[17]              4.430    0.016    0.0020      0.0054  
+ProgCount_Out[21]              4.430    0.019    0.0020      0.0054  
+ProgCount_Out[23]              4.430    0.017    0.0020      0.0054  
+ProgCount_Out[13]              4.430    0.016    0.0020      0.0053  
+ProgCount_Out[15]              4.430    0.018    0.0020      0.0053  
+ProgCount_Out[22]              4.430    0.018    0.0020      0.0052  
+ProgCount_Out[14]              4.430    0.017    0.0018      0.0049  
+ProgCount_Out[31]              3.015    0.019    0.0020      0.0037  
+DRAM_WE_INT                    0.363    0.016    0.0045      0.0010  
+BYTE_LEN_INT[1]                0.363    0.011    0.0033      0.0007  
+DataMem_Write[0]               0.363    0.002    0.0007      0.0002  
+DataMem_Write[4]               0.363    0.002    0.0007      0.0002  
+DataMem_Write[2]               0.363    0.002    0.0007      0.0001  
+DataMem_Write[3]               0.363    0.002    0.0007      0.0001  
+DataMem_Write[1]               0.363    0.002    0.0006      0.0001  
+DataMem_Write[5]               0.363    0.002    0.0006      0.0001  
+DataMem_Write[8]               0.363    0.002    0.0006      0.0001  
+DataMem_Write[11]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[14]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[15]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[16]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[17]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[18]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[19]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[20]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[21]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[22]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[23]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[24]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[25]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[26]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[27]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[28]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[29]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[30]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[31]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[10]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[9]               0.363    0.001    0.0005      0.0001  
+DataMem_Write[12]              0.363    0.001    0.0005      0.0001  
+DataMem_Write[13]              0.363    0.002    0.0005      0.0001  
+DataMem_Write[7]               0.363    0.002    0.0005      0.0001  
+DataMem_Write[6]               0.363    0.001    0.0004   9.823e-05  
+--------------------------------------------------------------------------------
+Total (155 nets)                                             9.2031 uW
+1

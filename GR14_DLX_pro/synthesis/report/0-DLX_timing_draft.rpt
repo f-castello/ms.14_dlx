@@ -1,0 +1,50 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'DLX' contains 2 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DLX
+Version: F-2011.09-SP3
+Date   : Wed Jul 13 18:53:39 2022
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: CONTROL/cw4_reg[3]
+              (rising edge-triggered flip-flop)
+  Endpoint: DataMem_BLen[0]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DLX                5K_hvratio_1_4        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  CONTROL/cw4_reg[3]/CK (DFFR_X1)                         0.00 #     0.00 r
+  CONTROL/cw4_reg[3]/Q (DFFR_X1)                          0.15       0.15 r
+  CONTROL/BYTE_LEN[0] (CU_HW_MICRO_SIZE154_FUNC_SIZE11_OPCODE_SIZE6_IR_SIZE32_CW_SIZE20)
+                                                          0.00       0.15 r
+  DATAPATH/BYTE_LEN_IN[0] (DP_N_BITS_DATA32_N_BYTES_INST4_RF_ADDR5_N_BITS_JUMP26_N_BITS_IMM16)
+                                                          0.00       0.15 r
+  DATAPATH/MEMORY/BYTE_LEN_IN[0] (MEM_STAGE_N_BITS_DATA32_RF_ADDR5)
+                                                          0.00       0.15 r
+  DATAPATH/MEMORY/BYTE_LEN_OUT[0] (MEM_STAGE_N_BITS_DATA32_RF_ADDR5)
+                                                          0.00       0.15 r
+  DATAPATH/BYTE_LEN_OUT[0] (DP_N_BITS_DATA32_N_BYTES_INST4_RF_ADDR5_N_BITS_JUMP26_N_BITS_IMM16)
+                                                          0.00       0.15 r
+  DataMem_BLen[0] (out)                                   0.01       0.16 r
+  data arrival time                                                  0.16
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

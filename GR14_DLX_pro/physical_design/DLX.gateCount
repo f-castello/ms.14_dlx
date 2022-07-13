@@ -1,0 +1,22 @@
+Gate area 0.7980 um^2
+Level 0 Module DLX                                      Gates=     22324 Cells=   10375 Area=   17814.8 um^2
+Level 1 Module DATAPATH                                 Gates=21111      Cells=9959     Area=   16847.1 um^2
+Level 2 Module DATAPATH/FETCH                           Gates=1544       Cells=544      Area=    1232.4 um^2
+Level 2 Module DATAPATH/DECODE                          Gates=12990      Cells=5384     Area=   10366.3 um^2
+Level 3 Module DATAPATH/DECODE/NPC1                     Gates=288        Cells=96       Area=     229.8 um^2
+Level 3 Module DATAPATH/DECODE/IMM                      Gates=288        Cells=96       Area=     229.8 um^2
+Level 3 Module DATAPATH/DECODE/RF                       Gates=12323      Cells=5135     Area=    9834.3 um^2
+Level 2 Module DATAPATH/EXECUTE                         Gates=5615       Cells=3555     Area=    4481.3 um^2
+Level 3 Module DATAPATH/EXECUTE/NPC2                    Gates=288        Cells=96       Area=     229.8 um^2
+Level 3 Module DATAPATH/EXECUTE/ALRITH_LOG_U            Gates=4469       Cells=3075     Area=    3566.5 um^2
+Level 4 Module DATAPATH/EXECUTE/ALRITH_LOG_U/r167       Gates=198        Cells=183      Area=     158.5 um^2
+Level 4 Module DATAPATH/EXECUTE/ALRITH_LOG_U/r166       Gates=190        Cells=173      Area=     152.2 um^2
+Level 4 Module DATAPATH/EXECUTE/ALRITH_LOG_U/r79        Gates=1857       Cells=874      Area=    1482.2 um^2
+Level 5 Module DATAPATH/EXECUTE/ALRITH_LOG_U/r79/FS_1   Gates=208        Cells=174      Area=     166.2 um^2
+Level 4 Module DATAPATH/EXECUTE/ALRITH_LOG_U/r170       Gates=412        Cells=358      Area=     329.3 um^2
+Level 3 Module DATAPATH/EXECUTE/ALU_OUTPUT              Gates=291        Cells=99       Area=     232.2 um^2
+Level 3 Module DATAPATH/EXECUTE/PAD                     Gates=288        Cells=96       Area=     229.8 um^2
+Level 2 Module DATAPATH/MEMORY                          Gates=807        Cells=366      Area=     644.3 um^2
+Level 2 Module DATAPATH/WRITE_BACK                      Gates=147        Cells=106      Area=     117.8 um^2
+Level 3 Module DATAPATH/WRITE_BACK/MUX                  Gates=147        Cells=106      Area=     117.8 um^2
+Level 1 Module CONTROL                                  Gates=948        Cells=341      Area=     757.0 um^2

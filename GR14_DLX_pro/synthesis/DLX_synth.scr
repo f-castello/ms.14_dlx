@@ -23,25 +23,25 @@ analyze -library WORK -format vhdl {../a.c-DP.core/a.c.d-MEM.core/a.c.d.a-gen_re
 analyze -library WORK -format vhdl {../a.c-DP.core/a.c.d-MEM.core/a.c.d.b-gen_mux21.vhd}
 analyze -library WORK -format vhdl {../a.c-DP.core/a.c.d-MEM.core/a.c.d.c-sign_ext_alt.vhd}
 analyze -library WORK -format vhdl {../a.c-DP.core/a.c.d-MEM.vhd}
-analyze -library WORK -format vhdl {../a.c-DP.core/a.c.e-WB.core/a.c.e.a-gen_reg.vhd}
-analyze -library WORK -format vhdl {../a.c-DP.core/a.c.e-WB.core/a.c.e.b-gen_mux41.vhd}
+analyze -library WORK -format vhdl {../a.c-DP.core/a.c.e-WB.core/a.c.e.a-gen_mux41.vhd}
 analyze -library WORK -format vhdl {../a.c-DP.core/a.c.e-WB.vhd}
 analyze -library WORK -format vhdl {../a.c-DP.vhd}
 analyze -library WORK -format vhdl {../a.b-CU_HW.vhd}
 analyze -library WORK -format vhdl {../a-DLX.vhd}
 
 elaborate DLX -architecture PRO
+set_wire_load_model -name 5K_hvratio_1_4
 
 # Unconstrained compilation:
 compile
 
 # Unconstrained reporting:
-report_timing > ./report/DLX_timing_prov.rpt
-report_area > ./report/DLX_area_prov.rpt
+report_timing > ./report/0-DLX_timing_draft.rpt
+report_area > ./report/0-DLX_area_draft.rpt
 
-report_power > ./report/DLX_power_prov.rpt
-report_power -cell > ./report/DLX_power-cell_prov.rpt
-report_power -net > ./report/DLX_power-net_prov.rpt
+report_power > ./report/0-DLX_power_draft.rpt
+report_power -cell > ./report/0-DLX_power-cell_draft.rpt
+report_power -net > ./report/0-DLX_power-net_draft.rpt
 
 # Defining new period variable:
 set T 3
@@ -53,21 +53,22 @@ create_clock -name "Clock" -period $T Clock
 set_max_delay $T -from [all_inputs] -to [all_outputs]
 
 # Forcing maximum dynamic power:
-set_max_dynamic_power 4 mW
+set_max_dynamic_power 4.2135 mW
 
 # Optimized compilation:
 compile -map_effort high
 
 # Optimized reporting:
-report_clock > ./report/DLX_clock_final.rpt
-report_timing > ./report/DLX_timing_final.rpt
-report_area > ./report/DLX_area_final.rpt
+report_clock > ./report/1-DLX_clock_opt.rpt
+report_timing > ./report/1-DLX_timing_opt.rpt
+report_area > ./report/1-DLX_area_opt.rpt
 
-report_power > ./report/DLX_power_final.rpt
-report_power -cell > ./report/DLX_power-cell_final.rpt
-report_power -net > ./report/DLX_power-net_final.rpt
+report_power > ./report/1-DLX_power_opt.rpt
+report_power -cell > ./report/1-DLX_power-cell_opt.rpt
+report_power -net > ./report/1-DLX_power-net_opt.rpt
 
 # Optimized netlists generation:
-write -hierarchy -format vhdl -output DLX_OPTIMIZED.vhdl
-write -hierarchy -format verilog -output DLX_OPTIMIZED.v
-write -hierarchy -format ddc -output DLX_OPTIMIZED.ddc
+write -hierarchy -f vhdl -output DLX_PRO.vhdl
+write -hierarchy -f verilog -output DLX_PRO.v
+write -hierarchy -f ddc -output DLX_PRO.ddc
+write_sdc DLX_PRO.sdc
