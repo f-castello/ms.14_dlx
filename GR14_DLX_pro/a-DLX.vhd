@@ -75,7 +75,6 @@ ARCHITECTURE PRO OF DLX IS
             DRAM_WE_OUT  : OUT STD_LOGIC;                    -- Bypass to External Memory
             BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Bypass to External Memory
             -- WB_STAGE
-            WB_LATCH_EN : IN STD_LOGIC; -- Write Back Register Latch Enable
             JAL_MUX_SEL : IN STD_LOGIC; -- Jump And Link RF OR/Mux Selector
             WB_MUX_SEL  : IN STD_LOGIC; -- Write Back MUX Sel
 
@@ -138,8 +137,7 @@ ARCHITECTURE PRO OF DLX IS
             -- PIPE STAGE #5: WB
             WB_MUX_SEL  : OUT STD_LOGIC; -- Write Back MUX Sel
             JAL_MUX_SEL : OUT STD_LOGIC; -- Jump And Link RF OR/Mux Selector
-            WR_EN       : OUT STD_LOGIC; -- Register File Write Enable
-            WB_LATCH_EN : OUT STD_LOGIC  -- Write Back Register Latch Enable
+            WR_EN       : OUT STD_LOGIC  -- Register File Write Enable
         );
     END COMPONENT;
 
@@ -162,7 +160,6 @@ ARCHITECTURE PRO OF DLX IS
     SIGNAL WB_MUX_SEL    : STD_LOGIC;
     SIGNAL JAL_MUX_SEL   : STD_LOGIC;
     SIGNAL WR_EN         : STD_LOGIC;
-    SIGNAL WB_LATCH_EN   : STD_LOGIC;
     SIGNAL ALU_OPCODE    : ALU_MSG;
     SIGNAL DRAM_WE_INT   : STD_LOGIC;
     SIGNAL BYTE_LEN_INT  : STD_LOGIC_VECTOR(1 DOWNTO 0);
@@ -201,7 +198,6 @@ BEGIN
         DRAM_WE           => DRAM_WE_INT,
         DRAM_WE_OUT       => DataMem_WrEn,
         BYTE_LEN_OUT      => DataMem_BLen,
-        WB_LATCH_EN       => WB_LATCH_EN,
         JAL_MUX_SEL       => JAL_MUX_SEL,
         WB_MUX_SEL        => WB_MUX_SEL,
         IR_IN             => IR_IN,
@@ -245,8 +241,7 @@ BEGIN
     BYTE_LEN      => BYTE_LEN_INT,
     WB_MUX_SEL    => WB_MUX_SEL,
     JAL_MUX_SEL   => JAL_MUX_SEL,
-    WR_EN         => WR_EN,
-    WB_LATCH_EN   => WB_LATCH_EN
+    WR_EN         => WR_EN
     );
 
     PROCESS (Clock, ResetN) -- delay the whole Datapath by 1 cc with respect to the Control Unit

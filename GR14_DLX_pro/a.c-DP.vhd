@@ -42,7 +42,6 @@ ENTITY DP IS
         DRAM_WE_OUT  : OUT STD_LOGIC;                    -- Bypass to External Memory
         BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Bypass to External Memory
         -- WB_STAGE
-        WB_LATCH_EN : IN STD_LOGIC; -- Write Back Register Latch Enable
         JAL_MUX_SEL : IN STD_LOGIC; -- Jump And Link RF OR/Mux Selector
         WB_MUX_SEL  : IN STD_LOGIC; -- Write Back MUX Sel
 
@@ -91,7 +90,7 @@ ARCHITECTURE PIPELINED OF DP IS
 
     SIGNAL IR_WB2ID : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 
-    SIGNAL WRT_WB2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL MUX_WB2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
     COMPONENT ID_STAGE
         GENERIC
@@ -231,9 +230,6 @@ ARCHITECTURE PIPELINED OF DP IS
         PORT
         (
             -- Control ports
-            CLK         : IN STD_LOGIC;
-            RST         : IN STD_LOGIC;
-            WB_LATCH_EN : IN STD_LOGIC; -- (WRT, IR4) Registers Enable
             JAL_MUX_SEL : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
             WB_MUX_SEL  : IN STD_LOGIC; -- Primary Outcome Selector
             -- Data ports
@@ -241,7 +237,7 @@ ARCHITECTURE PIPELINED OF DP IS
             MUX_IN2 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #2 ("1-" -> NPC)
             MUX_IN1 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #1 ("01" -> MEM Out)
             MUX_IN0 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #0 ("00" -> ALU Out)
-            WRT_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Pipe Register Output
+            MUX_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Mux Main Output
             IR_OUT  : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0)
         );
     END COMPONENT;
@@ -289,7 +285,7 @@ BEGIN
     ZERO_PADDING2 => ZERO_PADDING2,
     I_CODE        => IR_IF2ID,
     NPC1_IN       => NPC_IF2ID,
-    DATA_IN       => WRT_WB2ID,
+    DATA_IN       => MUX_WB2ID,
     WR_ADDR_IN    => IR_WB2ID,
     REGA_OUT      => A_ID2EXE,
     REGB_OUT      => B_ID2EXE,
@@ -376,16 +372,13 @@ BEGIN
     PORT
     MAP
     (
-    CLK         => CLK,
-    RST         => RST,
-    WB_LATCH_EN => WB_LATCH_EN,
     JAL_MUX_SEL => JAL_MUX_SEL,
     WB_MUX_SEL  => WB_MUX_SEL,
     IR_IN       => IR_MEM2WB,
     MUX_IN2     => NPC_MEM2WB,
     MUX_IN1     => MEM_MEM2WB,
     MUX_IN0     => ALU_MEM2WB,
-    WRT_OUT     => WRT_WB2ID,
+    MUX_OUT     => MUX_WB2ID,
     IR_OUT      => IR_WB2ID
     );
 END PIPELINED;
