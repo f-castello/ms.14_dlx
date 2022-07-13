@@ -50,8 +50,7 @@ ARCHITECTURE PRO OF DLX IS
             CLK : IN STD_LOGIC;
             RST : IN STD_LOGIC;
             -- IF_STAGE
-            IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR) Register Enable
-            PC_LATCH_EN : IN STD_LOGIC; -- Program Counter Register Enable
+            IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
             -- ID_STAGE
             DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
             IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
@@ -109,7 +108,7 @@ ARCHITECTURE PRO OF DLX IS
             IR_IN : IN STD_LOGIC_VECTOR(IR_SIZE - 1 DOWNTO 0); -- Instruction Register Word
 
             -- PIPE STAGE #1: IF
-            IF_LATCH_EN : OUT STD_LOGIC; -- (PC, IR) Register Enable
+            IF_LATCH_EN : OUT STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
 
             -- PIPE STAGE #2: ID
             DEC_OUTREG_EN : OUT STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
@@ -129,7 +128,6 @@ ARCHITECTURE PRO OF DLX IS
             FPU_OPCODE : OUT FPU_MSG; -- Custom Type for FPU Ops
 
             -- PIPE STAGE #4: MEM
-            PC_LATCH_EN   : OUT STD_LOGIC; -- Program Counter Register Enable
             MEM_OUTREG_EN : OUT STD_LOGIC; -- (NPC3, IR3, BRA, ALU2MEM, OP2MEM) Registers Enable
             ZERO_PADDING4 : OUT STD_LOGIC; -- Choose Zero Padding over normal Sign Extension
             MEM_OUT_SEL   : OUT STD_LOGIC; -- Memory Output Mux Selector
@@ -158,7 +156,6 @@ ARCHITECTURE PRO OF DLX IS
     SIGNAL EXE_OUTREG_EN : STD_LOGIC;
     SIGNAL EQ_COND       : STD_LOGIC;
     SIGNAL JUMP_EN       : STD_LOGIC;
-    SIGNAL PC_LATCH_EN   : STD_LOGIC;
     SIGNAL MEM_OUTREG_EN : STD_LOGIC;
     SIGNAL ZERO_PADDING4 : STD_LOGIC;
     SIGNAL MEM_OUT_SEL   : STD_LOGIC;
@@ -185,7 +182,6 @@ BEGIN
         CLK               => Clock,
         RST               => ResetN,
         IF_LATCH_EN       => IF_LATCH_EN,
-        PC_LATCH_EN       => PC_LATCH_EN,
         DEC_OUTREG_EN     => DEC_OUTREG_EN,
         IS_I_TYPE         => IS_I_TYPE,
         RD1_EN            => RD1_EN,
@@ -242,7 +238,6 @@ BEGIN
     EQ_COND       => EQ_COND,
     JUMP_EN       => JUMP_EN,
     ALU_OPCODE    => ALU_OPCODE,
-    PC_LATCH_EN   => PC_LATCH_EN,
     MEM_OUTREG_EN => MEM_OUTREG_EN,
     ZERO_PADDING4 => ZERO_PADDING4,
     MEM_OUT_SEL   => MEM_OUT_SEL,

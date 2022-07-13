@@ -47,8 +47,6 @@ sim:/tb_dlx/INST_MEM/idout
 add wave -position insertpoint  \
 sim:/tb_dlx/INST_MEM/DATA
 add wave -position insertpoint  \
-sim:/tb_dlx/DUT/DATAPATH/PC_LATCH_EN
-add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/JUMP_EN
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/IF_LATCH_EN

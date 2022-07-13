@@ -13,8 +13,7 @@ ENTITY IF_STAGE IS
 		-- Control ports
 		CLK         : IN STD_LOGIC;
 		RST         : IN STD_LOGIC;
-		IF_LATCH_EN : IN STD_LOGIC; -- (NPC, IR) Register Latch Enable
-		PC_LATCH_EN : IN STD_LOGIC; -- PC Register Latch Enable
+		IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
 		-- Data ports
 		PC_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 		IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
@@ -64,7 +63,7 @@ BEGIN
 	(
 		clk      => CLK,
 		rst      => RST,
-		ld       => PC_LATCH_EN,
+		ld       => IF_LATCH_EN,
 		data_in  => PC_IN,
 		data_out => PC_OUT_SIG
 	);

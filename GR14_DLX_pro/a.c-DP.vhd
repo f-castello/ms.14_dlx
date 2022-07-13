@@ -17,8 +17,7 @@ ENTITY DP IS
         CLK : IN STD_LOGIC;
         RST : IN STD_LOGIC;
         -- IF_STAGE
-        IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR) Register Enable
-        PC_LATCH_EN : IN STD_LOGIC; -- Program Counter Register Enable
+        IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
         -- ID_STAGE
         DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
         IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
@@ -74,8 +73,7 @@ ARCHITECTURE PIPELINED OF DP IS
             -- Control ports
             CLK         : IN STD_LOGIC;
             RST         : IN STD_LOGIC;
-            IF_LATCH_EN : IN STD_LOGIC; -- (NPC, IR) Register Latch Enable
-            PC_LATCH_EN : IN STD_LOGIC; -- PC Register Latch Enable
+            IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
             -- Data ports
             PC_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
             IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
@@ -260,7 +258,6 @@ BEGIN
         CLK         => CLK,
         RST         => RST,
         IF_LATCH_EN => IF_LATCH_EN,
-        PC_LATCH_EN => PC_LATCH_EN,
         PC_IN       => PC_MEM2IF,
         IR_IN       => IR_IN,
         PC_OUT      => PC_OUT,

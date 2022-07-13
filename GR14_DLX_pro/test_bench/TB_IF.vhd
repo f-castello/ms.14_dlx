@@ -33,8 +33,7 @@ ARCHITECTURE TEST OF TB_IF IS
 	);
 	SIGNAL CLK_tb         : STD_LOGIC := '0';
 	SIGNAL RST_tb         : STD_LOGIC;
-	SIGNAL IF_LATCH_EN_tb : STD_LOGIC; -- (NPC, IR) Register Latch Enable
-	SIGNAL PC_LATCH_EN_tb : STD_LOGIC; -- PC Register Latch Enable
+	SIGNAL IF_LATCH_EN_tb : STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
 	-- Data ports
 	SIGNAL PC_IN_tb   : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 	SIGNAL IR_IN_tb   : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- output of the memory to the IR
@@ -54,8 +53,7 @@ ARCHITECTURE TEST OF TB_IF IS
 			-- Control ports
 			CLK         : IN STD_LOGIC;
 			RST         : IN STD_LOGIC;
-			IF_LATCH_EN : IN STD_LOGIC; -- (NPC, IR) Register Latch Enable
-			PC_LATCH_EN : IN STD_LOGIC; -- PC Register Latch Enable
+			IF_LATCH_EN : IN STD_LOGIC; -- (PC, IR, NPC0, NPCA, NPCB) Registers Enable
 			-- Data ports
 			PC_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 			IR_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of the memory to the IR
@@ -78,7 +76,6 @@ BEGIN
 		CLK         => CLK_tb,
 		RST         => RST_tb,
 		IF_LATCH_EN => IF_LATCH_EN_tb,
-		PC_LATCH_EN => PC_LATCH_EN_tb,
 		-- Data ports
 		PC_IN   => PC_IN_tb,
 		IR_IN   => IR_IN_tb,
@@ -94,7 +91,6 @@ BEGIN
 		REPORT("Starting simulation");
 		RST_tb         <= '0'; --resetting (active-low)
 		IF_LATCH_EN_tb <= '1';
-		PC_LATCH_EN_tb <= '1';
 		IR_IN_tb       <= IR_MEM_VALS(TO_INTEGER(UNSIGNED(PC_OUT_tb)/4) MOD 19);
 		WAIT UNTIL falling_edge(CLK_tb);
 		ASSERT (PC_OUT_tb = (NbitLong - 1 DOWNTO 0 => '0') AND PC_IN_tb = ((NbitLong - 1 DOWNTO 3 => '0') & "100"))
