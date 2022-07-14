@@ -47,17 +47,13 @@ ARCHITECTURE TEST OF TB_MEM IS
 	SIGNAL CLK_tb               : STD_LOGIC := '0';
 	SIGNAL RST_tb               : STD_LOGIC;
 	SIGNAL MEM_OUTREG_EN_tb     : STD_LOGIC;
-	SIGNAL ZERO_PADDING4_tb     : STD_LOGIC;
-	SIGNAL MEM_OUT_SEL_tb       : STD_LOGIC; -- 0 sel sign extension output, otherwise data mem output	
 	SIGNAL BYTE_LEN_IN_tb       : STD_LOGIC_VECTOR(1 DOWNTO 0);
 	SIGNAL DRAM_WE_tb           : STD_LOGIC;
 	SIGNAL DRAM_WE_OUT_tb       : STD_LOGIC;
 	SIGNAL BYTE_LEN_OUT_tb      : STD_LOGIC_VECTOR(1 DOWNTO 0);
-	SIGNAL BRA_IN_tb            : STD_LOGIC;                               -- BRA reg input (for jump selection)
-	SIGNAL JUMP_MUX_IN_0_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 0 of the multiplexer for jumping (NPC)
 	SIGNAL ALU_OUTPUT_IN_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
-	SIGNAL MEM_DATA_IN_tb       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- input data of data memory
-	SIGNAL MEM_DATA_OUT_INT_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- input of sign extention module
+	SIGNAL MEM_DATA_IN_tb       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- input data from EXE
+	SIGNAL MEM_DATA_OUT_INT_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- output data from memory
 	SIGNAL NPC_IN_tb            : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
 	SIGNAL IR_IN_tb             : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 	SIGNAL IR_OUT_tb            : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
@@ -65,8 +61,7 @@ ARCHITECTURE TEST OF TB_MEM IS
 	SIGNAL MEM_ADDR_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- address data memory (connected to alu output)
 	SIGNAL MEM_DATA_IN_PRIME_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- input data of data memory
 	SIGNAL ALU_OUTPUT_OUT_tb    : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- output of register ALU_OUTPUT
-	SIGNAL MEM_DATA_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Output data from memory
-	SIGNAL ADDR_MUX_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0);
+	SIGNAL MEM_DATA_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- output data to WB
 
 	COMPONENT MEM_STAGE IS
 		GENERIC
@@ -80,18 +75,14 @@ ARCHITECTURE TEST OF TB_MEM IS
 			CLK           : IN STD_LOGIC;
 			RST           : IN STD_LOGIC;
 			MEM_OUTREG_EN : IN STD_LOGIC;
-			ZERO_PADDING4 : IN STD_LOGIC;
-			MEM_OUT_SEL   : IN STD_LOGIC; -- 0 sel sign extension output, otherwise data mem output	
 			BYTE_LEN_IN   : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
 			DRAM_WE       : IN STD_LOGIC;
 			DRAM_WE_OUT   : OUT STD_LOGIC;
 			BYTE_LEN_OUT  : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
 			-- Data ports
-			BRA_IN            : IN STD_LOGIC;                                  -- BRA reg input (for jump selection)
-			JUMP_MUX_IN_0     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Input 0 of the multiplexer for jumping (NPC)
 			ALU_OUTPUT_IN     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-			MEM_DATA_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data of data memory
-			MEM_DATA_OUT_INT  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input of sign extention module
+			MEM_DATA_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data from EXE
+			MEM_DATA_OUT_INT  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output data from memory
 			NPC_IN            : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 			IR_IN             : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 			IR_OUT            : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
@@ -99,8 +90,7 @@ ARCHITECTURE TEST OF TB_MEM IS
 			MEM_ADDR_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- address data memory (connected to alu output)
 			MEM_DATA_IN_PRIME : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data of data memory
 			ALU_OUTPUT_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of register ALU_OUTPUT
-			MEM_DATA_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data from memory (after mux)
-			ADDR_MUX_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
+			MEM_DATA_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)  -- output data to WB
 		);
 	END COMPONENT;
 
@@ -116,14 +106,10 @@ BEGIN
 		CLK               => CLK_tb,
 		RST               => RST_tb,
 		MEM_OUTREG_EN     => MEM_OUTREG_EN_tb,
-		ZERO_PADDING4     => ZERO_PADDING4_tb,
-		MEM_OUT_SEL       => MEM_OUT_SEL_tb,
 		BYTE_LEN_IN       => BYTE_LEN_IN_tb,
 		DRAM_WE           => DRAM_WE_tb,
 		DRAM_WE_OUT       => DRAM_WE_OUT_tb,
 		BYTE_LEN_OUT      => BYTE_LEN_OUT_tb,
-		BRA_IN            => BRA_IN_tb,
-		JUMP_MUX_IN_0     => JUMP_MUX_IN_0_tb,
 		ALU_OUTPUT_IN     => ALU_OUTPUT_IN_tb,
 		MEM_DATA_IN       => MEM_DATA_IN_tb,
 		MEM_DATA_OUT_INT  => MEM_DATA_OUT_INT_tb,
@@ -134,8 +120,7 @@ BEGIN
 		MEM_ADDR_OUT      => MEM_ADDR_OUT_tb,
 		MEM_DATA_IN_PRIME => MEM_DATA_IN_PRIME_tb,
 		ALU_OUTPUT_OUT    => ALU_OUTPUT_OUT_tb,
-		MEM_DATA_OUT      => MEM_DATA_OUT_tb,
-		ADDR_MUX_OUT      => ADDR_MUX_OUT_tb
+		MEM_DATA_OUT      => MEM_DATA_OUT_tb
 	);
 
 	P_STIMULI : PROCESS IS
@@ -363,14 +348,13 @@ BEGIN
 		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
 			SEVERITY failure;
 		REPORT("TEST 6 RESULT: SUCCESSFUL");
-		REPORT " End of simulation";
-		WAIT;
 
+		REPORT (" End of simulation");
+		WAIT;
 	END PROCESS;
 
 	P_CLOCK : PROCESS (CLK_tb)
 	BEGIN
 		CLK_tb <= NOT(CLK_tb) AFTER Tclk / 2;
 	END PROCESS;
-
 END TEST;

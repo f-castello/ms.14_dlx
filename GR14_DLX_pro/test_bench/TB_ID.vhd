@@ -182,7 +182,6 @@ BEGIN
             ASSERT (REGA_OUT_tb = RF_COPY(i) AND REGB_OUT_tb = RF_COPY(j))
             REPORT "i=" & INTEGER'image(i) & " REG A exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(i)))) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B exp val " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(j)))) & " REG B obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))
                 SEVERITY failure;
-
         END LOOP;
         REPORT("TEST 2 RESULT: SUCCESSFUL");
 
@@ -213,7 +212,6 @@ BEGIN
         ASSERT (REGIMM_OUT_tb = aux)--x"7FFF"))
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb))) --obtained value is 1FF7FFF
             SEVERITY failure;
-
         IS_I_TYPE_tb <= '0'; --J-TYPE INSTRUCTION, 26 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := (31 DOWNTO 26 => '0') & "01" & x"FF7FFF";
@@ -228,7 +226,6 @@ BEGIN
         ASSERT (REGIMM_OUT_tb = aux)
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
             SEVERITY failure;
-
         IS_I_TYPE_tb <= '0'; --J-TYPE INSTRUCTION, 26 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := (31 DOWNTO 26 => '1') & "11" & x"FFFF00";
@@ -257,7 +254,6 @@ BEGIN
         ASSERT (REGIMM_OUT_tb = aux)--x"7FFF"))
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb))) --obtained value is 1FF7FFF
             SEVERITY failure;
-
         IS_I_TYPE_tb <= '0'; --J-TYPE INSTRUCTION, 26 bits sign extension
         WAIT UNTIL falling_edge(CLK_tb);
         aux := (31 DOWNTO 26 => '0') & "01" & x"2FFFEA";
@@ -268,7 +264,6 @@ BEGIN
 
         --############################ TEST 4.2  ############################--        
         REPORT("TEST 4.2: -Sign extension new features test (zero padding)");
-
         I_CODE_tb(27 DOWNTO 0) <= x"FFFFF01"; --Negative number for 16 and 26 bits immediate
         IS_I_TYPE_tb           <= '1';        --I-TYPE INSTRUCTION, 16 bits sign extension
         ZERO_PADDING2_tb       <= '1';
@@ -299,25 +294,20 @@ BEGIN
         DATA_IN_tb       <= x"F0E0D0C0";
         WR_EN_tb         <= '1';
         RF_COPY(31)      <= x"F0E0D0C0"; --keeping track of the values in the RF
-
         WAIT UNTIL falling_edge(CLK_tb);
         I_CODE_tb(25 DOWNTO 21) <= STD_LOGIC_VECTOR(to_unsigned(31, RF_ADDR)); --Addressing last reg in port 1
-
         WAIT UNTIL falling_edge(CLK_tb);
         ASSERT (REGA_OUT_tb = RF_COPY(31))
         REPORT " REG A exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(31)))) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb)))
             SEVERITY failure;
-
         REPORT("TEST 5 RESULT: SUCCESSFUL");
 
         --############################ TEST 6  ############################--
         REPORT("TEST 6: -Writing reg 0    -Reading ports with reading enable = 0");
         JAL_REG31_tb  <= '0'; -- 0 in order to don't mask ADD_WR
         WR_ADDR_IN_tb <= "00000";
-
         WAIT UNTIL falling_edge(CLK_tb);
         I_CODE_tb(25 DOWNTO 21) <= STD_LOGIC_VECTOR(to_unsigned(0, RF_ADDR)); --Addressing last reg in port 1
-
         WAIT UNTIL falling_edge(CLK_tb);
         ASSERT (REGA_OUT_tb = "00000000")
         REPORT " REG A exp val: " & INTEGER'image(0) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb)))
@@ -332,7 +322,6 @@ BEGIN
         REPORT " REG A exp val: " & INTEGER'image(0) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B exp val " & INTEGER'image(0) & " REG B obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))
             SEVERITY failure;
         WAIT UNTIL falling_edge(CLK_tb);
-
         REPORT("TEST 6 RESULT: SUCCESSFUL");
 
         --############################ TEST 7  ############################--
@@ -347,27 +336,22 @@ BEGIN
         --I am writing (Modifying the reading address modifies the immeddiate) This shouldn't happend.
         IS_I_TYPE_tb           <= '1';                                         --I-TYPE INSTRUCTION, 16 bits sign extension and selecting I-type writing address from the instruction
         I_CODE_tb(25 DOWNTO 0) <= "10001" & "10101" & "00011" & "101" & x"00"; --Rd Port1 = d17,WR_ADDR = d21 RD PORT2 = d21, Imm =0x3500 or d13568 (positive)
-
         WAIT UNTIL falling_edge(CLK_tb);
         DEC_OUTREG_EN_tb       <= '0';                                         -- 0 to disable all pipeline registers
         I_CODE_tb(25 DOWNTO 0) <= "11101" & "11000" & "11100" & "011" & x"0F"; --Changing all input values (output values should not change)
-
         ASSERT (REGA_OUT_tb = RF_COPY(17) AND REGB_OUT_tb = RF_COPY(21))
         REPORT " REG A exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(17)))) & " REG A obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGA_OUT_tb))) & " REG B exp val " & INTEGER'image(TO_INTEGER(UNSIGNED(RF_COPY(21)))) & " REG B obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(REGB_OUT_tb)))
             SEVERITY failure;
-
         ASSERT (NPC1_out_tb = STD_LOGIC_VECTOR(to_unsigned(22, NbitLong)) AND WR_ADDR_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(21, NbitLong)))
         REPORT " NPC1 exp val: " & INTEGER'image(22) & " NPC1 obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC1_out_tb))) & " WR ADDR OUT exp val " & INTEGER'image(21) & " WR ADDR OUT obt val " & INTEGER'image(TO_INTEGER(UNSIGNED(WR_ADDR_OUT_tb)))
             SEVERITY failure;
-
         aux := (31 DOWNTO 16 => '0') & "00011101" & x"00";
         ASSERT (REGIMM_OUT_tb = aux)
         REPORT " REG IMM exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " REG IMM obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(REGIMM_OUT_tb)))
             SEVERITY failure;
-
         REPORT("TEST 7 RESULT: SUCCESSFUL");
-        REPORT " End of simulation";
 
+        REPORT (" End of simulation");
         WAIT;
     END PROCESS;
 

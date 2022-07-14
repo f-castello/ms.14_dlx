@@ -118,8 +118,8 @@ BEGIN
 			REPORT " IR_IN: " & INTEGER'image(TO_INTEGER(UNSIGNED(IR_OUT_tb)))
 				SEVERITY failure;
 		END LOOP;
-		REPORT("Ending simulation");
 
+		REPORT("Ending simulation");
 		WAIT;
 	END PROCESS;
 

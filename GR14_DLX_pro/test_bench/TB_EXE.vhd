@@ -18,22 +18,23 @@ ARCHITECTURE TEST OF TB_EXE IS
 	SIGNAL JUMP_EN_tb       : STD_LOGIC; -- Jump Enable Signal for Cond Selection
 	SIGNAL ALU_OPCODE_tb    : ALU_MSG;   -- Custom Type for ALU Ops
 	-- Data ports
-	SIGNAL NPC2_IN_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- NPC2 reg input
-	SIGNAL NPC1_MUXA_IN_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 0 of the first multiplexer
-	SIGNAL REGA_MUXA_IN_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 1 of the first multiplexer
-	SIGNAL REGB_MUXB_IN_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 0 of the second multiplexer
-	SIGNAL IMM_MUXB_IN_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 1 of the second multiplexer
-	SIGNAL PAD_IN_tb       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Pad OP reg input
-	SIGNAL IR2_IN_tb       : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);  -- IR2 reg input
-	SIGNAL NPC2_OUT_tb     : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- NPC2 reg output
-	SIGNAL ZERO_OP_OUT_tb  : STD_LOGIC;                               -- Output of the Zero OP reg
-	SIGNAL ALU_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Output data of the ALU
-	SIGNAL PAD_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Pad OP reg output
-	SIGNAL IR2_OUT_tb      : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);  -- IR2 reg output
-	SIGNAL N_FLAG_tb       : STD_LOGIC;                               -- Negative condition code flag ALU 
-	SIGNAL Z_FLAG_tb       : STD_LOGIC;                               -- Zero condition code flag ALU 
-	SIGNAL C_FLAG_tb       : STD_LOGIC;                               -- Carry condition code flag ALU 
-	SIGNAL V_FLAG_tb       : STD_LOGIC;                               -- Overflow condition code flag ALU 
+	SIGNAL NPC2_IN_tb       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- NPC2 reg input
+	SIGNAL NPC1_MUXA_IN_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 0 of the first multiplexer
+	SIGNAL REGA_MUXA_IN_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 1 of the first multiplexer
+	SIGNAL REGB_MUXB_IN_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 0 of the second multiplexer
+	SIGNAL IMM_MUXB_IN_tb   : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 1 of the second multiplexer
+	SIGNAL PAD_IN_tb        : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Pad OP reg input
+	SIGNAL IR2_IN_tb        : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);  -- IR2 reg input
+	SIGNAL JUMP_MUX_IN_0_tb : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Input 0 of the multiplexer for jumping (NPC)
+	SIGNAL NPC2_OUT_tb      : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- NPC2 reg output
+	SIGNAL ALU_OUT_tb       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Output data of the ALU
+	SIGNAL PAD_OUT_tb       : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Pad OP reg output
+	SIGNAL IR2_OUT_tb       : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);  -- IR2 reg output
+	SIGNAL ADDR_MUX_OUT_tb  : STD_LOGIC_VECTOR(NbitLong - 1 DOWNTO 0); -- Program Counter mux output
+	SIGNAL N_FLAG_tb        : STD_LOGIC;                               -- Negative condition code flag ALU 
+	SIGNAL Z_FLAG_tb        : STD_LOGIC;                               -- Zero condition code flag ALU 
+	SIGNAL C_FLAG_tb        : STD_LOGIC;                               -- Carry condition code flag ALU 
+	SIGNAL V_FLAG_tb        : STD_LOGIC;                               -- Overflow condition code flag ALU 
 
 	COMPONENT EXE_STAGE IS
 		GENERIC
@@ -53,22 +54,23 @@ ARCHITECTURE TEST OF TB_EXE IS
 			JUMP_EN       : IN STD_LOGIC; -- Jump Enable Signal for Cond Selection
 			ALU_OPCODE    : IN ALU_MSG;   -- Custom Type for ALU Ops
 			-- Data ports
-			NPC2_IN      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- NPC2 reg input
-			NPC1_MUXA_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the first multiplexer
-			REGA_MUXA_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the first multiplexer
-			REGB_MUXB_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the second multiplexer
-			IMM_MUXB_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the second multiplexer
-			PAD_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Pad OP reg input
-			IR2_IN       : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);      -- IR2 reg input
-			NPC2_OUT     : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- NPC2 reg output
-			ZERO_OP_OUT  : OUT STD_LOGIC;                                  -- Output of the Zero OP reg
-			ALU_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data of the ALU
-			PAD_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Pad OP reg output
-			IR2_OUT      : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);     -- IR2 reg output
-			N_FLAG       : OUT STD_LOGIC;                                  -- Negative condition code flag ALU 
-			Z_FLAG       : OUT STD_LOGIC;                                  -- Zero condition code flag ALU 
-			C_FLAG       : OUT STD_LOGIC;                                  -- Carry condition code flag ALU 
-			V_FLAG       : OUT STD_LOGIC                                   -- Overflow condition code flag ALU 
+			NPC2_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- NPC2 reg input
+			NPC1_MUXA_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the first multiplexer
+			REGA_MUXA_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the first multiplexer
+			REGB_MUXB_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the second multiplexer
+			IMM_MUXB_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the second multiplexer
+			PAD_IN        : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Pad OP reg input
+			IR2_IN        : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);      -- IR2 reg input
+			JUMP_MUX_IN_0 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the multiplexer for jumping (NPC)
+			NPC2_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- NPC2 reg output
+			ALU_OUT       : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data of the ALU
+			PAD_OUT       : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Pad OP reg output
+			IR2_OUT       : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);     -- IR2 reg output
+			ADDR_MUX_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Program Counter mux output
+			N_FLAG        : OUT STD_LOGIC;                                  -- Negative condition code flag ALU 
+			Z_FLAG        : OUT STD_LOGIC;                                  -- Zero condition code flag ALU 
+			C_FLAG        : OUT STD_LOGIC;                                  -- Carry condition code flag ALU 
+			V_FLAG        : OUT STD_LOGIC                                   -- Overflow condition code flag ALU 
 		);
 	END COMPONENT;
 
@@ -89,23 +91,23 @@ BEGIN
 		EQ_COND       => EQ_COND_tb,
 		JUMP_EN       => JUMP_EN_tb,
 		ALU_OPCODE    => ALU_OPCODE_tb,
-		-- Data
-		NPC2_IN      => NPC2_IN_tb,
-		NPC1_MUXA_IN => NPC1_MUXA_IN_tb,
-		REGA_MUXA_IN => REGA_MUXA_IN_tb,
-		REGB_MUXB_IN => REGB_MUXB_IN_tb,
-		IMM_MUXB_IN  => IMM_MUXB_IN_tb,
-		PAD_IN       => PAD_IN_tb,
-		IR2_IN       => IR2_IN_tb,
-		NPC2_OUT     => NPC2_OUT_tb,
-		ZERO_OP_OUT  => ZERO_OP_OUT_tb,
-		ALU_OUT      => ALU_OUT_tb,
-		PAD_OUT      => PAD_OUT_tb,
-		IR2_OUT      => IR2_OUT_tb,
-		N_FLAG       => N_FLAG_tb,
-		Z_FLAG       => Z_FLAG_tb,
-		C_FLAG       => C_FLAG_tb,
-		V_FLAG       => V_FLAG_tb
+		NPC2_IN       => NPC2_IN_tb,
+		NPC1_MUXA_IN  => NPC1_MUXA_IN_tb,
+		REGA_MUXA_IN  => REGA_MUXA_IN_tb,
+		REGB_MUXB_IN  => REGB_MUXB_IN_tb,
+		IMM_MUXB_IN   => IMM_MUXB_IN_tb,
+		PAD_IN        => PAD_IN_tb,
+		IR2_IN        => IR2_IN_tb,
+		JUMP_MUX_IN_0 => JUMP_MUX_IN_0_tb,
+		NPC2_OUT      => NPC2_OUT_tb,
+		ALU_OUT       => ALU_OUT_tb,
+		PAD_OUT       => PAD_OUT_tb,
+		IR2_OUT       => IR2_OUT_tb,
+		ADDR_MUX_OUT  => ADDR_MUX_OUT_tb,
+		N_FLAG        => N_FLAG_tb,
+		Z_FLAG        => Z_FLAG_tb,
+		C_FLAG        => C_FLAG_tb,
+		V_FLAG        => V_FLAG_tb
 	);
 
 	P_STIMULI : PROCESS IS
@@ -139,11 +141,7 @@ BEGIN
 		ASSERT (NPC2_OUT_tb = x"00000000")
 		REPORT " NPC2_OUT exp val: " & INTEGER'image(0) & " NPC2_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC2_OUT_tb)))
 			SEVERITY failure;
-		aux_bit(0)  := '0';
-		aux_bit2(0) := ZERO_OP_OUT_tb;
-		ASSERT (ZERO_OP_OUT_tb = '0')
-		REPORT " ZERO_OP_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_bit))) & " ZERO_OP_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_bit2)))
-			SEVERITY failure;
+		aux_bit(0) := '0';
 		ASSERT (ALU_OUT_tb = x"00000000")
 		REPORT " ALU_OUT exp val: " & INTEGER'image(0) & " ALU_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUT_tb)))
 			SEVERITY failure;
@@ -184,12 +182,8 @@ BEGIN
 		ASSERT (NPC2_OUT_tb = x"FFFAA012")
 		REPORT " NPC_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " NPT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC2_OUT_tb)))
 			SEVERITY failure;
-		aux_bit(0)  := '0';
-		aux_bit2(0) := ZERO_OP_OUT_tb;
-		ASSERT (ZERO_OP_OUT_tb = '0')
-		REPORT " ZERO_OP_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_bit))) & " ZERO_OP_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_bit2)))
-			SEVERITY failure;
-		aux := x"00000005";
+		aux_bit(0) := '0';
+		aux        := x"00000005";
 		ASSERT (ALU_OUT_tb = x"00000005")
 		REPORT " ALU_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " ALU_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUT_tb)))
 			SEVERITY failure;
@@ -305,8 +299,8 @@ BEGIN
 		REPORT " N_FLAG exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_bit))) & " N_FLAG obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_bit2)))
 			SEVERITY failure;
 		REPORT("TEST 4 RESULT: SUCCESSFUL");
-		REPORT("END SIMULATION");
 
+		REPORT("END SIMULATION");
 		WAIT;
 	END PROCESS;
 

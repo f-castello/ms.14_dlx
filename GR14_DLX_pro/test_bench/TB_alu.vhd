@@ -384,5 +384,8 @@ BEGIN
 		REPORT " OUTALU exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(TEST_VALUES(31)))) & " OUTALU obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(OUTALU_tb))) & "ZERO exp val : " & STD_LOGIC'image('0') & "ZERO obt val : " & STD_LOGIC'image(ZERO_tb)
 			SEVERITY failure;
 		REPORT("TEST 10 result: SUCCESSFUL");
+
+		REPORT("End simulation");
+		WAIT;
 	END PROCESS;
 END TEST;

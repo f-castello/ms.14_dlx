@@ -59,7 +59,7 @@ ENTITY DP IS
 END DP;
 
 ARCHITECTURE PIPELINED OF DP IS
-    SIGNAL PC_MEM2IF : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL PC_EXE2IF : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
     COMPONENT IF_STAGE
         GENERIC
@@ -83,10 +83,10 @@ ARCHITECTURE PIPELINED OF DP IS
         );
     END COMPONENT;
 
-    SIGNAL NPC_IF2ID  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-    SIGNAL NPC_IF2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL NPC_IF2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL IR_IF2ID  : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
-    SIGNAL IR_IF2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
+    SIGNAL NPC_IF2EXE : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
     SIGNAL IR_MEM2ID : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 
@@ -155,27 +155,27 @@ ARCHITECTURE PIPELINED OF DP IS
             JUMP_EN       : IN STD_LOGIC; -- Jump Enable Signal for Cond Selection
             ALU_OPCODE    : IN ALU_MSG;   -- Custom Type for ALU Ops
             -- Data ports
-            NPC2_IN      : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- NPC2 reg input
-            NPC1_MUXA_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the first multiplexer
-            REGA_MUXA_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the first multiplexer
-            REGB_MUXB_IN : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the second multiplexer
-            IMM_MUXB_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the second multiplexer
-            PAD_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Pad OP reg input
-            IR2_IN       : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);      -- IR2 reg input
-            NPC2_OUT     : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- NPC2 reg output
-            ZERO_OP_OUT  : OUT STD_LOGIC;                                  -- Output of the Zero OP reg
-            ALU_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data of the ALU
-            PAD_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Pad OP reg output
-            IR2_OUT      : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);     -- IR2 reg output
-            N_FLAG       : OUT STD_LOGIC;                                  -- Negative condition code flag ALU 
-            Z_FLAG       : OUT STD_LOGIC;                                  -- Zero condition code flag ALU 
-            C_FLAG       : OUT STD_LOGIC;                                  -- Carry condition code flag ALU 
-            V_FLAG       : OUT STD_LOGIC                                   -- Overflow condition code flag ALU 
+            NPC2_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- NPC2 reg input
+            NPC1_MUXA_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the first multiplexer
+            REGA_MUXA_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the first multiplexer
+            REGB_MUXB_IN  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the second multiplexer
+            IMM_MUXB_IN   : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 1 of the second multiplexer
+            PAD_IN        : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Pad OP reg input
+            IR2_IN        : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);      -- IR2 reg input
+            JUMP_MUX_IN_0 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Input 0 of the multiplexer for jumping (NPC)
+            NPC2_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- NPC2 reg output
+            ALU_OUT       : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data of the ALU
+            PAD_OUT       : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Pad OP reg output
+            IR2_OUT       : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);     -- IR2 reg output
+            ADDR_MUX_OUT  : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Program Counter mux output
+            N_FLAG        : OUT STD_LOGIC;                                  -- Negative condition code flag ALU 
+            Z_FLAG        : OUT STD_LOGIC;                                  -- Zero condition code flag ALU 
+            C_FLAG        : OUT STD_LOGIC;                                  -- Carry condition code flag ALU 
+            V_FLAG        : OUT STD_LOGIC                                   -- Overflow condition code flag ALU 
         );
     END COMPONENT;
 
     SIGNAL NPC_EXE2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-    SIGNAL ZOP_EXE2MEM : STD_LOGIC;
     SIGNAL ALU_EXE2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
     SIGNAL PAD_EXE2MEM : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
     SIGNAL IR_EXE2MEM  : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
@@ -183,8 +183,8 @@ ARCHITECTURE PIPELINED OF DP IS
     COMPONENT MEM_STAGE
         GENERIC
         (
-            N_BITS_DATA : NATURAL := N_BITS_DATA; -- # of bits
-            RF_ADDR     : NATURAL := RF_ADDR      -- # OF BITS FOR REGISTER FILE ADDRESS
+            N_BITS_DATA : NATURAL := NbitLong; -- # of bits
+            RF_ADDR     : NATURAL := RF_ADDR   -- # OF BITS FOR REGISTER FILE ADDRESS
         );
         PORT
         (
@@ -192,18 +192,14 @@ ARCHITECTURE PIPELINED OF DP IS
             CLK           : IN STD_LOGIC;
             RST           : IN STD_LOGIC;
             MEM_OUTREG_EN : IN STD_LOGIC;
-            ZERO_PADDING4 : IN STD_LOGIC;
-            MEM_OUT_SEL   : IN STD_LOGIC; -- 0 sel sign extension output, otherwise data mem output	
             BYTE_LEN_IN   : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
             DRAM_WE       : IN STD_LOGIC;
             DRAM_WE_OUT   : OUT STD_LOGIC;
             BYTE_LEN_OUT  : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
             -- Data ports
-            BRA_IN            : IN STD_LOGIC;                                  -- BRA reg input (for jump selection)
-            JUMP_MUX_IN_0     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Input 0 of the multiplexer for jumping (NPC)
             ALU_OUTPUT_IN     : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-            MEM_DATA_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data of data memory
-            MEM_DATA_OUT_INT  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input of sign extention module
+            MEM_DATA_IN       : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data from EXE
+            MEM_DATA_OUT_INT  : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output data from memory
             NPC_IN            : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
             IR_IN             : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
             IR_OUT            : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
@@ -211,8 +207,7 @@ ARCHITECTURE PIPELINED OF DP IS
             MEM_ADDR_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- address data memory (connected to alu output)
             MEM_DATA_IN_PRIME : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- input data of data memory
             ALU_OUTPUT_OUT    : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- output of register ALU_OUTPUT
-            MEM_DATA_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Output data from memory (after mux)
-            ADDR_MUX_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)
+            MEM_DATA_OUT      : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0)  -- output data to WB
         );
     END COMPONENT;
 
@@ -251,11 +246,11 @@ BEGIN
         CLK         => CLK,
         RST         => RST,
         IF_LATCH_EN => IF_LATCH_EN,
-        PC_IN       => PC_MEM2IF,
+        PC_IN       => PC_EXE2IF,
         IR_IN       => IR_IN,
         PC_OUT      => PC_OUT,
         IR_OUT      => IR_IF2ID,
-        ADD_OUT     => NPC_IF2MEM,
+        ADD_OUT     => NPC_IF2EXE,
         NPC_OUT     => NPC_IF2ID
     );
 
@@ -315,11 +310,12 @@ BEGIN
     IMM_MUXB_IN   => IMM_ID2EXE,
     PAD_IN        => B_ID2EXE,
     IR2_IN        => IR_ID2EXE,
+    JUMP_MUX_IN_0 => NPC_IF2EXE,
     NPC2_OUT      => NPC_EXE2MEM,
-    ZERO_OP_OUT   => ZOP_EXE2MEM,
     ALU_OUT       => ALU_EXE2MEM,
     PAD_OUT       => PAD_EXE2MEM,
     IR2_OUT       => IR_EXE2MEM,
+    ADDR_MUX_OUT  => PC_EXE2IF,
     N_FLAG        => N,
     Z_FLAG        => Z,
     C_FLAG        => C,
@@ -338,33 +334,27 @@ BEGIN
     CLK               => CLK,
     RST               => RST,
     MEM_OUTREG_EN     => MEM_OUTREG_EN,
-    ZERO_PADDING4     => ZERO_PADDING4,
-    MEM_OUT_SEL       => MEM_OUT_SEL,
     BYTE_LEN_IN       => BYTE_LEN_IN,
     DRAM_WE           => DRAM_WE,
     DRAM_WE_OUT       => DRAM_WE_OUT,
     BYTE_LEN_OUT      => BYTE_LEN_OUT,
-    BRA_IN            => ZOP_EXE2MEM,
-    JUMP_MUX_IN_0     => NPC_IF2MEM,
     ALU_OUTPUT_IN     => ALU_EXE2MEM,
     MEM_DATA_IN       => PAD_EXE2MEM,
     MEM_DATA_OUT_INT  => MEM_DATA_OUT_INT,
     NPC_IN            => NPC_EXE2MEM,
     IR_IN             => IR_EXE2MEM,
-    IR_OUT            => IR_MEM2WB,
+    IR_OUT            => IR_MEM2ID,
     NPC_OUT           => NPC_MEM2WB,
     MEM_ADDR_OUT      => MEM_ADDR_OUT,
     MEM_DATA_IN_PRIME => MEM_DATA_IN_PRIME,
     ALU_OUTPUT_OUT    => ALU_MEM2WB,
-    MEM_DATA_OUT      => MEM_MEM2WB,
-    ADDR_MUX_OUT      => PC_MEM2IF
+    MEM_DATA_OUT      => MEM_MEM2WB
     );
 
     WRITE_BACK : WB_STAGE
     GENERIC
     MAP (
-    N_BITS_DATA => N_BITS_DATA,
-    RF_ADDR     => RF_ADDR
+    N_BITS_DATA => N_BITS_DATA
     )
     PORT
     MAP
