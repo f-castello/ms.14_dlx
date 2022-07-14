@@ -57,6 +57,7 @@ ARCHITECTURE PRO OF DLX IS
             RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
             RD2_EN        : IN STD_LOGIC; -- Register File Read 2 Enable
             WR_EN         : IN STD_LOGIC; -- Register File Write Enable
+            JAL_REG31     : IN STD_LOGIC; -- Jump And Link RF OR
             ZERO_PADDING2 : IN STD_LOGIC; -- Choose Zero Padding over normal Sign Extension
             -- EXE_STAGE
             MUXA_SEL      : IN STD_LOGIC; -- MUXA Selector
@@ -66,17 +67,16 @@ ARCHITECTURE PRO OF DLX IS
             JUMP_EN       : IN STD_LOGIC; -- Jump Enable Signal for Cond Selection
             ALU_OPCODE    : IN ALU_MSG;   -- Custom Type for ALU Ops
             -- MEM_STAGE
-            MEM_OUTREG_EN : IN STD_LOGIC;                    -- (NPC3, IR3, BRA, ALU2MEM, OP2MEM) Registers Enable
-            ZERO_PADDING4 : IN STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
-            MEM_OUT_SEL   : IN STD_LOGIC;                    -- Memory Output Mux Selector
+            MEM_OUTREG_EN : IN STD_LOGIC;                    -- (NPC3, IR3, ALU2MEM, OP2MEM) Registers Enable
             BYTE_LEN_IN   : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- Memory Output Modifier
             DRAM_WE       : IN STD_LOGIC;                    -- Data RAM Write Enable
 
             DRAM_WE_OUT  : OUT STD_LOGIC;                    -- Bypass to External Memory
             BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Bypass to External Memory
             -- WB_STAGE
-            JAL_MUX_SEL : IN STD_LOGIC; -- Jump And Link RF OR/Mux Selector
-            WB_MUX_SEL  : IN STD_LOGIC; -- Write Back MUX Sel
+            WB_MUX_SEL    : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- Write Back Mux Sel
+            WB_CTRL_SIGN  : IN STD_LOGIC;                    -- Choose Sign Extension domain
+            ZERO_PADDING5 : IN STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
 
             --############################ DATA ############################--
             -- IF_STAGE
@@ -127,17 +127,17 @@ ARCHITECTURE PRO OF DLX IS
             FPU_OPCODE : OUT FPU_MSG; -- Custom Type for FPU Ops
 
             -- PIPE STAGE #4: MEM
-            MEM_OUTREG_EN : OUT STD_LOGIC; -- (NPC3, IR3, BRA, ALU2MEM, OP2MEM) Registers Enable
-            ZERO_PADDING4 : OUT STD_LOGIC; -- Choose Zero Padding over normal Sign Extension
-            MEM_OUT_SEL   : OUT STD_LOGIC; -- Memory Output Mux Selector
+            MEM_OUTREG_EN : OUT STD_LOGIC; -- (NPC3, IR3, ALU2MEM, OP2MEM) Registers Enable
             -- EXTERNAL MEMORY
             DRAM_WE  : OUT STD_LOGIC;                    -- Data RAM Write Enable
             BYTE_LEN : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Memory Output Modifier
 
             -- PIPE STAGE #5: WB
-            WB_MUX_SEL  : OUT STD_LOGIC; -- Write Back MUX Sel
-            JAL_MUX_SEL : OUT STD_LOGIC; -- Jump And Link RF OR/Mux Selector
-            WR_EN       : OUT STD_LOGIC  -- Register File Write Enable
+            WB_MUX_SEL    : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Write Back Mux Sel
+            JAL_REG31     : OUT STD_LOGIC;                    -- Jump And Link RF OR
+            WB_CTRL_SIGN  : OUT STD_LOGIC;                    -- Choose Sign Extension domain
+            ZERO_PADDING5 : OUT STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
+            WR_EN         : OUT STD_LOGIC                     -- Register File Write Enable
         );
     END COMPONENT;
 
@@ -155,10 +155,10 @@ ARCHITECTURE PRO OF DLX IS
     SIGNAL EQ_COND       : STD_LOGIC;
     SIGNAL JUMP_EN       : STD_LOGIC;
     SIGNAL MEM_OUTREG_EN : STD_LOGIC;
-    SIGNAL ZERO_PADDING4 : STD_LOGIC;
-    SIGNAL MEM_OUT_SEL   : STD_LOGIC;
-    SIGNAL WB_MUX_SEL    : STD_LOGIC;
-    SIGNAL JAL_MUX_SEL   : STD_LOGIC;
+    SIGNAL WB_MUX_SEL    : STD_LOGIC_VECTOR(1 DOWNTO 0);
+    SIGNAL JAL_REG31     : STD_LOGIC;
+    SIGNAL WB_CTRL_SIGN  : STD_LOGIC;
+    SIGNAL ZERO_PADDING5 : STD_LOGIC;
     SIGNAL WR_EN         : STD_LOGIC;
     SIGNAL ALU_OPCODE    : ALU_MSG;
     SIGNAL DRAM_WE_INT   : STD_LOGIC;
@@ -184,6 +184,7 @@ BEGIN
         RD1_EN            => RD1_EN,
         RD2_EN            => RD2_EN,
         WR_EN             => WR_EN,
+        JAL_REG31         => JAL_REG31,
         ZERO_PADDING2     => ZERO_PADDING2,
         MUXA_SEL          => MUXA_SEL,
         MUXB_SEL          => MUXB_SEL,
@@ -192,14 +193,13 @@ BEGIN
         JUMP_EN           => JUMP_EN,
         ALU_OPCODE        => ALU_OPCODE,
         MEM_OUTREG_EN     => MEM_OUTREG_EN,
-        ZERO_PADDING4     => ZERO_PADDING4,
-        MEM_OUT_SEL       => MEM_OUT_SEL,
         BYTE_LEN_IN       => BYTE_LEN_INT,
         DRAM_WE           => DRAM_WE_INT,
         DRAM_WE_OUT       => DataMem_WrEn,
         BYTE_LEN_OUT      => DataMem_BLen,
-        JAL_MUX_SEL       => JAL_MUX_SEL,
         WB_MUX_SEL        => WB_MUX_SEL,
+        WB_CTRL_SIGN      => WB_CTRL_SIGN,
+        ZERO_PADDING5     => ZERO_PADDING5,
         IR_IN             => IR_IN,
         PC_OUT            => ProgCount_Out,
         MEM_DATA_OUT_INT  => DataMem_Read,
@@ -235,12 +235,12 @@ BEGIN
     JUMP_EN       => JUMP_EN,
     ALU_OPCODE    => ALU_OPCODE,
     MEM_OUTREG_EN => MEM_OUTREG_EN,
-    ZERO_PADDING4 => ZERO_PADDING4,
-    MEM_OUT_SEL   => MEM_OUT_SEL,
     DRAM_WE       => DRAM_WE_INT,
     BYTE_LEN      => BYTE_LEN_INT,
     WB_MUX_SEL    => WB_MUX_SEL,
-    JAL_MUX_SEL   => JAL_MUX_SEL,
+    JAL_REG31     => JAL_REG31,
+    WB_CTRL_SIGN  => WB_CTRL_SIGN,
+    ZERO_PADDING5 => ZERO_PADDING5,
     WR_EN         => WR_EN
     );
 

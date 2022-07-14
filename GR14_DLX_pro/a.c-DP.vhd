@@ -24,6 +24,7 @@ ENTITY DP IS
         RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
         RD2_EN        : IN STD_LOGIC; -- Register File Read 2 Enable
         WR_EN         : IN STD_LOGIC; -- Register File Write Enable
+        JAL_REG31     : IN STD_LOGIC; -- Jump And Link RF OR
         ZERO_PADDING2 : IN STD_LOGIC; -- Choose Zero Padding over normal Sign Extension
         -- EXE_STAGE
         MUXA_SEL      : IN STD_LOGIC; -- MUXA Selector
@@ -33,17 +34,16 @@ ENTITY DP IS
         JUMP_EN       : IN STD_LOGIC; -- Jump Enable Signal for Cond Selection
         ALU_OPCODE    : IN ALU_MSG;   -- Custom Type for ALU Ops
         -- MEM_STAGE
-        MEM_OUTREG_EN : IN STD_LOGIC;                    -- (NPC3, IR3, BRA, ALU2MEM, OP2MEM) Registers Enable
-        ZERO_PADDING4 : IN STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
-        MEM_OUT_SEL   : IN STD_LOGIC;                    -- Memory Output Mux Selector
+        MEM_OUTREG_EN : IN STD_LOGIC;                    -- (NPC3, IR3, ALU2MEM, OP2MEM) Registers Enable
         BYTE_LEN_IN   : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- Memory Output Modifier
         DRAM_WE       : IN STD_LOGIC;                    -- Data RAM Write Enable
 
         DRAM_WE_OUT  : OUT STD_LOGIC;                    -- Bypass to External Memory
         BYTE_LEN_OUT : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Bypass to External Memory
         -- WB_STAGE
-        JAL_MUX_SEL : IN STD_LOGIC; -- Jump And Link RF OR/Mux Selector
-        WB_MUX_SEL  : IN STD_LOGIC; -- Write Back MUX Sel
+        WB_MUX_SEL    : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- Write Back Mux Sel
+        WB_CTRL_SIGN  : IN STD_LOGIC;                    -- Choose Sign Extension domain
+        ZERO_PADDING5 : IN STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
 
         --############################ DATA ############################--
         -- IF_STAGE
@@ -88,7 +88,7 @@ ARCHITECTURE PIPELINED OF DP IS
 
     SIGNAL IR_IF2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
-    SIGNAL IR_WB2ID : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
+    SIGNAL IR_MEM2ID : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 
     SIGNAL MUX_WB2ID : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
 
@@ -106,7 +106,7 @@ ARCHITECTURE PIPELINED OF DP IS
             -- Control ports
             CLK           : IN STD_LOGIC;
             RST           : IN STD_LOGIC;
-            JAL_MUX_SEL   : IN STD_LOGIC;
+            JAL_REG31     : IN STD_LOGIC;
             DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
             IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
             RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
@@ -219,26 +219,23 @@ ARCHITECTURE PIPELINED OF DP IS
     SIGNAL NPC_MEM2WB : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
     SIGNAL MEM_MEM2WB : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
     SIGNAL ALU_MEM2WB : STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);
-    SIGNAL IR_MEM2WB  : STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
 
     COMPONENT WB_STAGE IS
         GENERIC
         (
-            N_BITS_DATA : NATURAL := NbitLong; -- # of bits
-            RF_ADDR     : NATURAL := RF_ADDR
+            N_BITS_DATA : NATURAL := NbitLong -- # of bits
         );
         PORT
         (
             -- Control ports
-            JAL_MUX_SEL : IN STD_LOGIC; -- 'Jal' Op Auxiliary Selector
-            WB_MUX_SEL  : IN STD_LOGIC; -- Primary Outcome Selector
+            WB_MUX_SEL    : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- Primary Outcome Selector
+            WB_CTRL_SIGN  : IN STD_LOGIC;                    -- Choose Sign Extension domain
+            ZERO_PADDING5 : IN STD_LOGIC;                    -- Choose Zero Padding over normal Sign Extension
             -- Data ports
-            IR_IN   : IN STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0);
-            MUX_IN2 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #2 ("1-" -> NPC)
-            MUX_IN1 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #1 ("01" -> MEM Out)
-            MUX_IN0 : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0);  -- Mux Input #0 ("00" -> ALU Out)
-            MUX_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Mux Main Output
-            IR_OUT  : OUT STD_LOGIC_VECTOR(RF_ADDR - 1 DOWNTO 0)
+            NPC_OUT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Mux Input #3 ("11" -> NPC)
+            MEM_OUT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Sign Ext Input/Mux Input #2 ("01" -> MEM Out)
+            ALU_OUT : IN STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0); -- Mux Input #0 ("00" -> ALU Out)
+            MUX_OUT : OUT STD_LOGIC_VECTOR(N_BITS_DATA - 1 DOWNTO 0) -- Mux Main Output
         );
     END COMPONENT;
 
@@ -276,7 +273,7 @@ BEGIN
     (
     CLK           => CLK,
     RST           => RST,
-    JAL_MUX_SEL   => JAL_MUX_SEL,
+    JAL_REG31     => JAL_REG31,
     DEC_OUTREG_EN => DEC_OUTREG_EN,
     IS_I_TYPE     => IS_I_TYPE,
     RD1_EN        => RD1_EN,
@@ -286,7 +283,7 @@ BEGIN
     I_CODE        => IR_IF2ID,
     NPC1_IN       => NPC_IF2ID,
     DATA_IN       => MUX_WB2ID,
-    WR_ADDR_IN    => IR_WB2ID,
+    WR_ADDR_IN    => IR_MEM2ID,
     REGA_OUT      => A_ID2EXE,
     REGB_OUT      => B_ID2EXE,
     REGIMM_OUT    => IMM_ID2EXE,
@@ -372,13 +369,12 @@ BEGIN
     PORT
     MAP
     (
-    JAL_MUX_SEL => JAL_MUX_SEL,
-    WB_MUX_SEL  => WB_MUX_SEL,
-    IR_IN       => IR_MEM2WB,
-    MUX_IN2     => NPC_MEM2WB,
-    MUX_IN1     => MEM_MEM2WB,
-    MUX_IN0     => ALU_MEM2WB,
-    MUX_OUT     => MUX_WB2ID,
-    IR_OUT      => IR_WB2ID
+    WB_MUX_SEL    => WB_MUX_SEL,
+    WB_CTRL_SIGN  => WB_CTRL_SIGN,
+    ZERO_PADDING5 => ZERO_PADDING5,
+    NPC_OUT       => NPC_MEM2WB,
+    MEM_OUT       => MEM_MEM2WB,
+    ALU_OUT       => ALU_MEM2WB,
+    MUX_OUT       => MUX_WB2ID
     );
 END PIPELINED;

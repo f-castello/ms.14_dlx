@@ -21,11 +21,10 @@ vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.c-EXE.vhd
 
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.a-gen_reg.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.b-gen_mux21.vhd
-vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.core/a.c.d.c-sign_ext_alt.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.d-MEM.vhd
 
-vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.core/a.c.e.a-gen_reg.vhd
-vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.core/a.c.e.b-gen_mux41.vhd
+vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.core/a.c.e.a-gen_mux41.vhd
+vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.core/a.c.e.b-sign_ext_alt.vhd
 vcom -reportprogress 300 -work work ../../a.c-DP.core/a.c.e-WB.vhd
 
 vcom -reportprogress 300 -work work ../../a.c-DP.vhd
@@ -53,13 +52,13 @@ sim:/tb_dlx/DUT/DATAPATH/MEMORY/ALU_OUTPUT_OUT_AUX
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/WRITE_BACK/MUX_OUT
 add wave -position insertpoint  \
-sim:/tb_dlx/DUT/DATAPATH/MEMORY/SIGN_EXTEND/ctrl_in
+sim:/tb_dlx/DUT/DATAPATH/WRITE_BACK/SIGN_EXTEND/ctrl_in
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/CONTROL/BYTE_LEN
 add wave -position insertpoint  \
-sim:/tb_dlx/DUT/CONTROL/ZERO_PADDING4
+sim:/tb_dlx/DUT/CONTROL/ZERO_PADDING5
 add wave -position insertpoint  \
-sim:/tb_dlx/DUT/DATAPATH/MEMORY/SIGN_EXTEND/data_ext
+sim:/tb_dlx/DUT/DATAPATH/WRITE_BACK/SIGN_EXTEND/data_ext
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/DECODE/RF/REGISTERS
 add wave -position insertpoint  \

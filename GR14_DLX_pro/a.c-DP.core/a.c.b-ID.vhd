@@ -16,7 +16,7 @@ ENTITY ID_STAGE IS
 		-- Control ports
 		CLK           : IN STD_LOGIC;
 		RST           : IN STD_LOGIC;
-		JAL_MUX_SEL   : IN STD_LOGIC;
+		JAL_REG31     : IN STD_LOGIC;
 		DEC_OUTREG_EN : IN STD_LOGIC; -- (A, B, Imm, NPC1, IR1) Registers Enable
 		IS_I_TYPE     : IN STD_LOGIC; -- Detect I-Type Instructions for Sign Extension & Writing Address Selection
 		RD1_EN        : IN STD_LOGIC; -- Register File Read 1 Enable
@@ -184,7 +184,7 @@ BEGIN
 
 	ADD_RD1       <= I_CODE(25 DOWNTO 21);
 	ADD_RD2       <= I_CODE(20 DOWNTO 16);
-	ADD_WR        <= (RF_ADDR - 1 DOWNTO 0 => JAL_MUX_SEL) OR WR_ADDR_IN;
+	ADD_WR        <= (RF_ADDR - 1 DOWNTO 0 => JAL_REG31) OR WR_ADDR_IN;
 	ADD_WR_I_TYPE <= I_CODE(20 DOWNTO 16);
 	ADD_WR_R_TYPE <= I_CODE(15 DOWNTO 11);
 	SIGN_EXT_IN   <= I_CODE(25 DOWNTO 0);

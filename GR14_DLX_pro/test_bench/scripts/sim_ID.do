@@ -13,7 +13,7 @@ sim:/tb_id/DUT/RF/ADD_WR
 add wave -position insertpoint  \
 sim:/tb_id/DUT/RF/REGISTERS
 add wave -position insertpoint  \
-sim:/tb_id/DUT/SING_EXT/data_in
+sim:/tb_id/DUT/SIGN_EXTEND/data_in
 add wave -position insertpoint  \
-sim:/tb_id/DUT/SING_EXT/data_ext
+sim:/tb_id/DUT/SIGN_EXTEND/data_ext
 run 160 ns
