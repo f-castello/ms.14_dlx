@@ -48,7 +48,7 @@ sim:/tb_dlx/INST_MEM/DATA
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/JUMP_EN
 add wave -position insertpoint  \
-sim:/tb_dlx/DUT/DATAPATH/EXECUTE/ALU_OUTPUT_OUT
+sim:/tb_dlx/DUT/DATAPATH/EXECUTE/ALU_OUT_INT
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/WRITE_BACK/MUX_OUT
 add wave -position insertpoint  \
