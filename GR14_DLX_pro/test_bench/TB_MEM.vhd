@@ -135,13 +135,9 @@ BEGIN
 		RST_tb           <= '0'; -- Reset all registers
 		MEM_OUTREG_EN_tb <= '1'; --Enabling all pipeline registers
 		--other signals
-		ZERO_PADDING4_tb <= '1';--random value (shouldn't care)
-		MEM_OUT_SEL_tb   <= '1'; -- 0 sel sign extension output, otherwise data mem output	
 		BYTE_LEN_IN_tb   <= "11";
 		DRAM_WE_tb       <= '0';
 		-- Data ports
-		BRA_IN_tb           <= '1';-- BRA reg input (for jump selection)
-		JUMP_MUX_IN_0_tb    <= (OTHERS => '0'); -- Input 0 of the multiplexer for jumping (NPC)
 		ALU_OUTPUT_IN_tb    <= x"FF00FF02";     -- 
 		MEM_DATA_IN_tb      <= x"000FF030";     -- random value
 		MEM_DATA_OUT_INT_tb <= x"FFF00400";     --random value
@@ -170,9 +166,6 @@ BEGIN
 		ASSERT (ALU_OUTPUT_OUT_tb = x"00000000")
 		REPORT " ALU_OUTPUT_OUT exp val: " & INTEGER'image(0) & " ALU_OUTPUT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUTPUT_OUT_tb)))
 			SEVERITY failure;
-		ASSERT (ADDR_MUX_OUT_tb = x"00000000")
-		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(0) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
-			SEVERITY failure;
 		aux_DRAM_WE(0) := DRAM_WE_OUT_tb;
 		ASSERT (DRAM_WE_OUT_tb = '0')
 		REPORT " DRAM_WE_OUT exp val: " & INTEGER'image(0) & " DRAM_WE_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux_DRAM_WE)))
@@ -182,26 +175,9 @@ BEGIN
 			SEVERITY failure;
 		REPORT("TEST 1 RESULT: SUCCESSFUL");
 
-		--############################ TEST 2  ############################--
-		REPORT("TEST 2: Address MUX");
-		RST_tb           <= '1';
-		JUMP_MUX_IN_0_tb <= STD_LOGIC_VECTOR(to_unsigned(1005, NbitLong));  -- Input 0 of the multiplexer for jumping (NPC)
-		ALU_OUTPUT_IN_tb <= STD_LOGIC_VECTOR(to_unsigned(75318, NbitLong)); -- Also Input 1 of the multiplexer
-		BRA_IN_tb        <= '0';
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (ADDR_MUX_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(1005, NbitLong)))
-		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(1005) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
-			SEVERITY failure;
-		BRA_IN_tb <= '1';
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (ADDR_MUX_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(75318, NbitLong)))
-		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(75318) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
-			SEVERITY failure;
-		REPORT("TEST 2 RESULT: SUCCESSFUL");
-
 		--############################ TEST 3  ############################--
-		REPORT("TEST 3: Memory reading and writing test");
-		MEM_OUT_SEL_tb <= '1'; -- 0 sel sign extension output, otherwise data mem output
+		REPORT("TEST 2: Memory reading and writing test");
+		RST_tb           <= '1'; -- Reset all registers
 		FOR i IN 0 TO 31 LOOP
 			j := 31 - i; --go through memory values from the last to the first
 			ALU_OUTPUT_IN_tb <= STD_LOGIC_VECTOR(to_unsigned(i, NbitLong));
@@ -219,93 +195,10 @@ BEGIN
 			REPORT "j=" & INTEGER'image(j) & " MEM_DATA_IN_PRIME exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(DATA_MEM(j)))) & " MEM_DATA_IN_PRIME obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_IN_PRIME_tb)))
 				SEVERITY failure;
 		END LOOP;
-		REPORT("TEST 3 RESULT: SUCCESSFUL");
-
-		--############################ TEST 4  ############################--
-		REPORT("TEST 4: Sign extension");
-		MEM_OUT_SEL_tb      <= '0';         -- 0 sel sign extension output, otherwise data mem output
-		BYTE_LEN_IN_tb      <= "00";        --select byte extension
-		ZERO_PADDING4_tb    <= '0';         -- No zero padding
-		MEM_DATA_OUT_INT_tb <= x"4F1FDF1E"; --positive number (Considering only bits from 0 to 7)
-		WAIT UNTIL falling_edge(CLK_tb);
-		aux := x"0000001E";
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		REPORT " End of simulation";
-		ZERO_PADDING4_tb <= '1'; -- zero padding, Unsigned extension
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		REPORT " End of simulation";
-		ZERO_PADDING4_tb    <= '0';         -- No zero padding
-		BYTE_LEN_IN_tb      <= "01";        --select half word extension
-		MEM_DATA_OUT_INT_tb <= x"4F1F7FE1"; --positive number (Considering only bits from 0 to 15)
-		aux := x"00007FE1";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		ZERO_PADDING4_tb <= '1'; -- zero padding, Unsigned extension
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		REPORT " End of simulation";
-		ZERO_PADDING4_tb    <= '0';         -- No zero padding
-		BYTE_LEN_IN_tb      <= "00";        --select byte extension
-		MEM_DATA_OUT_INT_tb <= x"4F1F7FE9"; --Negative number (Considering only bits from 0 to 7)
-		aux := x"FFFFFFE9";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		ZERO_PADDING4_tb <= '1'; -- zero padding, Unsigned extension
-		aux := x"000000E9";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		ZERO_PADDING4_tb    <= '0';         -- No zero padding
-		BYTE_LEN_IN_tb      <= "11";        --select half word extension
-		MEM_DATA_OUT_INT_tb <= x"4F1FAFE1"; --Negative number (Considering only bits from 0 to 15)
-		aux := x"FFFFAFE1";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		ZERO_PADDING4_tb <= '1'; -- zero padding, Unsigned extension
-		aux := x"0000AFE1";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		REPORT("TEST 4 RESULT: SUCCESSFUL");
-
-		--############################ TEST 5  ############################--
-		REPORT("TEST 5: Out data MUX");
-		MEM_OUT_SEL_tb      <= '0';         -- 0 sel sign extension output, otherwise data mem output
-		ZERO_PADDING4_tb    <= '0';         -- No zero padding
-		BYTE_LEN_IN_tb      <= "11";        --select half word extension
-		MEM_DATA_OUT_INT_tb <= x"4F1FAFE1"; --Negative number (Considering only bits from 0 to 15)
-		aux := x"FFFFAFE1";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		MEM_OUT_SEL_tb <= '1'; -- 0 sel sign extension output, otherwise data mem output
-		aux := x"4F1FAFE1";
-		WAIT UNTIL falling_edge(CLK_tb);
-		ASSERT (MEM_DATA_OUT_tb = aux)
-		REPORT " MEM_DATA_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " MEM_DATA_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(MEM_DATA_OUT_tb)))
-			SEVERITY failure;
-		REPORT("TEST 5 RESULT: SUCCESSFUL");
-
+		REPORT("TEST 2 RESULT: SUCCESSFUL");
 		--############################ TEST 6  ############################--
-		REPORT("TEST 6: Register enable");
+		REPORT("TEST 3: Register enable");
 		MEM_OUTREG_EN_tb <= '1'; --Enabling all pipeline registers
-		BRA_IN_tb        <= '1';-- BRA reg input (for jump selection)
 		ALU_OUTPUT_IN_tb <= x"FE00FF02"; -- 
 		MEM_DATA_IN_tb   <= x"040FF030"; -- random value
 		NPC_IN_tb        <= x"20A10023";
@@ -313,7 +206,6 @@ BEGIN
 		WAIT UNTIL falling_edge(CLK_tb);
 		--Changing all the values and enable = 0
 		MEM_OUTREG_EN_tb <= '0'; --Disabling all pipeline registers
-		BRA_IN_tb        <= '0';-- BRA reg input (for jump selection)
 		ALU_OUTPUT_IN_tb <= x"00000000"; -- 
 		MEM_DATA_IN_tb   <= x"040AA000"; -- random value
 		NPC_IN_tb        <= x"FFFF0023";
@@ -343,11 +235,7 @@ BEGIN
 		ASSERT (ALU_OUTPUT_OUT_tb = aux)
 		REPORT " ALU_OUTPUT_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " ALU_OUTPUT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUTPUT_OUT_tb)))
 			SEVERITY failure;
-		aux := x"FE00FF02"; --Same value as alu output
-		ASSERT (ADDR_MUX_OUT_tb = aux)
-		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
-			SEVERITY failure;
-		REPORT("TEST 6 RESULT: SUCCESSFUL");
+		REPORT("TEST 3 RESULT: SUCCESSFUL");
 
 		REPORT (" End of simulation");
 		WAIT;

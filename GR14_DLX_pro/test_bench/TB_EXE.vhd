@@ -141,7 +141,6 @@ BEGIN
 		ASSERT (NPC2_OUT_tb = x"00000000")
 		REPORT " NPC2_OUT exp val: " & INTEGER'image(0) & " NPC2_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC2_OUT_tb)))
 			SEVERITY failure;
-		aux_bit(0) := '0';
 		ASSERT (ALU_OUT_tb = x"00000000")
 		REPORT " ALU_OUT exp val: " & INTEGER'image(0) & " ALU_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUT_tb)))
 			SEVERITY failure;
@@ -182,7 +181,6 @@ BEGIN
 		ASSERT (NPC2_OUT_tb = x"FFFAA012")
 		REPORT " NPC_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " NPT_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(NPC2_OUT_tb)))
 			SEVERITY failure;
-		aux_bit(0) := '0';
 		aux        := x"00000005";
 		ASSERT (ALU_OUT_tb = x"00000005")
 		REPORT " ALU_OUT exp val: " & INTEGER'image(TO_INTEGER(UNSIGNED(aux))) & " ALU_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ALU_OUT_tb)))
@@ -300,6 +298,43 @@ BEGIN
 			SEVERITY failure;
 		REPORT("TEST 4 RESULT: SUCCESSFUL");
 
+
+		--############################ TEST 5  ############################--
+		REPORT("TEST 5: Zero condition and jump MUX");
+		JUMP_MUX_IN_0_tb <= STD_LOGIC_VECTOR(to_unsigned(1005, NbitLong));  -- Input 0 of the multiplexer for jumping (NPC)
+		REGA_MUXA_IN_tb <= STD_LOGIC_VECTOR(to_unsigned(75318, NbitLong)); --  Reg A output (use for zero checking)
+		MUXA_SEL_tb 		<= '0'; --selecting NPC2_IN as input 1 of the ALU
+		MUXB_SEL_tb 		<= '1'; --selecting Imm as input 2 of the ALU
+		IMM_MUXB_IN_tb 		<= x"00000002";
+		NPC1_MUXA_IN_tb       	<= x"00000001"; --value to calculate the address to jump
+		EQ_COND_tb 			<= '1'; --Checking if REG A = 0
+		JUMP_EN_tb 			<= '1'; --Enabling jump
+		WAIT FOR 1 ns; -- No waiting for raising edge since path is combinational
+		--WAIT UNTIL falling_edge(CLK_tb);
+		ASSERT (ADDR_MUX_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(1005, NbitLong))) --expecting no jump
+		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(1005) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
+		SEVERITY failure;
+		WAIT FOR 1 ns; -- No waiting for raising edge since path is combinational
+		EQ_COND_tb <= '0'; --Checking if REG A != 0
+		WAIT FOR 1 ns; -- No waiting for raising edge since path is combinational
+		ASSERT (ADDR_MUX_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(3, NbitLong))) --Expecting jump
+		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(3) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
+		SEVERITY failure;
+		WAIT FOR 1 ns; -- No waiting for raising edge since path is combinational
+		REGA_MUXA_IN_tb <= STD_LOGIC_VECTOR(to_unsigned(0, NbitLong)); --  Reg A output (use for zero checking)
+		JUMP_MUX_IN_0_tb <= STD_LOGIC_VECTOR(to_unsigned(55, NbitLong));  -- Input 0 of the multiplexer for jumping (NPC)
+		--WAIT UNTIL falling_edge(CLK_tb);
+		WAIT FOR 1 ns;
+		ASSERT (ADDR_MUX_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(55, NbitLong)))
+		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(55) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
+		SEVERITY failure;
+		EQ_COND_tb <= '1'; --Checking if REG A = 0
+		WAIT FOR 1 ns; -- No waiting for raising edge since path is combinational
+		ASSERT (ADDR_MUX_OUT_tb = STD_LOGIC_VECTOR(to_unsigned(3, NbitLong)))
+		REPORT " ADDR_MUX_OUT exp val: " & INTEGER'image(3) & " ADDR_MUX_OUT obt val: " & INTEGER'image(TO_INTEGER(UNSIGNED(ADDR_MUX_OUT_tb)))
+		SEVERITY failure;
+
+		REPORT("TEST 5 RESULT: SUCCESSFUL");
 		REPORT("END SIMULATION");
 		WAIT;
 	END PROCESS;
