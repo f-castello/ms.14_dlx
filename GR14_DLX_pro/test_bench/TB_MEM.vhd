@@ -135,12 +135,12 @@ BEGIN
 		RST_tb           <= '0'; -- Reset all registers
 		MEM_OUTREG_EN_tb <= '1'; --Enabling all pipeline registers
 		--other signals
-		BYTE_LEN_IN_tb   <= "11";
-		DRAM_WE_tb       <= '0';
+		BYTE_LEN_IN_tb <= "11";
+		DRAM_WE_tb     <= '0';
 		-- Data ports
-		ALU_OUTPUT_IN_tb    <= x"FF00FF02";     -- 
-		MEM_DATA_IN_tb      <= x"000FF030";     -- random value
-		MEM_DATA_OUT_INT_tb <= x"FFF00400";     --random value
+		ALU_OUTPUT_IN_tb    <= x"FF00FF02"; -- 
+		MEM_DATA_IN_tb      <= x"000FF030"; -- random value
+		MEM_DATA_OUT_INT_tb <= x"FFF00400"; --random value
 		NPC_IN_tb           <= x"00000000";
 		IR_IN_tb            <= "00010";
 		WAIT UNTIL falling_edge(CLK_tb);
@@ -177,7 +177,7 @@ BEGIN
 
 		--############################ TEST 3  ############################--
 		REPORT("TEST 2: Memory reading and writing test");
-		RST_tb           <= '1'; -- Reset all registers
+		RST_tb <= '1'; -- Reset all registers
 		FOR i IN 0 TO 31 LOOP
 			j := 31 - i; --go through memory values from the last to the first
 			ALU_OUTPUT_IN_tb <= STD_LOGIC_VECTOR(to_unsigned(i, NbitLong));
@@ -198,14 +198,14 @@ BEGIN
 		REPORT("TEST 2 RESULT: SUCCESSFUL");
 		--############################ TEST 6  ############################--
 		REPORT("TEST 3: Register enable");
-		MEM_OUTREG_EN_tb <= '1'; --Enabling all pipeline registers
+		MEM_OUTREG_EN_tb <= '1';         --Enabling all pipeline registers
 		ALU_OUTPUT_IN_tb <= x"FE00FF02"; -- 
 		MEM_DATA_IN_tb   <= x"040FF030"; -- random value
 		NPC_IN_tb        <= x"20A10023";
 		IR_IN_tb         <= "01010";
 		WAIT UNTIL falling_edge(CLK_tb);
 		--Changing all the values and enable = 0
-		MEM_OUTREG_EN_tb <= '0'; --Disabling all pipeline registers
+		MEM_OUTREG_EN_tb <= '0';         --Disabling all pipeline registers
 		ALU_OUTPUT_IN_tb <= x"00000000"; -- 
 		MEM_DATA_IN_tb   <= x"040AA000"; -- random value
 		NPC_IN_tb        <= x"FFFF0023";
