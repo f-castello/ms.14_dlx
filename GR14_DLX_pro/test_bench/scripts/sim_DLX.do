@@ -60,6 +60,10 @@ sim:/tb_dlx/DUT/CONTROL/ZERO_PADDING5
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/WRITE_BACK/SIGN_EXTEND/data_ext
 add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/EXECUTE/ALRITH_LOG_U/DATA1
+add wave -position insertpoint  \
+sim:/tb_dlx/DUT/DATAPATH/EXECUTE/ALRITH_LOG_U/DATA2
+add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/DECODE/RF/REGISTERS
 add wave -position insertpoint  \
 sim:/tb_dlx/DUT/DATAPATH/IF_LATCH_EN

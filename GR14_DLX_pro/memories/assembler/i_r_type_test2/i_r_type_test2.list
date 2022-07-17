@@ -1,0 +1,16 @@
+ line   address	contents
+    1  00000000  20210005	addi r1,r1,#5
+    2  00000004  28020002	subi r2,r0,#2
+    3  00000008  200a0002	addi r10,r0,#2
+    4  0000000c  28030007	subi r3,r0,#7 hFFFFFFF9
+    5  00000010  2007fffb	addi r7,r0,#-5
+    6  00000014  54000000	nop
+    7  00000018  54000000	nop
+    8  0000001c  54000000	nop
+    9  00000020  54000000	nop
+   10  00000024  00232021	addu r4,r1,r3 ;expected result :hFFFFFFFE
+   11  00000028  002a2804	sll r5,r1,r10 ;expected result: d20
+   12  0000002c  00223029	sne r6,r1,r2 ;expected result: 1
+   13  00000030  00274029	sne r8,r1,r7 ;expected result: 1
+   14  00000034  00ea4806	srl r9,r7,r10 ;expected result: h3FFFFFFE
+   15  00000038  00225822	sub r11,r1,r2 ;expected result: h7
