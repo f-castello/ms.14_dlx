@@ -28,7 +28,7 @@ BEGIN
 		TMP := (OTHERS => '0');
 
 		CASE ALU_OPCODE IS
-			WHEN I_addui | I_jr | I_jalr | I_lbu | I_lhu | R_addu =>
+			WHEN I_addui | I_jr | I_lbu | I_lhu | R_addu =>
 				TMP := STD_LOGIC_VECTOR(UNSIGNED('0' & DATA1) + UNSIGNED('0' & DATA2));
 				OVF <= TMP(N);
 			WHEN J_j | J_jal | I_addi | I_lb | I_lh | I_lw | I_sb | I_sh | I_sw | R_add =>
@@ -47,6 +47,8 @@ BEGIN
 					NEG <= TMP(N - 1);
 					OVF <= (DATA1(N - 1) AND DATA2(N - 1) AND NOT TMP(N - 1)) OR (NOT DATA1(N - 1) AND NOT DATA2(N - 1) AND TMP(N - 1));
 				END IF;
+			WHEN I_jalr =>
+				TMP := '0' & DATA1;
 			WHEN I_subui | R_subu =>
 				TMP := STD_LOGIC_VECTOR(UNSIGNED('0' & DATA1) - UNSIGNED('0' & DATA2));
 				OVF <= TMP(N);

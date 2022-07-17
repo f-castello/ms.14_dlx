@@ -8,7 +8,7 @@ Report : timing
         -max_paths 1
 Design : DLX
 Version: F-2011.09-SP3
-Date   : Wed Jul 13 18:53:39 2022
+Date   : Mon Jul 18 01:01:47 2022
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -16,9 +16,9 @@ Date   : Wed Jul 13 18:53:39 2022
 Operating Conditions: typical   Library: NangateOpenCellLibrary
 Wire Load Model Mode: top
 
-  Startpoint: CONTROL/cw4_reg[3]
+  Startpoint: DATAPATH/FETCH/PC/data_out_reg[2]
               (rising edge-triggered flip-flop)
-  Endpoint: DataMem_BLen[0]
+  Endpoint: ProgCount_Out[2]
             (output port)
   Path Group: (none)
   Path Type: max
@@ -29,20 +29,15 @@ Wire Load Model Mode: top
 
   Point                                                   Incr       Path
   --------------------------------------------------------------------------
-  CONTROL/cw4_reg[3]/CK (DFFR_X1)                         0.00 #     0.00 r
-  CONTROL/cw4_reg[3]/Q (DFFR_X1)                          0.15       0.15 r
-  CONTROL/BYTE_LEN[0] (CU_HW_MICRO_SIZE154_FUNC_SIZE11_OPCODE_SIZE6_IR_SIZE32_CW_SIZE20)
-                                                          0.00       0.15 r
-  DATAPATH/BYTE_LEN_IN[0] (DP_N_BITS_DATA32_N_BYTES_INST4_RF_ADDR5_N_BITS_JUMP26_N_BITS_IMM16)
-                                                          0.00       0.15 r
-  DATAPATH/MEMORY/BYTE_LEN_IN[0] (MEM_STAGE_N_BITS_DATA32_RF_ADDR5)
-                                                          0.00       0.15 r
-  DATAPATH/MEMORY/BYTE_LEN_OUT[0] (MEM_STAGE_N_BITS_DATA32_RF_ADDR5)
-                                                          0.00       0.15 r
-  DATAPATH/BYTE_LEN_OUT[0] (DP_N_BITS_DATA32_N_BYTES_INST4_RF_ADDR5_N_BITS_JUMP26_N_BITS_IMM16)
-                                                          0.00       0.15 r
-  DataMem_BLen[0] (out)                                   0.01       0.16 r
-  data arrival time                                                  0.16
+  DATAPATH/FETCH/PC/data_out_reg[2]/CK (DFFR_X1)          0.00 #     0.00 r
+  DATAPATH/FETCH/PC/data_out_reg[2]/Q (DFFR_X1)           0.12       0.12 r
+  DATAPATH/FETCH/PC/data_out[2] (gen_reg_N32_0)           0.00       0.12 r
+  DATAPATH/FETCH/PC_OUT[2] (IF_STAGE_N_BITS_DATA32_N_BYTES_INST4)
+                                                          0.00       0.12 r
+  DATAPATH/PC_OUT[2] (DP_N_BITS_DATA32_N_BYTES_INST4_RF_ADDR5_N_BITS_JUMP26_N_BITS_IMM16)
+                                                          0.00       0.12 r
+  ProgCount_Out[2] (out)                                  0.00       0.12 r
+  data arrival time                                                  0.12
   --------------------------------------------------------------------------
   (Path is unconstrained)
 

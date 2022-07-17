@@ -1,15 +1,15 @@
 ###################################################################
 
-# Created by write_sdc on Wed Jul 13 19:02:22 2022
+# Created by write_sdc on Mon Jul 18 01:08:08 2022
 
 ###################################################################
 set sdc_version 1.9
 
 set_units -time ns -resistance MOhm -capacitance fF -voltage V -current mA
 set_wire_load_model -name 5K_hvratio_1_4 -library NangateOpenCellLibrary
-set_max_dynamic_power 4.2135 mW
-create_clock [get_ports Clock]  -period 3  -waveform {0 1.5}
-set_max_delay 3  -from [list [get_ports Clock] [get_ports ResetN] [get_ports {Instr_In[31]}]   \
+set_max_dynamic_power 3.9496 mW
+create_clock [get_ports Clock]  -period 3.21  -waveform {0 1.605}
+set_max_delay 3.21  -from [list [get_ports Clock] [get_ports ResetN] [get_ports {Instr_In[31]}]   \
 [get_ports {Instr_In[30]}] [get_ports {Instr_In[29]}] [get_ports               \
 {Instr_In[28]}] [get_ports {Instr_In[27]}] [get_ports {Instr_In[26]}]          \
 [get_ports {Instr_In[25]}] [get_ports {Instr_In[24]}] [get_ports               \
