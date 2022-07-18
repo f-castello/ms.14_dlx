@@ -5,7 +5,7 @@ Warning: Design 'DLX' contains 1 high-fanout nets. A fanout number of 1000 will 
 Report : clocks
 Design : DLX
 Version: F-2011.09-SP3
-Date   : Mon Jul 18 01:07:59 2022
+Date   : Mon Jul 18 15:05:33 2022
 ****************************************
 
 Attributes:
@@ -17,6 +17,6 @@ Attributes:
 
 Clock          Period   Waveform            Attrs     Sources
 --------------------------------------------------------------------------------
-Clock            3.21   {0 1.605}                     {Clock}
+Clock            3.18   {0 1.59}                      {Clock}
 --------------------------------------------------------------------------------
 1

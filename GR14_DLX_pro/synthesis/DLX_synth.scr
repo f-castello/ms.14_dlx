@@ -43,7 +43,7 @@ report_power -cell > ./report/0-DLX_power-cell_draft.rpt
 report_power -net > ./report/0-DLX_power-net_draft.rpt
 
 # Defining new period variable:
-set T 3.21
+set T 3.18
 
 # Creating synchronous constraint:
 create_clock -name "Clock" -period $T Clock
@@ -52,7 +52,7 @@ create_clock -name "Clock" -period $T Clock
 set_max_delay $T -from [all_inputs] -to [all_outputs]
 
 # Forcing maximum dynamic power:
-set_max_dynamic_power 3.9496 mW
+set_max_dynamic_power 3.9802 mW
 
 # Optimized compilation:
 compile -map_effort high
